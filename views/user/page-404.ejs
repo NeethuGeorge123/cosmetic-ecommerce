@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 100px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #6c757d;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+<body> 
+    <div class="container">
+        <h1>404</h1>
+        <h2>Oops! Page Not Found</h2>
+        <p>The page you are looking for might have been removed or is temporarily unavailable.</p>
+        <div class="buttons">
+            <a href="/"><i class="fas fa-home"></i> Go to Homepage</a>
+            <a href="#" onclick="goBack()"><i class="fas fa-arrow-left"></i> Go Back</a>
+        </div>
+    </div>
+</body>
+</html>
