@@ -1,0 +1,103 @@
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.search-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.search-box {
+    padding: 10px;
+    width: 50%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.category-sections {
+    display: flex;
+    gap: 20px;
+}
+
+.category-form {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    flex: 0.25;
+}
+
+.category-table-section {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    flex: 0.75;
+}
+
+.category-form input, .category-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.create-category {
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.category-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.category-table th, .category-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.category-table th {
+    background: #f8f8f8;
+}
+
+
+
+
+.pagination-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    background: #6a7264;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.pagination li a:hover,
+.pagination .active a {
+    background: #779162;
+}

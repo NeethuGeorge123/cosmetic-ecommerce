@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/css/admin-style.css">
+    <link rel="stylesheet" href="/css/admin-error.css">
+</head>
+<%- include('../partials/admin/header') %>
+<main class="content">
+    <div class="container">
+        <h1>Customers</h1>
+        
+        <div class="search-bar">
+            <input type="text" id="customerSearch" placeholder="Search Customers..." onkeyup="filterCustomers()">
+        </div>
+
+        <table class="customer-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone No</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                <% for(let i=0;i<data.length;i++) {%>
+                <!-- Dynamic Data will be filled here -->
+                <tr>
+                    <td><%= data[i].name %></td>
+                    <td><%= data[i].email %></td>
+            
+                    <td><%= data[i].phone %></td>
+                    <td>
+                        <% if(data[i].isBlocked===false){ %>
+                        <button class="btn block"> <a href="/admin/blockCustomer?id=<%= data[i]._id %>"> Block </a></button>
+                        <%}else { %>
+                        <button class="btn unblock"> <a href="/admin/unblockCustomer?id=<%= data[i]._id %>">Unblock</a> </button>
+                        <% } %>
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <td>Jane Smith</td>
+                    <td>janesmith@example.com</td>
+                    <td>+9876543210</td>
+                    <td>
+                        <button class="btn block">Block</button>
+                        <button class="btn unblock">Unblock</button>
+                    </td>
+                </tr>-->
+                <%}%>
+            </tbody>
+        </table>
+        <!-- Pagination Controls -->
+        <!-- <div class="pagination">
+            <% if (currentPage > 1) { %>
+                <a href="/admin/customers?page=<%= currentPage - 1 %>">Previous</a>
+            <% } %>
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="/admin/customers?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
+                    <%= i %>
+                </a>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+                <a href="/admin/customers?page=<%= currentPage + 1 %>">Next</a>
+            <% } %>
+        </div> -->
+
+        <!-- Pagination (UL & LI) -->
+        <nav class="pagination-container">
+            <ul class="pagination">
+                <% if (currentPage > 1) { %>
+                    <li><a href="/admin/customers?page=<%= currentPage - 1 %>">Previous</a></li>
+                <% } %>
+
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="<%= currentPage === i ? 'active' : '' %>">
+                        <a href="/admin/customers?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+
+                <% if (currentPage < totalPages) { %>
+                    <li><a href="/admin/customers?page=<%= currentPage + 1 %>">Next</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<!-- <script>
+    function filterCustomers() {
+        let input = document.getElementById("customerSearch").value.toLowerCase();
+        let rows = document.querySelectorAll("#customerTableBody tr");
+
+        rows.forEach(row => {
+            let name = row.cells[0].innerText.toLowerCase();
+            let email = row.cells[1].innerText.toLowerCase();
+            let phone = row.cells[2].innerText.toLowerCase();
+
+            if (name.includes(input) || email.includes(input) || phone.includes(input)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+</script> -->
+
+<style>
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        margin-bottom: 10px;
+    }
+    .search-bar {
+        margin-bottom: 20px;
+    }
+    .search-bar input {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .customer-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .customer-table th, .customer-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+    .customer-table th {
+        background-color: #f4f4f4;
+    }
+    .btn {
+        padding: 5px 10px;
+        margin: 2px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+    .block {
+        background-color: red;
+        color: white;
+    }
+    .unblock {
+        background-color: green;
+        color: white;
+    }
+</style>

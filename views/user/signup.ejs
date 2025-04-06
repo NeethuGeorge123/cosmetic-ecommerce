@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <h2>Sign Up</h2>
+            <form id="signup-form" method="post" action="/signup"  >
+                <input type="text" id="full-name" placeholder="Full Name" name="name" required>
+                <span id="full-name-error"></span>
+                <input type="email" id="email" placeholder="Email Address" name="email" required>
+                <span id="email-error"></span>
+                <input type="tel" id="phone" placeholder="Phone Number" name="phone" required>
+                <span id="phone-error"></span> <!-- Error message appears here -->
+                <input type="password" id="password" placeholder="Password" name="password" required>
+                <span id="password-error"></span>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" name="cpassword" required>
+                <span id="confirm-password-error"></span>
+                <button type="submit" >Sign Up</button>
+            </form>
+            <button class="google-signup">
+                <img src="google-icon.png" alt="Google Logo" class="google-icon"> Sign Up with Google
+            </button>
+        </div>
+        <div class="right-section">
+            <img src="https://media.istockphoto.com/id/1390665987/photo/pastel-pink-make-up.jpg?s=612x612&w=0&k=20&c=Bk03MfBkuco9vEZ0r6WgTG2tBtFczgqWqZaCw1oV-Nw=" alt="Cosmetic Shopping">
+            <p class="login-text small-text">Already registered? <a href="#">Log in</a></p>
+        </div>
+    </div>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            width: 800px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .left-section {
+            flex: 1;
+            background: #ffe6e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        .right-section img {
+            width: 100%;
+            max-width: 300px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        input {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            background: #ff4d4d;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .google-signup {
+            background: #4285F4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+        .login-text {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+        }
+    </style>
+
+  
+        <!--document.getElementById("signup-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+            } else {
+                alert("Signup Successful!");
+            }
+        });-->
+ <script>
+//     document.getElementById("signup-form").addEventListener("submit", function(event) {
+//     event.preventDefault(); // Prevent form submission
+
+//     // Get form values
+//     const fullName = document.getElementById("full-name").value.trim();
+//     const email = document.getElementById("email").value.trim();
+//     const phone = document.getElementById("phone").value.trim();
+//     const password = document.getElementById("password").value.trim();
+//     const confirmPassword = document.getElementById("confirm-password").value.trim();
+
+//     // Regular expressions for validation
+//     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+//     const phonePattern = /^[0-9]{10}$/;
+
+//     let errors = [];
+
+//     // Validation checks
+//     if (fullName === "") {
+//         errors.push("Full Name is required.");
+//     }
+
+//     if (!emailPattern.test(email)) {
+//         errors.push("Enter a valid email address.");
+//     }
+
+//     if (!phonePattern.test(phone)) {
+//         errors.push("Invalid phone number");
+//     }
+//     if (isNaN(phone)) {
+//         errors.push("Phone number must contain only numbers.");
+//     }
+
+//     if (password.length < 6) {
+//         errors.push("Password must be at least 6 characters long.");
+//     }
+
+//     if (password !== confirmPassword) {
+//         errors.push("Passwords do not match.");
+//     }
+
+//     // Display errors or submit form
+//     if (errors.length > 0) {
+//         alert(errors.join("\n")); // Show all errors
+//     } else {
+//         alert("Signup Successful!");
+//         this.submit(); // Submit form after validation
+//     }
+// });
+
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const fullName = document.getElementById("full-name");
+    const email = document.getElementById("email");
+    const phone = document.getElementById("phone");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirm-password");
+    const signupForm = document.getElementById("signup-form");
+
+    
+    const fullNameError = document.getElementById("full-name-error");
+    const emailError = document.getElementById("email-error");
+    const phoneError = document.getElementById("phone-error");
+    const passwordError = document.getElementById("password-error");
+    const confirmPasswordError = document.getElementById("confirm-password-error");
+
+    
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phonePattern = /^[0-9]{10}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    
+    function showErrorMessage(element, message) {
+        element.textContent = message;
+        element.style.color = "red";
+    }
+
+    
+    function clearErrorMessage(element) {
+        element.textContent = "";
+    }
+
+    
+    fullName.addEventListener("input", function () {
+        if (fullName.value.trim() === "") {
+            showErrorMessage(fullNameError, "Full Name is required.");
+        } else {
+            clearErrorMessage(fullNameError);
+        }
+    });
+
+    
+    email.addEventListener("input", function () {
+        if (!emailPattern.test(email.value.trim())) {
+            showErrorMessage(emailError, "Enter a valid email address.");
+        } else {
+            clearErrorMessage(emailError);
+        }
+    });
+
+    
+    phone.addEventListener("input", function () {
+        if (!phone.value.match(/^[0-9]*$/)) {
+            showErrorMessage(phoneError, "Phone number must contain only digits.");
+        } else if (phone.value.length > 10) {
+            showErrorMessage(phoneError, "Phone number should not exceed 10 digits.");
+        } else if (phone.value.length < 10) {
+            showErrorMessage(phoneError, "Phone number must be exactly 10 digits.");
+        } else {
+            clearErrorMessage(phoneError);
+        }
+    });
+
+    
+    password.addEventListener("input", function () {
+        if (!passwordPattern.test(password.value.trim())) {
+            showErrorMessage(passwordError, "Password must be at least 8 characters, contain one uppercase, one lowercase, one number, and one special character.");
+        } else {
+            clearErrorMessage(passwordError);
+        }
+    });
+
+    
+    confirmPassword.addEventListener("input", function () {
+        if (confirmPassword.value !== password.value) {
+            showErrorMessage(confirmPasswordError, "Passwords do not match.");
+        } else {
+            clearErrorMessage(confirmPasswordError);
+        }
+    });
+
+    
+    signupForm.addEventListener("submit", function (event) {
+        event.preventDefault(); 
+
+        let errors = [];
+
+        if (fullName.value.trim() === "") errors.push("Full Name is required.");
+        if (!emailPattern.test(email.value.trim())) errors.push("Enter a valid email address.");
+        if (!phonePattern.test(phone.value.trim())) errors.push("Phone number must be exactly 10 digits.");
+        if (!passwordPattern.test(password.value.trim())) errors.push("Password must meet complexity requirements.");
+        if (confirmPassword.value !== password.value) errors.push("Passwords do not match.");
+
+        if (errors.length > 0) {
+            alert(errors.join("\n")); 
+        } else {
+            alert("Signup Successful!");
+            this.submit();
+        }
+    });
+});
+
+    </script> 
+</body>
+</html>

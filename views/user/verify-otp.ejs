@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+      .otp-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      input {
+        font-size: 20px;
+        text-align: center;
+        padding: 10px;
+        margin: 5px;
+        width: 50px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .timer {
+        margin-top: 10px;
+        color: red;
+      }
+      button {
+        margin-top: 10px;
+        padding: 10px;
+        border: none;
+        background: blue;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      button:disabled {
+        background: gray;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="otp-container">
+      <h2>Enter OTP</h2>
+      <form
+        id="otpForm"
+        action="/user/verify-otp"
+        method="post"
+        onsubmit="validateOtpForm()"
+      >
+        <div>
+          <input type="text" maxlength="1" name="otp1" class="otp" required />
+          <input type="text" maxlength="1" name="otp2" class="otp" required />
+          <input type="text" maxlength="1" name="otp3" class="otp" required />
+          <input type="text" maxlength="1" name="otp4" class="otp" required />
+          <input type="text" maxlength="1" name="otp5" class="otp" required />
+          <input type="text" maxlength="1" name="otp6" class="otp" required />
+        </div>
+        <p class="timer">Time left: <span id="countdown">30</span> seconds</p>
+        <button type="submit">Verify OTP</button>
+      </form>
+      <button id="resendBtn" disabled>Resend OTP</button>
+    </div>
+
+    <script>
+      // let timeLeft = 30;
+      // let timer = setInterval(() => {
+      //     if (timeLeft > 0) {
+      //         timeLeft--;
+      //         document.getElementById("countdown").innerText = timeLeft;
+      //     } else {
+      //         clearInterval(timer);
+      //         document.getElementById("resendBtn").disabled = false;
+      //     }
+      // }, 1000);
+
+      // // document.getElementById("otpForm").addEventListener("submit", function(event) {
+      // //     event.preventDefault();
+      // //     alert("OTP Submitted!");
+      // // });
+      // function validateOtpForm(){
+      //     const otpInput=document.getElementByClassName("otp").value;
+
+      //     $.ajax({
+      //         type:"POST",
+      //         url:"verify-otp",
+      //         data:{otp:otpInput},
+      //         success:function(responce){
+      //             if(responce.success){
+      //                 if(responce.success){
+      //                     Swal.fire({
+      //                         icon:"success",
+      //                         title:"OTP verified success",
+      //                         showConfirmButton:false,
+      //                         timer:1500,
+
+      //                     }).then(()=>{
+      //                         window.location.href=responce.redirectUrl;
+      //                     })
+      //                 }else{
+      //                     Swal.fire({
+      //                         icon:"error",
+      //                         title:Error,
+      //                         text:responce.message,
+      //                     })
+      //                 }
+      //             }
+
+      //             },
+      //             error:function( ){
+      //                 Swal.fire({
+      //                     icon:"error",
+      //                     title:"Invalid OTP",
+      //                     text:"plese try again",
+      //                 })
+      //         }
+      //     })
+      //     return false;
+      // }
+
+      // function validateOtpForm(event) {
+      //     event.preventDefault(); // Prevent form submission
+
+      //     // Correct way to get OTP input values
+      //     let otpInput = "";
+      //     document.querySelectorAll(".otp").forEach(input => {
+      //         otpInput += input.value;
+      //     });
+      //     console.log("Sending OTP:", otpInput); // Debugging: Check OTP before sending
+
+      //     $.ajax({
+      //         type: "POST",
+      //         url: "/verify-otp", // Ensure this matches your backend route
+      //         data: { otp: otpInput },//send concatenated otp
+      //         success: function(response) {
+      //             if (response.success) {
+      //                 Swal.fire({
+      //                     icon: "success",
+      //                     title: "OTP verified successfully",
+      //                     showConfirmButton: false,
+      //                     timer: 1500,
+      //                 }).then(() => {
+      //                     window.location.href = response.redirectUrl;
+      //                 });
+      //             } else {
+      //                 Swal.fire({
+      //                     icon: "error",
+      //                     title: "Error",
+      //                     text: response.message,
+      //                 });
+      //             }
+      //         },
+      //         error: function() {
+      //             Swal.fire({
+      //                 icon: "error",
+      //                 title: "Invalid OTP",
+      //                 text: "Please try again",
+      //             });
+      //         }
+      //     });
+
+      //     return false; // Prevent form from reloading
+      // }
+
+      let timeLeft = 30;
+      let timer;
+
+      function startTimer() {
+        timeLeft = 30; // Reset timer
+        document.getElementById("countdown").innerText = timeLeft;
+        document.getElementById("resendBtn").disabled = true; // Disable resend button
+
+        clearInterval(timer); // Clear any existing timer
+        timer = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            document.getElementById("countdown").innerText = timeLeft;
+          } else {
+            clearInterval(timer);
+            document.getElementById("resendBtn").disabled = false; // Enable resend button
+          }
+        }, 1000);
+      }
+
+      // Start the timer when the page loads
+      startTimer();
+
+      // Resend OTP functionality
+      document
+        .getElementById("resendBtn")
+        .addEventListener("click", function () {
+          this.disabled = true; // Disable button immediately
+          startTimer(); // Restart the timer
+
+          // Make an AJAX request to resend OTP (Replace with actual backend API)
+          fetch("/resend-otp", { method: "POST" })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                alert("New OTP sent!");
+                console.log("New OTP:", data.otp); // Debugging purpose
+              } else {
+                alert("Failed to resend OTP. Try again.");
+              }
+            })
+            .catch((error) => console.error("Error resending OTP:", error));
+        });
+
+    //   function validateOtpForm() {
+    //     let otpInput = "";
+    //     document.querySelectorAll(".otp").forEach((input) => {
+    //       otpInput += input.value; // Concatenates all inputs
+    //     });
+
+    //     $.ajax({
+    //       type: "POST",
+    //       url: "/verify-otp",
+    //       data: { otp: otpInput },
+    //       success: function (response) {
+    //         console.log("Inside Ajax");
+    //         if (response.success) {
+    //           Swal.fire({
+    //             icon: "success",
+    //             title: "OTP verified successfully",
+    //             showConfirmButton: false,
+    //             timer: 1500,
+    //           }).then(() => {
+    //             window.location.href = response.redirectUrl;
+    //           });
+    //         } else {
+    //           Swal.fire({
+    //             icon: "error",
+    //             title: "Error",
+    //             text: response.message,
+    //           });
+    //         }
+    //       },
+    //       error: function () {
+    //         Swal.fire({
+    //           icon: "error",
+    //           title: "Invalid OTP",
+    //           text: "Please try again",
+    //         });
+    //       },
+    //     });
+
+    //     return false; // Prevents form submission
+    //   }
+
+
+    function validateOtpForm() {
+    let otpInput = "";
+    document.querySelectorAll(".otp").forEach(input => {
+        otpInput += input.value;
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: "/verify-otp", // Make sure this matches your route
+        data: { otp: otpInput },
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "OTP verified successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = response.redirectUrl || "/";
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: response.message || "Invalid OTP"
+                });
+            }
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid OTP",
+                text: xhr.responseJSON?.message || "Please try again"
+            });
+        }
+    });
+    
+    return false;
+}
+
+      document
+        .getElementById("otpForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent normal form submission
+          validateOtpForm();
+        });
+    </script>
+  </body>
+</html>
