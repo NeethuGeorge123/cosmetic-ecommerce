@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    
+    <!-- jQuery Elevate Zoom -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.css"/>
+    
+    <style>
+    /* General styling */
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+    }
+    
+    .main {
+      min-height: 80vh;
+    }
+    
+    /* Breadcrumb styling */
+    .breadcrumb-wrap {
+      background-color: #f0f2f5;
+      padding: 15px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .breadcrumb {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    
+    .breadcrumb a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    
+    .breadcrumb span::before {
+      content: "/";
+      padding: 0 8px;
+      color: #6c757d;
+    }
+    
+    /* Product detail section */
+    .product-detail {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      padding: 30px;
+      margin-top: 30px;
+    }
+    
+    /* Gallery section */
+    .detail-gallery {
+      position: relative;
+      margin-bottom: 30px;
+    }
+    
+    .product-image-slider {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .product-image-slider figure {
+      margin: 0;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    
+    .product-image-slider img {
+      width: 100%;
+      height: 400px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+      cursor: zoom-in;
+    }
+    
+    /* Thumbnail navigation */
+    .slider-nav-thumbnails {
+      margin-top: 15px;
+    }
+    
+    .slider-nav-thumbnails div {
+      padding: 5px;
+    }
+    
+    .slider-nav-thumbnails img {
+      height: 70px;
+      width: 70px;
+      object-fit: cover;
+      border-radius: 5px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .slider-nav-thumbnails .slick-current img {
+      border-color: #3498db;
+    }
+    
+    .slider-nav-thumbnails img:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    
+    /* Product details */
+    .title-detail {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    
+    .pro-details-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .pro-details-brand span {
+      font-size: 15px;
+      color: #6c757d;
+    }
+    
+    .pro-details-brand a {
+      color: #3498db;
+      font-weight: 500;
+      margin-left: 5px;
+      text-decoration: none;
+    }
+    
+    /* Rating */
+    .product-rate-cover {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .product-rate {
+      position: relative;
+      height: 15px;
+      width: 85px;
+      background-color: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .product-rating {
+      position: absolute;
+      height: 100%;
+      background-color: #f1c40f;
+      border-radius: 10px;
+    }
+    
+    .text-muted {
+      margin-left: 10px;
+      font-size: 14px;
+    }
+    
+    /* Price section */
+    .product-price-cover {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+    }
+    
+    .text-brand {
+      font-size: 26px;
+      font-weight: 700;
+      color: #2ecc71;
+    }
+    
+    .old-price {
+      font-size: 18px;
+      text-decoration: line-through;
+      color: #95a5a6;
+      margin-left: 15px;
+    }
+    
+    .save-price {
+      background-color: #fff8e8;
+      color: #ff9800;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-left: 15px;
+    }
+    
+    /* Separator */
+    .border-color-1 {
+      height: 1px;
+      background-color: #eaeaea;
+      margin: 25px 0;
+    }
+    
+    /* Short description */
+    .short-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #6c757d;
+    }
+    
+    /* Product info */
+    .product_sort_info {
+      padding: 0;
+    }
+    
+    .product_sort_info li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .product_sort_info li i {
+      color: #3498db;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    
+    /* Quantity and buttons */
+    .detail-extralink {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .detail-qty {
+      display: flex;
+      align-items: center;
+      border: 1px solid #e9ecef;
+      border-radius: 50px;
+      padding: 5px 15px;
+      background-color: #f8f9fa;
+    }
+    
+    .qty-down, .qty-up {
+      cursor: pointer;
+      padding: 0 10px;
+      font-size: 18px;
+      color: #3498db;
+      transition: all 0.3s ease;
+    }
+    
+    .qty-down:hover, .qty-up:hover {
+      color: #2980b9;
+    }
+    
+    .qty-val {
+      width: 30px;
+      text-align: center;
+      font-weight: 500;
+      font-size: 16px;
+    }
+    
+    .button-add-to-cart {
+      background: linear-gradient(45deg, #2ecc71, #27ae60);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+    }
+    
+    .button-add-to-cart:hover {
+      background: linear-gradient(45deg, #27ae60, #2ecc71);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(46, 204, 113, 0.25);
+    }
+    
+    .button-add-to-cart i {
+      font-size: 18px;
+    }
+    
+    .action-btn {
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      color: #e74c3c;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    
+    .action-btn:hover {
+      background-color: #fee2e1;
+      border-color: #e74c3c;
+      transform: translateY(-2px);
+    }
+    
+    /* Product meta info */
+    .product-meta {
+      padding: 0;
+      margin-top: 30px;
+    }
+    
+    .product-meta li {
+      list-style: none;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+    }
+    
+    .product-meta li a {
+      color: #3498db;
+      text-decoration: none;
+      margin-left: 5px;
+    }
+    
+    .in-stock {
+      color: #2ecc71 !important;
+      font-weight: 500;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .title-detail {
+        font-size: 24px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .product-detail {
+        padding: 20px;
+      }
+      
+      .product-image-slider img {
+        height: 300px;
+      }
+      
+      .detail-extralink {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .button-add-to-cart {
+        margin-top: 15px;
+      }
+      
+      .title-detail {
+        font-size: 22px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .product-image-slider img {
+        height: 250px;
+      }
+      
+      .slider-nav-thumbnails img {
+        height: 50px;
+        width: 50px;
+      }
+      
+      .text-brand {
+        font-size: 22px;
+      }
+      
+      .old-price {
+        font-size: 16px;
+      }
+    }
+    
+    /* Zoom style adjustments */
+    .zoomContainer {
+      z-index: 100;
+    }
+    
+    .zoomWindow {
+      border: 1px solid #eaeaea !important;
+      background-color: #fff !important;
+    }
+    
+    /* Loading spinner animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    </style>
+</head>
+<body>
+    <!-- Header placeholder -->
+    <header class="bg-white shadow-sm py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <a href="#" class="h4 text-decoration-none text-dark fw-bold">ShopName</a>
+                </div>
+                <div class="d-none d-md-flex gap-4">
+                    <a href="#" class="text-decoration-none text-secondary">Home</a>
+                    <a href="#" class="text-decoration-none text-secondary">Shop</a>
+                    <a href="#" class="text-decoration-none text-secondary">Categories</a>
+                    <a href="#" class="text-decoration-none text-secondary">Contact</a>
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-decoration-none text-secondary"><i class="fas fa-search"></i></a>
+                    <a href="#" class="text-decoration-none text-secondary"><i class="fas fa-user"></i></a>
+                    <a href="#" class="text-decoration-none text-secondary"><i class="fas fa-heart"></i></a>
+                    <a href="#" class="text-decoration-none text-secondary position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/shopnow">Fashion</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Detail</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        
+        <section class="py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="product-detail">
+                            <div class="row g-4">
+                                <!-- Product Gallery -->
+                                <div class="col-lg-6">
+                                    <div class="detail-gallery">
+                                        <div class="product-image-slider">
+                                            <figure>
+                                                <img src="/uploads/re-image/<%=product.productImage[0] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[0] %>" id="zoom_image">
+                                            </figure>
+                                            <figure>
+                                                <img src="/uploads/re-image/<%=product.productImage[1] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[1] %>">
+                                            </figure>
+                                            <figure>
+                                                <img src="/uploads/re-image/<%=product.productImage[2] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[2] %>">
+                                            </figure>
+                                            <figure>
+                                                <img src="/uploads/re-image/<%=product.productImage[3] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[3] %>">
+                                            </figure>
+                                            <figure>
+                                                <img src="/uploads/re-image/<%=product.productImage[4] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[4] %>">
+                                            </figure>
+                                        </div>
+                                        <div class="slider-nav-thumbnails">
+                                            <%for(let i=0;i<product.productImage.length;i++){%>
+                                            <div>
+                                                <img src="/uploads/re-image/<%=product.productImage[i]%>" alt="product thumbnail">
+                                            </div>
+                                            <%}%>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Product Info -->
+                                <div class="col-lg-6">
+                                    <div class="detail-info">
+                                        <h1 class="title-detail"><%=product.productName%></h1>
+                                        <div class="d-flex flex-wrap justify-content-between mb-3">
+                                            <div class="pro-details-brand">
+                                                <span>Brand: <a href="#"><%=product.brand%></a></span>
+                                            </div>
+                                            <div class="product-rate-cover">
+                                                <div class="product-rate me-2">
+                                                    <div class="product-rating" style="width:90%"></div>
+                                                </div>
+                                                <span class="text-muted">(25 reviews)</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="product-price-cover">
+                                            <span class="text-brand"><%=product.salePrice%></span>
+                                            <span class="old-price"><%=product.regularPrice%></span>
+                                            <span class="save-price">
+                                                <%if(!totalOffer){%>
+                                                    No Offers
+                                                <%}else{%>
+                                                    <%=totalOffer%>% Off
+                                                <%}%>
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="border-color-1"></div>
+                                        
+                                        <div class="short-desc">
+                                            <p><%=product.description %></p>
+                                        </div>
+                                        
+                                        <ul class="product_sort_info">
+                                            <li><i class="fas fa-check-circle"></i> 1 Year Brand Warranty</li>
+                                            <li><i class="fas fa-exchange-alt"></i> 30 Day Return Policy</li>
+                                            <li><i class="fas fa-money-bill-wave"></i> Cash on Delivery available</li>
+                                        </ul>
+                                        
+                                        <div class="border-color-1"></div>
+                                        
+                                        <div class="detail-extralink">
+                                            <div class="detail-qty">
+                                                <a href="#" class="qty-down"><i class="fas fa-minus"></i></a>
+                                                <span class="qty-val" id="quantity">1</span>
+                                                <a href="#" class="qty-up"><i class="fas fa-plus"></i></a>
+                                            </div>
+                                            
+                                            <div class="d-flex gap-2">
+                                                <button type="button" class="button button-add-to-cart">
+                                                    <i class="fas fa-shopping-cart"></i> Add to cart
+                                                </button>
+                                                <a href="#" class="action-btn" title="Add to Wishlist">
+                                                    <i class="fas fa-heart"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        
+                                        <ul class="product-meta">
+                                            <li>Stock Code: <a href="#">FWM15VKT</a></li>
+                                            <li>Tags: <a href="#" rel="tag"><%=category.name%></a></li>
+                                            <li>Availability: 
+                                                <span class="in-stock ml-5">
+                                                    <i class="fas fa-check-circle me-1"></i>
+                                                    <%=quantity%> Items in Stock
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer placeholder -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3">About Us</h5>
+                    <p class="mb-0 text-white-50">We provide high-quality products at affordable prices. Our mission is to make shopping easy and enjoyable.</p>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50">Shop</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50">About</a></li>
+                        <li><a href="#" class="text-decoration-none text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-5">
+                    <h5 class="mb-3">Subscribe</h5>
+                    <p class="text-white-50">Get the latest updates and offers.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Your Email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary mt-4 pt-4 text-center text-white-50">
+                <p class="mb-0">&copy; 2025 ShopName. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Slick Carousel JS -->
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    
+    <!-- Elevate Zoom JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            // Initialize product slider
+            $('.product-image-slider').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: true,
+                fade: true,
+                asNavFor: '.slider-nav-thumbnails',
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            arrows: false,
+                        }
+                    }
+                ]
+            });
+            
+            // Initialize thumbnail navigation
+            $('.slider-nav-thumbnails').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                asNavFor: '.product-image-slider',
+                dots: false,
+                focusOnSelect: true,
+                prevArrow: '<button type="button" class="slick-prev"><i class="fas fa-chevron-left"></i></button>',
+                nextArrow: '<button type="button" class="slick-next"><i class="fas fa-chevron-right"></i></button>',
+                responsive: [
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 4,
+                        }
+                    },
+                    {
+                        breakpoint: 576,
+                        settings: {
+                            slidesToShow: 3,
+                        }
+                    }
+                ]
+            });
+            
+            // Initialize Elevate Zoom
+            function initZoom() {
+                if ($(window).width() > 767) {
+                    $('.zoom-img').elevateZoom({
+                        zoomType: "inner",
+                        cursor: "crosshair",
+                        zoomWindowFadeIn: 500,
+                        zoomWindowFadeOut: 750
+                    });
+                } else {
+                    $('.zoom-img').elevateZoom({
+                        zoomType: "inner",
+                        cursor: "crosshair",
+                        zoomWindowFadeIn: 500,
+                        zoomWindowFadeOut: 750
+                    });
+                }
+            }
+            
+            // Initialize zoom on page load
+            initZoom();
+            
+            // Reinitialize zoom on window resize
+            $(window).resize(function() {
+                $('.zoomContainer').remove();
+                initZoom();
+            });
+            
+            // Reinitialize zoom when slider changes
+            $('.product-image-slider').on('afterChange', function(event, slick, currentSlide) {
+                $('.zoomContainer').remove();
+                setTimeout(function() {
+                    $('.zoom-img').elevateZoom({
+                        zoomType: "inner",
+                        cursor: "crosshair",
+                        zoomWindowFadeIn: 500,
+                        zoomWindowFadeOut: 750
+                    });
+                }, 100);
+            });
+            
+            // Quantity buttons
+            $('.qty-up').on('click', function(e) {
+                e.preventDefault();
+                var qtyVal = parseInt($('#quantity').text());
+                $('#quantity').text(qtyVal + 1);
+            });
+            
+            $('.qty-down').on('click', function(e) {
+                e.preventDefault();
+                var qtyVal = parseInt($('#quantity').text());
+                if (qtyVal > 1) {
+                    $('#quantity').text(qtyVal - 1);
+                }
+            });
+            
+            // Add to cart button effect
+            $('.button-add-to-cart').on('click', function() {
+                $(this).addClass('clicked');
+                setTimeout(() => {
+                    $(this).removeClass('clicked');
+                }, 300);
+                
+                // Here you would add your cart functionality
+                alert('Item added to cart!');
+            });
+        });
+    </script>
+</body>
+</html>

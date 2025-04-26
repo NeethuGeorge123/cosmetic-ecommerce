@@ -7,6 +7,128 @@
     
     <link rel="stylesheet" href="/css/admin-style.css">
     <link rel="stylesheet" href="/css/admin-error.css">
+
+    <style>
+        .container {
+    padding: 30px;
+    max-width: 100%;
+    margin: auto;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.search-bar input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.customer-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 15px;
+    table-layout: auto;
+}
+
+.customer-table th,
+.customer-table td {
+    border: 1px solid #eee;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.customer-table th {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.customer-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn a {
+    text-decoration: none;
+    color: white;
+}
+
+.block {
+    background-color: #dc3545;
+}
+
+.block:hover {
+    background-color: #c82333;
+}
+
+.unblock {
+    background-color: #28a745;
+}
+
+.unblock:hover {
+    background-color: #218838;
+}
+
+.pagination-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.pagination {
+    list-style: none;
+    padding: 0;
+    display: inline-flex;
+    gap: 10px;
+}
+
+.pagination li {
+    display: inline;
+}
+
+.pagination li a {
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    background-color: #d4edda; /* light green */
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    transition: 0.3s;
+}
+
+.pagination li a:hover,
+.pagination li.active a {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+    </style>
+    
+
+
 </head>
 <%- include('../partials/admin/header') %>
 <main class="content">
@@ -42,53 +164,29 @@
                         <% } %>
                     </td>
                 </tr>
-                <!-- <tr>
-                    <td>Jane Smith</td>
-                    <td>janesmith@example.com</td>
-                    <td>+9876543210</td>
-                    <td>
-                        <button class="btn block">Block</button>
-                        <button class="btn unblock">Unblock</button>
-                    </td>
-                </tr>-->
+               
                 <%}%>
             </tbody>
         </table>
-        <!-- Pagination Controls -->
-        <!-- <div class="pagination">
-            <% if (currentPage > 1) { %>
-                <a href="/admin/customers?page=<%= currentPage - 1 %>">Previous</a>
-            <% } %>
 
-            <% for (let i = 1; i <= totalPages; i++) { %>
-                <a href="/admin/customers?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
-                    <%= i %>
-                </a>
-            <% } %>
-
-            <% if (currentPage < totalPages) { %>
-                <a href="/admin/customers?page=<%= currentPage + 1 %>">Next</a>
-            <% } %>
-        </div> -->
-
-        <!-- Pagination (UL & LI) -->
-        <nav class="pagination-container">
+        <div class="pagination-container">
             <ul class="pagination">
-                <% if (currentPage > 1) { %>
-                    <li><a href="/admin/customers?page=<%= currentPage - 1 %>">Previous</a></li>
-                <% } %>
-
-                <% for (let i = 1; i <= totalPages; i++) { %>
-                    <li class="<%= currentPage === i ? 'active' : '' %>">
-                        <a href="/admin/customers?page=<%= i %>"><%= i %></a>
-                    </li>
-                <% } %>
-
-                <% if (currentPage < totalPages) { %>
-                    <li><a href="/admin/customers?page=<%= currentPage + 1 %>">Next</a></li>
-                <% } %>
+                <% if (currentPage> 1) { %>
+                    <li><a href="?page=<%= currentPage - 1 %>">Previous</a></li>
+                    <% } %>
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <li class="<%= currentPage === i ? 'active' : '' %>">
+                                <a href="?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <li><a href="?page=<%= currentPage + 1 %>">Next</a></li>
+                                    <% } %>
             </ul>
-        </nav>
+        </div>
+        
     </div>
 </main>
 
@@ -111,49 +209,3 @@
     }
 </script> -->
 
-<style>
-    .container {
-        padding: 20px;
-    }
-    h1 {
-        margin-bottom: 10px;
-    }
-    .search-bar {
-        margin-bottom: 20px;
-    }
-    .search-bar input {
-        width: 100%;
-        padding: 8px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-    .customer-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    .customer-table th, .customer-table td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-    }
-    .customer-table th {
-        background-color: #f4f4f4;
-    }
-    .btn {
-        padding: 5px 10px;
-        margin: 2px;
-        border: none;
-        cursor: pointer;
-        border-radius: 3px;
-    }
-    .block {
-        background-color: red;
-        color: white;
-    }
-    .unblock {
-        background-color: green;
-        color: white;
-    }
-</style>

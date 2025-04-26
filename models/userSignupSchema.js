@@ -15,7 +15,7 @@ const userSignupSchema=new mongoose.Schema({
         type:String,
         required:false,
         //unique:false,
-        //sparse:true,//single sign up time ph not must
+        sparse:true,//single sign up time ph not must
         default:null
     },
     password:{
@@ -34,7 +34,54 @@ default:false
     isAdmin:{
         type:Boolean,
         default:false
-    }
+    },
+    googleId:{
+        type:String,
+        unique:true,
+        sparse:true
+    },cart:[{
+        type:Schema.Types.ObjectId,
+        ref:"Cart",
+    }],
+    wallet:{
+        type:Number,
+        default:0,
+    },
+    whishlist:[{
+        type:Schema.Types.ObjectId,
+        ref:"Wishlist"
+    }],
+    orderHistory:[{
+        type:Schema.Types.ObjectId,
+        ref:"Order"
+    }],
+    createdOn:{
+        type:Date,
+        default:Date.now,
+    },
+    referalCode:{
+        type:String,
+    },
+    redeemed:{
+        type:Boolean
+    },
+    redeemedUsers:[{
+        type:Schema.Types.ObjectId,
+        ref:"User"
+    }],
+    searchHistory:[{
+        category:{
+            type:Schema.Types.ObjectId,
+            ref:"Category"
+        },
+        brand:{
+            type:String,
+        },
+        searchOn:{
+            type:Date,
+            default:Date.now
+        }
+    }]
 })
 const User=mongoose.model("User",userSignupSchema)
 module.exports=User;

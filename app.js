@@ -3,8 +3,9 @@ const app=express()
 const connectDatabase=require("./config/db.js")
 const PORT=process.env.PORT || 3000
   const session=require("express-session")
-
+const passport=require("./config/passport")
 const path=require ("path")
+const nocache=require("nocache")
 //const env=require("dotenv").config()
 //const db=require("./config/db")
 const userRouter=require("./routes/userRouter"); 
@@ -14,6 +15,9 @@ const adminRouter=require('./routes/adminRouter')
 connectDatabase();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
+
+app.use(nocache());
+
 app.use(session({
     secret:process.env.SESSION_SECRET,
     resave:false,
@@ -25,6 +29,8 @@ app.use(session({
     }
 }))
 
+app.use(passport.initialize());
+app.use(passport.session());
 // app.use((req,res,next)=>{
 //     res.set('cache-control','no-store')
 //     next()

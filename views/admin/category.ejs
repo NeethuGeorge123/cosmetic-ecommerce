@@ -85,7 +85,8 @@
                                     
                                 </td>
                                 <td>
-                                    <% if(category.isListed){ %>}                              <span>Listed</span> 
+                                    <% if(category.isListed){ %>                          
+                                            <span>Listed</span> 
 
                                    <% } else { %>
                                     <span>Unlisted</span>
@@ -105,7 +106,7 @@
                                      
                                 </td>
                                 <td>
-                                    <button class="btn-edit" onclick="handleEditCategory('<%= category._id %>')">Edit</button>
+                                    <button class="btn-edit" ><a href="/admin/editCategory?id=<%= category._id%>">Edit</a> </button>
                                 </td>
                             </tr>
                             <% }); %>

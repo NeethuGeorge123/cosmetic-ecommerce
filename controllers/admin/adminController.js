@@ -64,7 +64,7 @@ const login = async (req, res) => {
         console.log("Admin found:", admin ? true : false);
 
         if (!admin) {
-            console.log("❌ Admin not found");
+            //console.log("❌ Admin not found");
             return res.redirect("/admin/login");
         }
 

@@ -1,0 +1,142 @@
+.brands-container {
+    padding: 20px;
+    width: 100%;
+}
+
+.brands-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.brands-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Left: Form */
+.add-brand-form {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.add-brand-form .form-group {
+    margin-bottom: 15px;
+}
+
+.add-brand-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.add-brand-form input[type="text"],
+.add-brand-form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+.add-brand-form .btn.add-btn {
+    margin-top: 10px;
+    background-color: #779162;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-brand-form .btn.add-btn:hover {
+    background-color: #5e794f;
+}
+
+/* Right: Table */
+.brand-table-section {
+    flex: 2;
+    overflow-x: auto;
+}
+
+.brand-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.brand-table th,
+.brand-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+.brand-logo {
+    width: 60px;
+    height: auto;
+}
+
+.status-btn {
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.status-btn.red {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.status-btn.green {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.btn {
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.btn.red {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn.green {
+    background-color: #2ecc71;
+    color: white;
+}
+/* Add this to your brands.css temporarily for testing */
+
+.btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.red {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.green {
+    background-color: #2ecc71;
+    color: white;
+}
+
+
+

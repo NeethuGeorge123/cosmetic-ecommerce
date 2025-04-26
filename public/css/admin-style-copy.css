@@ -1,0 +1,178 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background: #c4d2c2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.brand-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.hamburger {
+    font-size: 28px;
+    cursor: pointer;
+    display: none;
+    color: #333;
+}
+
+.search-bar {
+    flex: 1;
+    text-align: center;
+}
+
+.search-bar input {
+    padding: 10px;
+    width: 50%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-account {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.admin-account img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 150px;
+    text-align: left;
+    z-index: 1000;
+}
+
+.dropdown a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.dropdown a:last-child {
+    border-bottom: none;
+}
+
+.dropdown a:hover {
+    background: #f4f4f4;
+}
+
+.dashboard-container {
+    display: flex;
+    flex: 1;
+    height: 100%;
+}
+
+.sidebar {
+    width: 250px;
+    background: #c4d2c2;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    background: #6a7264;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+    background: #779162;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f9f9f9;
+}
+
+/* RESPONSIVE SECTION */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    .sidebar {
+        position: absolute;
+        left: -250px;
+        top: 70px;
+        height: calc(100vh - 70px);
+        background: #c4d2c2;
+        z-index: 999;
+    }
+
+    .sidebar.show {
+        transform: translateX(250px);
+        left: 0;
+    }
+
+    .search-bar input {
+        width: 80%;
+        margin: 10px 0;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .admin-account {
+        align-self: flex-end;
+    }
+}

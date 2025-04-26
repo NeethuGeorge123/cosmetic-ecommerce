@@ -1,0 +1,94 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin-style.css">
+    <link rel="stylesheet" href="/css/brands.css">
+
+</head>
+<body>
+    <%- include('../partials/admin/header') %>
+
+    <div class="brands-container">
+        <h2 class="brands-heading">Brands</h2>
+    
+        <div class="brands-content">
+            <!-- Add Brand Form -->
+            <div class="add-brand-form">
+                <form action="/admin/addBrand" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="brandName">Brand Name</label>
+                        <input type="text" id="brandName" name="name" required>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="brandImage">Brand Image</label>
+                        <input type="file" id="brandImage" name="image"  >
+                    </div>
+    
+                    <button type="submit" class="btn add-btn">Add Brand</button>
+                </form>
+            </div>
+    
+            <!-- Brands Table -->
+            <div class="brand-table-section">
+                <table class="brand-table">
+                    <thead>
+                        <tr>
+                            <th>Brand</th>
+                            <th>Logo</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                
+    
+    
+    
+                        <tbody>
+                            <%data.reverse().forEach((brand,index)=>{%>
+                            <tr>
+                                <td><%= brand.brandName %></td>
+                                <td>
+                                    <img src="/uploads/re-image/<%=brand.brandImage[0]%>" alt="<%brand.brandName%>" class="brand-logo" >
+                                </td>
+                                <td>
+                                    <% if(brand.isBlocked===true){ %>
+                                    <span class="status-btn red">Blocked</span>
+                                    <%}else{%>
+                                    <span class="status-btn green">Active</span>
+                                    <%}%>
+                                </td>
+                                <td>
+                                    <%if(brand.isBlocked===false){%>
+                                        <a href="/admin/blockBrand?id=<%=brand._id%>" class="btn red" >Block</a>
+                                        <%}else{%>
+                                    <a href="/admin/unblockBrand?id=<%=brand._id%>" class="btn green">Unblock</a>
+                                    <%}%>
+                                    <a href="/admin/deleteBrand?id=<%=brand._id%>" class="btn red" onclick="return confirmDelete()">Delete</a>
+                                </td>
+                            </tr>
+                            <% }) %>
+                        </tbody>
+                        
+                          
+                        
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+    
+        function confirmDelete(){
+            return confirm("Are you sure delete this brand?")
+        }
+    
+    </script>
+</body>
+    

@@ -23,14 +23,19 @@
                 <input type="password" id="confirm-password" placeholder="Confirm Password" name="cpassword" required>
                 <span id="confirm-password-error"></span>
                 <button type="submit" >Sign Up</button>
-            </form>
-            <button class="google-signup">
+            
+            <a href="/auth/google" class="google-signup">
+                <img src="" alt="" class="google-icon"> Sign Up with Google
+            </a>
+            
+            <!-- <a href="/auth/google" class="google-signup">
                 <img src="google-icon.png" alt="Google Logo" class="google-icon"> Sign Up with Google
-            </button>
+            </a> -->
+        </form>
         </div>
         <div class="right-section">
             <img src="https://media.istockphoto.com/id/1390665987/photo/pastel-pink-make-up.jpg?s=612x612&w=0&k=20&c=Bk03MfBkuco9vEZ0r6WgTG2tBtFczgqWqZaCw1oV-Nw=" alt="Cosmetic Shopping">
-            <p class="login-text small-text">Already registered? <a href="#">Log in</a></p>
+            <p class="login-text small-text">Already registered? <a href="/login">Log in</a></p>
         </div>
     </div>
 
@@ -211,7 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     
     fullName.addEventListener("input", function () {
-        if (fullName.value.trim() === "") {
+        if (fullName.value.trim() === "" || !( /^[A-Za-z\s]+$/.test(fullName.value) )) {
             showErrorMessage(fullNameError, "Full Name is required.");
         } else {
             clearErrorMessage(fullNameError);

@@ -1,0 +1,423 @@
+<%- include('../partials/admin/header') %>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="/css/products.css">
+    <link rel="stylesheet" href="/css/admin-style.css" />
+    <style>
+        /* Main Content Area */
+        .admin-main-content {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+            min-height: calc(100vh - 60px);
+            margin-left: 0;
+        }
+        
+        /* Content Header */
+        .content-header {
+            margin-bottom: 25px;
+        }
+        
+        .content-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            text-align: left;
+        }
+        
+        /* Enhanced Search Section */
+        .search-container {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        
+        .search-form {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 15px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+        }
+        
+        .search-btn {
+            padding: 10px 25px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 15px;
+        }
+        
+        .search-btn:hover {
+            background: #2563eb;
+        }
+        
+        /* Improved Table Section */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            table-layout: auto;
+        }
+        
+        .table th {
+            background-color: #f1f5f9;
+            padding: 12px 15px;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+            text-align: center;
+        }
+        
+        /* Column Width Adjustments */
+        .table th:nth-child(1), .table td:nth-child(1) {
+            width: 20%;
+            text-align: left;
+            padding-left: 20px;
+        }
+        
+        .table th:nth-child(2), .table td:nth-child(2) {
+            width: 12%;
+        }
+        
+        .table th:nth-child(3), .table td:nth-child(3) {
+            width: 12%;
+        }
+        
+        .table th:nth-child(4), .table td:nth-child(4) {
+            width: 10%;
+        }
+        
+        .table th:nth-child(5), .table td:nth-child(5) {
+            width: 10%;
+        }
+        
+        .table th:nth-child(6), .table td:nth-child(6) {
+            width: 16%;
+        }
+        
+        .table th:nth-child(7), .table td:nth-child(7) {
+            width: 8%;
+        }
+        
+        .table th:nth-child(8), .table td:nth-child(8) {
+            width: 12%;
+        }
+        
+        .table th:nth-child(9), .table td:nth-child(9) {
+            width: 10%;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin: 2px;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            min-width: 80px;
+            color: white;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        /* Info Button (Blue) */
+        .btn-info {
+            background-color: #316542;
+        }
+        
+        .btn-info:hover {
+            background-color: #2563eb;
+        }
+        
+        /* Success Button (Green) */
+        .btn-success {
+            background-color: #10b981;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        /* Danger Button (Red) */
+        .btn-danger {
+            background-color: #ef4444;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .admin-main-content {
+                padding: 15px;
+            }
+            
+            .search-form {
+                max-width: 100%;
+            }
+            
+            .table th, .table td {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .table th:nth-child(n), .table td:nth-child(n) {
+                width: auto;
+            }
+        }
+
+
+        .pagination-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.pagination {
+    list-style: none;
+    padding: 0;
+    display: inline-flex;
+    gap: 8px;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination li a {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: #d4edda; /* light green background */
+    color: #155724; /* green text */
+    text-decoration: none;
+    border: 1px solid #c3e6cb;
+    transition: 0.3s ease;
+}
+
+.pagination li a:hover {
+    background-color: #28a745; /* dark green on hover */
+    color: #fff;
+    border-color: #28a745;
+}
+
+.pagination li.active a {
+    background-color: #28a745;
+    color: #fff;
+    border-color: #28a745;
+}
+
+    </style>
+</head>
+
+<div class="dashboard-container">
+    <!-- Sidebar is included from your header partial -->
+    
+    <main class="admin-main-content">
+        <!-- Header Section -->
+        <div class="content-header">
+            <h1 class="content-title">Products</h1>
+        </div>
+        
+        <!-- Enhanced Search Section -->
+        <div class="search-container">
+            <form action="" method="get" class="search-form">
+                <input type="text" class="search-input" placeholder="Search products or brands..." name="search">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+        </div>
+        
+        <!-- Improved Table Section -->
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product name</th>
+                        <th>Brand</th>
+                        <th>Category</th>
+                        <th>Sale Price</th>
+                        <th>Offer Price</th>
+                        <th>Offer</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%for(let i=data.length-1;i>=0;i--){%>
+                    <tr>
+                        <td><%=data[i].productName%></td>
+                        <td><%=data[i].brand%></td>
+                        <td><%=data[i].category.name%></td>
+                        <td>₹<%=data[i].salePrice%></td>
+                        <td>
+                            <%if(locals.data[i].productOffer){%>
+                                <%= data[i].productOffer%>
+                                <%}else{%>
+                                    0%
+                                    <%}%>
+                            <!-- ₹<%=data[i].offerPrice || '-'%></td> -->
+                        <td>
+                            <%if(locals.data[i].productOffer===0){%>
+                            <a href="#" class="btn btn-info" onclick="addOffer('<%=data[i]._id%>')">Add Offer</a>
+                            <%}else{%>
+                            <a href="#" class="btn btn-info mt-2" onclick="removeOffer('<%=data[i]._id%>')">Remove</a>
+                            <%}%>
+                        </td>
+                        <td><%=data[i].quantity || '0'%></td>
+                        <td>
+                            <%if(data[i].isBlocked===false){%>
+                            <a href="/admin/blockProduct?id=<%=data[i]._id%>" class="btn btn-danger btn-block">Block</a>
+                            <%}else{%>
+                            <a href="/admin/unblockProduct?id=<%=data[i]._id%>" class="btn btn-success btn-block mt-2">Unblock</a>
+                        <%}%>
+                        </td>
+                        <td>
+                            <a href="/admin/editProduct?id=<%=data[i]._id%>" class="btn btn-info btn-block">Edit</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination Section -->
+        <div class="pagination-container">
+            <ul class="pagination">
+                <% if (currentPage> 1) { %>
+                    <li><a href="?page=<%= currentPage - 1 %>">Previous</a></li>
+                    <% } %>
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <li class="<%= currentPage === i ? 'active' : '' %>">
+                                <a href="?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <li><a href="?page=<%= currentPage + 1 %>">Next</a></li>
+                                    <% } %>
+            </ul>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+<script>
+
+    async function addOffer(productId){
+        
+        const {value:amount}=await Swal.fire({
+
+            title:"Offer in percentage",
+            input:'number',
+            inputLabel:'percentage',
+            inputPlaceholder:'%'
+
+        })
+
+        $.ajax({
+
+            url:"/admin/addProductOffer",
+            method:'post',
+            data:{
+                percentage:amount,
+                productId:productId
+            },
+            success:(response)=>{
+                if(response.status===true){
+                    location:reload()
+                    Swal.fire('Offer added','The offer has been removed','success')
+                }else{
+                    alert("failed")
+                }
+            }
+        })
+
+    }
+
+
+    function removeOffer(productId){
+        try {
+           Swal.fire({
+            title:'remove offer',
+            text:'Are you sure you want to remove this offer',
+            icon:'Warning',
+            showCancelButton:true,
+            confirmButtonColor:'#3085d6',
+            cancelButtonColor:'d33',
+            confirmButtonText:'Yes,remove it?',
+            timer:5000,
+            timeProgressBar:true,
+           }).then(async(result)=>{
+            if(result.isConfirmed){
+                $.ajax({
+
+
+                    url:"/admin/removeProductOffer",
+                    method:"post",
+                    data:{
+                        productId:productId
+                    },
+                    success:(response)=>{
+                        if(response.status===true){
+                            Swal.fire('Removed','The offer has been removed','success');
+                            location.reload()
+                        }else if(response.status===false){
+                            Swal.fire('failed');
+
+                        }else{
+                            alert('Failed')
+                        }
+                    }
+                })
+            }
+           }) 
+        } catch (error) {
+            console.error(error);
+        }
+    }
+</script>

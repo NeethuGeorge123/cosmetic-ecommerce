@@ -21,16 +21,26 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .forgot-password-link{
+            font-size: .875rem;
+            color: rgb(3, 116, 255);
+            text-decoration: none;
+
+        }
+        .forgot-password-link:hover{
+            color: blue;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="login-container">
             <h2 class="login-header">Login to Leaf</h2>
-            
-            <% if (error) { %>
-                <div class="alert alert-danger"><%= error %></div>
+            <% if (message) { %>
+                <div class="alert alert-danger"><%= message %></div>
             <% } %>
+
             
             <form action="/login" method="POST">
                 <div class="mb-3">
@@ -41,9 +51,18 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" name="password" id="password" class="form-control" required>
                 </div>
+                <%if(locals.message && message.length>0){%>
+                    <div  class="alert alert-danger text-center">
+
+                        <% message%>
+                    </div>
+                <%} %>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
-            <p class="text-center mt-3">Don't have an account? <a href="/register">Register</a></p>
+            <p class="text-center mt-3">Don't have an account? <a href="/signup">Register</a></p>
+            <div class="justify-content-center form-group d-flex">
+             <a href="/forgot-password" class="forgot-password-link ms-auto">Forgot Password</a>
+        </div>
         </div>
     </div>
 </body>
