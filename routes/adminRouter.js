@@ -6,6 +6,9 @@ const categoryController=require("../controllers/admin/categoryController")
 const brandController=require("../controllers/admin/brandController")
 const productController=require("../controllers/admin/productController")
 const bannerController=require("../controllers/admin/bannerController")
+const adminOrderController=require("../controllers/admin/adminOrderController")
+const couponController=require("../controllers/admin/couponController")
+//const walletController=require("../controllers/admin/walletController")
 
 const {userAuth,adminAuth}=require("../middlewares/auth")
 //const { upload } = require("../helpers/multer");
@@ -45,7 +48,10 @@ console.log("uploads",uploads)
 router.get("/pageerror",adminController.pageerror)
 router.get("/login",adminController.loadLogin);
 router.post("/login",adminController.login);
-router.get("/dashboard",adminAuth,adminController.loadDashboard)
+router.get("/dashboard",adminAuth,adminController.getAdminDashboard)
+router.get('/dashboardAnalytics', adminAuth, adminController.getDashboardAnalytics);
+router.get('/generateLedger', adminAuth, adminController.generateLedgerBook);
+
 router.get("/logout",adminController.logout)
 //customer
 router.get("/users",adminAuth,customerController.customerInfo)
@@ -81,13 +87,51 @@ router.get("/blockProduct",adminAuth,productController.blockProduct);
 router.get("/unblockProduct",adminAuth,productController.unblockProduct);
 router.get("/editProduct",adminAuth,productController.getEditProduct)
 router.post("/editProduct/:id",adminAuth,uploads.array("images",3),productController.editProduct)
-router.post("/deleteImage",adminAuth,productController.deleteSingleImage)
+// router.post("/deleteImage",adminAuth,productController.deleteSingleImage)
+
+
+
+router.post('/deleteImage', adminAuth,productController.deleteImage);
+
+// Route for deleting temporary (newly uploaded) images
+router.post('/deleteTempImage',adminAuth, productController.deleteTempImage);
+
 
 //Banner Management
 router.get("/banner",adminAuth,bannerController.getBannerPage)
 router.get("/addBanner",adminAuth,bannerController.getAddBannerPage)
 router.post("/addBanner",adminAuth,uploads.single("images"),bannerController.addBanner)
 router.get("/deleteBanner",adminAuth,bannerController.deleteBanner);
+
+
+
+//Order Management
+
+router.get("/orders",adminAuth, adminOrderController.getOrders);
+router.put("/updateStatus",adminAuth,adminOrderController.updateStatus)
+router.put("/orderCancel",adminAuth,adminOrderController.cancelOrder)
+router.get("/adminOrders/:orderId", adminAuth, adminOrderController.getOrderDetails);
+router.put("/handleReturn",adminAuth,adminOrderController.handleReturn)
+ router.put("/updateReturnStatus",adminAuth,adminOrderController.updateReturnStatus)
+ router.get("/sales",adminAuth,adminOrderController.loadSales)
+ router.get("/salesReport",adminAuth,adminOrderController.loadSalesReport)
+
+
+
+
+//stock
+
+router.get('/inventory', adminAuth,productController.loadInventoryPage);
+router.patch('/inventory', adminAuth,productController.updateInventoryy);
+
+
+
+//coupon
+router.get("/coupon",adminAuth,couponController.loadCoupon)
+router.post("/coupon",adminAuth,couponController.addCoupon)
+router.put("/coupon",adminAuth,couponController.editCoupon)
+router.delete("/coupon",adminAuth,couponController.deleteCoupon)
+
 
 
 

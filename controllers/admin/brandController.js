@@ -50,28 +50,6 @@ const addBrand = async (req, res) => {
 };
 
 
-//   try {
-//     const brand = req.body.name;
-//     const findBrand = await Brand.findOne({ brand});
-//     console.log("FINDBRAND",findBrand)
-
-//     if (!findBrand) {
-//       // Check if file exists
-//       if (!req.file) {
-//         return res.status(400).send("No image uploaded");
-//       }
-
-//       const image = req.file.filename;
-//       const newBrand = new Brand({
-//         brandName: brand,
-//         brandImage: [image], // Notice I'm using an array since yo
-//       });
-//     } else {
-//       res.status(400).send("Brand already exists");
-//     }
-//   } catch (error) {
-//     res.redirect("/pageerror");
-//   }
 
 const blockBrand = async (req, res) => {
   try {

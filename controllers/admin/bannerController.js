@@ -15,7 +15,7 @@ const getBannerPage=async(req,res)=>{
 
 const getAddBannerPage = async (req,res)=>{
 try {
-    // const findBanner=await Banner.find({});
+    
     res.render("admin/addBanner");
 } catch (error) {
     res.redirect("/pageerror")

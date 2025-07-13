@@ -1,0 +1,362 @@
+<%- include("../partials/admin/header") %>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  .quantity-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .quantity-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 200px;
+  }
+  .quantity-input {
+    width: 80px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 2px;
+    display: none;
+    min-height: 16px;
+  }
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 250px;
+  }
+  
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    padding: 0 15px;
+  }
+  
+  @media (min-width: 768px) {
+    .search-container {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+  
+  .search-form {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .search-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  @media (max-width: 767px) {
+    .card-header h2 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    
+    .quantity-wrapper {
+      min-width: auto;
+      width: 100%;
+    }
+    
+    .quantity-container {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .quantity-input {
+      width: calc(50% - 10px);
+    }
+    
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: auto;
+    }
+    
+    .product-img {
+      height: 60px !important;
+      width: 60px !important;
+    }
+    
+    /* Improve mobile table layout */
+    .table thead {
+      display: none;
+    }
+    
+    .table tbody tr {
+      display: block;
+      border: 1px solid #dee2e6;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+    }
+    
+    .table tbody td {
+      display: flex;
+      padding: 0.5rem 0.25rem;
+      text-align: right;
+      border-top: none;
+    }
+    
+    .table tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      margin-right: auto;
+      text-align: left;
+    }
+    
+    .table tbody td:first-child {
+      display: flex;
+      justify-content: center;
+      padding-top: 1rem;
+    }
+    
+    .table tbody td:first-child::before {
+      display: none;
+    }
+    
+    .table tbody td:last-child {
+      border-bottom: none;
+    }
+    .pagination-container {
+    margin-top: 50px;
+    display: flex;
+  justify-content: center;
+  }
+  }
+</style>
+
+<div class="main-content container-fluid">
+  <div class="card mt-4">
+    <div class="card-header">
+      <h2>Inventory Management</h2>
+    </div>
+    <div class="search-container">
+      <form action="" method="get" class="search-form mt-3">
+        <div class="input-group border border-1 rounded-pill overflow-hidden">
+            <input
+            type="text"
+            id="searchInput"
+            class="form-control border-0"
+            placeholder="<%= typeof searched !== 'undefined' && searched.length > 0 ? searched : 'Search for products' %>"
+            name="search"
+            value="<%= typeof searched !== 'undefined' ? searched : '' %>"
+            />
+          <button class="btn border-0 bg-white" type="submit">
+            <i class="fas fa-search text-primary"></i>
+          </button>
+        </div>
+      </form>
+      <div class="search-actions mt-3">
+        <a
+          href="/admin/inventory"
+          id="clearSearch"
+          class="btn btn-secondary rounded-pill d-none"
+        >
+          <i class="fas fa-times me-1"></i>
+          Clear
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="table-dark">
+            <tr>
+              <th>Product Image</th>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Update Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% product.forEach(product => { %>
+            <tr>
+              <td data-label="">
+                <img
+                  src="/uploads/re-image/<%= product.productImage[0] %>"
+                  alt="Product Image"
+                  class="product-img"
+                  style="height: 80px; width: 80px"
+                />
+              </td>
+              <td data-label="Product Name"><%= product.productName %></td>
+              <td data-label="Category"><%= product.category?.name %></td>
+              <td data-label="Current Quantity" class="current-quantity"><%= product.quantity %></td>
+              <td data-label="Update Quantity">
+                <form data-valid="true">
+                  <div class="quantity-wrapper">
+                    <div class="quantity-container">
+                      <input
+                        type="number"
+                        name="quantity"
+                        min="0"
+                        step="1"
+                        value="<%= product.quantity %>"
+                        class="quantity-input"
+                        oninput="validateQuantity(this)"
+                      />
+                      <button type="button" class="btn btn-primary" onclick="updateInventory(this,'<%= product._id%>')">
+                        Update
+                      </button>
+                    </div>
+                    <span class="error-message"></span>
+                  </div>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+<div class="row">
+  <div class="col-12 d-flex justify-content-center mt-4">
+    <nav aria-label="Page navigation">
+      <ul class="pagination pagination-sm flex-wrap">
+
+        <% if (currentPage > 1) { %>
+          <li class="page-item">
+            <a href="?page=<%= currentPage - 1 %>" class="page-link">&laquo; Previous</a>
+          </li>
+        <% } %>
+
+        <li class="page-item <%= currentPage === 1 ? 'active' : '' %>">
+          <a class="page-link" href="?page=1">1</a>
+        </li>
+
+        <% if (currentPage > 2 && totalPages > 3) { %>
+          <li class="page-item disabled"><span class="page-link">...</span></li>
+        <% } %>
+
+        <% if (currentPage !== 1 && currentPage !== totalPages) { %>
+          <li class="page-item active"><span class="page-link"><%= currentPage %></span></li>
+        <% } else if (totalPages > 1 && currentPage !== 2) { %>
+          <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+        <% } else if (totalPages > 1) { %>
+          <li class="page-item active"><span class="page-link">2</span></li>
+        <% } %>
+
+        <% if (currentPage < totalPages - 1 && totalPages > 3) { %>
+          <li class="page-item disabled"><span class="page-link">...</span></li>
+        <% } %>
+
+        <% if (totalPages > 1) { %>
+          <li class="page-item <%= currentPage === totalPages ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= totalPages %>"><%= totalPages %></a>
+          </li>
+        <% } %>
+
+        <% if (currentPage < totalPages) { %>
+          <li class="page-item">
+            <a href="?page=<%= currentPage + 1 %>" class="page-link">Next &raquo;</a>
+          </li>
+        <% } %>
+
+      </ul>
+    </nav>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<script>
+  function validateQuantity(input) {
+    const value = input.value;
+    const wrapper = input.closest(".quantity-wrapper");
+    const errorElement = wrapper.querySelector(".error-message");
+    const form = input.closest("form");
+    if (!Number.isInteger(Number(value)) || value < 0 || value === "") {
+      errorElement.textContent = "Please enter a valid whole number!";
+      errorElement.style.display = "block";
+      input.classList.add("is-invalid");
+      form.dataset.valid = "false";
+    } else {
+      errorElement.textContent = "";
+      errorElement.style.display = "none";
+      input.classList.remove("is-invalid");
+      form.dataset.valid = "true";
+    }
+  }
+  console.log("Bforeeee")
+
+  function updateInventory(button, productId) {
+
+    console.log("Update button clicked for product ID:", productId);
+    const input = button.closest(".quantity-container").querySelector(".quantity-input");
+    const value = input.value;
+    const currentQuantity = button.closest("tr").querySelector(".current-quantity").textContent;
+
+    if (input.closest("form").dataset.valid === "false") {
+      return;
+    }
+
+    if (parseInt(value) === parseInt(currentQuantity)) {
+      Swal.fire("Info", "Quantity is the same as current stock. No changes made.", "info");
+      return;
+    }
+console.log("Afterrrr")
+    $.ajax({
+      url: `/admin/inventory?id=${productId}`,
+      type: "PATCH",
+      contentType: "application/json",
+      data: JSON.stringify({ quantity: value }),
+      success: function (data) {
+        if (data.success) {
+          Swal.fire("Success", `Quantity updated to ${value}`, "success").then(() => {
+            location.reload();
+          });
+        } else {
+          Swal.fire("Error", data.error || "Failed to update quantity", "error");
+        }
+      },
+      error: function () {
+        Swal.fire("Error", "An error occurred. Try again.", "error");
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+        const clearButton = document.getElementById("clearSearch");
+
+      
+        if (window.location.search.includes("search")) {
+            clearButton.classList.remove("d-none");  
+        }
+    });
+</script>

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,25 +6,237 @@
     <title>E-commerce Admin Dashboard</title>
     <link rel="stylesheet" href="/css/admin-style.css">
     <link rel="stylesheet" href="/css/edit-category.css">
+    <style>
+        .content {
+            padding: 0.5rem 1.5rem 1.5rem; /* Match previous files */
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+        }
 
+        .edit-category-container {
+            width: 100%;
+            max-width: 1200px; /* Center content */
+            margin: 0 auto;
+        }
+
+        .edit-category-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .edit-category-form {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 800px; /* Consistent with categoryList.ejs */
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center inputs and labels */
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            max-width: 400px; /* Consistent with previous files */
+            padding: 0.625rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            display: none;
+            margin-top: 0.25rem;
+            text-align: center;
+        }
+
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 1rem auto; /* Center button */
+        }
+
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .content {
+                padding: 0.5rem 1rem 1rem;
+            }
+            .edit-category-container {
+                max-width: 100%;
+            }
+            .edit-category-form {
+                max-width: 100%;
+                padding: 1rem;
+            }
+            .form-group input,
+            .form-group textarea {
+                max-width: 100%; /* Full width on smaller screens */
+            }
+            .form-group {
+                align-items: center; /* Maintain centering */
+            }
+            .btn-submit {
+                padding: 0.3125rem 0.625rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .edit-category-container h2 {
+                font-size: 1.25rem;
+            }
+            .form-group input,
+            .form-group textarea {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+            }
+            .error-message {
+                font-size: 0.75rem;
+            }
+            .btn-submit {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.6875rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .content {
+                padding: 0.5rem;
+            }
+            .edit-category-form {
+                padding: 0.75rem;
+            }
+            .form-group input,
+            .form-group textarea {
+                font-size: 0.75rem;
+            }
+            .error-message {
+                font-size: 0.6875rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <%- include('../partials/admin/header') %>
-<div class="edit-category-container">
-    <h2>Edit Category</h2>
-    <form action="/admin/editCategory/<%=category._id%>" method="POST" class="edit-category-form">
-        <div class="form-group">
-            <label for="name">Category Name</label>
-            <input type="text" id="name" value="<%= category.name%>" name="categoryName" placeholder="Enter category name" required>
-        </div>
+    <div class="content">
+        <div class="edit-category-container">
+            <h2>Edit Category</h2>
+            <form action="/admin/editCategory/<%=category._id%>" method="POST" class="edit-category-form" onsubmit="return validateForm(event)">
+                <div class="form-group">
+                    <label for="name">Category Name</label>
+                    <input type="text" id="name" value="<%= category.name%>" name="categoryName" placeholder="Enter category name" required>
+                    <span class="error-message" id="name-error"></span>
+                </div>
 
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description"  name="description" placeholder="Enter category description" required><%=category.description%></textarea>
-        </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter category description" required><%= category.description%></textarea>
+                    <span class="error-message" id="description-error"></span>
+                </div>
 
-        <button type="submit" class="btn-submit">Update Category</button>
-    </form>
-</div>
+                <button type="submit" class="btn-submit">Update Category</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            clearErrorMessages();
+
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            let isValid = true;
+
+            // Category Name validations
+            if (name.trim() === "") {
+                displayErrorMessage("name-error", "Category name cannot be empty");
+                isValid = false;
+            } else if (/^\s*$/.test(name)) {
+                displayErrorMessage("name-error", "Category name cannot contain only spaces");
+                isValid = false;
+            } else if (/^\d+$/.test(name.trim())) {
+                displayErrorMessage("name-error", "Category name cannot contain only numbers");
+                isValid = false;
+            } else if (name.trim().length < 3) {
+                displayErrorMessage("name-error", "Category name must be at least 3 characters long");
+                isValid = false;
+            }
+
+            // Description validations
+            if (description.trim() === "") {
+                displayErrorMessage("description-error", "Description cannot be empty");
+                isValid = false;
+            } else if (/^\s*$/.test(description)) {
+                displayErrorMessage("description-error", "Description cannot contain only spaces");
+                isValid = false;
+            } else if (/^\d+$/.test(description.trim())) {
+                displayErrorMessage("description-error", "Description cannot contain only numbers");
+                isValid = false;
+            } else if (description.trim().length < 4) {
+                displayErrorMessage("description-error", "Description must be at least 4 characters long");
+                isValid = false;
+            }
+
+            if (isValid) {
+                event.target.submit(); // Submit form if valid
+            }
+            return isValid;
+        }
+
+        function displayErrorMessage(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = "block";
+        }
+
+        function clearErrorMessages() {
+            const errorElements = document.getElementsByClassName("error-message");
+            Array.from(errorElements).forEach((element) => {
+                element.innerText = "";
+                element.style.display = "none";
+            });
+        }
+    </script>
 </body>
 </html>

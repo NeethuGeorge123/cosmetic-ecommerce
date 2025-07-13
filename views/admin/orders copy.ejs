@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-commerce Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/admin-style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    /* Your existing styles - unchanged */
+
+    body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Assuming your sidebar is 250px wide */
+.container {
+  margin-left: 250px;
+  padding: 30px 20px;
+  box-sizing: border-box;
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+/* Filter Form */
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.filter-form input,
+.filter-form select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 180px;
+}
+
+.filter-form button,
+.filter-form .clear-btn {
+  padding: 10px 16px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  text-decoration: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.filter-form .clear-btn {
+  background-color: #e74c3c;
+}
+
+.filter-form button:hover,
+.filter-form .clear-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.table thead {
+  background-color: #f4f4f4;
+}
+
+.table th,
+.table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.table td a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+.table td a:hover {
+  text-decoration: underline;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.pagination a {
+  padding: 8px 14px;
+  margin: 3px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.pagination a.active {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination a:hover {
+  background-color: #ddd;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table, .table tbody, .table tr, .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    padding: 10px;
+  }
+
+  .table td {
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+    font-size: 14px;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    font-weight: bold;
+    color: #555;
+    text-align: left;
+  }
+}
+
+
+
+
+  </style>
+</head>
+<body>
+  <%- include('../partials/admin/header') %>
+
+  <div class="container">
+    <h2>Orders</h2>
+
+    <form method="GET" class="filter-form">
+      <input type="text" name="search" value="<%= search %>" placeholder="Search by Order ID" />
+      <select name="sort">
+        <option value="desc" <%= sort === 'desc' ? 'selected' : '' %>>Newest</option>
+        <option value="asc" <%= sort === 'asc' ? 'selected' : '' %>>Oldest</option>
+      </select>
+      <button type="submit">Filter</button>
+      <a href="/admin/orders" class="clear-btn">Clear</a>
+    </form>
+
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>View</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(order => { %>
+            <tr>
+              <td data-label="Order ID"><%= order.orderId %></td>
+              <td data-label="User"><%= order.userId?.name || "N/A" %></td>
+              <td data-label="Date"><%= order.createdOn.toDateString() %></td>
+              <td data-label="Status"><%= order.status %></td>
+              <td data-label="View"><a href="/admin/order/<%= order._id %>">View</a></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>&search=<%= search %>&sort=<%= sort %>" class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>

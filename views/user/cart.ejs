@@ -1,0 +1,664 @@
+
+
+<%- include("../partials/user/header") %>
+    <style>
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #ff006e;
+            --accent-color: #ffbe0b;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --border-radius: 10px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+        }
+        
+        .breadcrumb-wrap {
+            background-color: var(--light-bg);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .breadcrumb {
+            margin-bottom: 0;
+        }
+        
+        .no-style {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .cart-section {
+            padding: 50px 0;
+        }
+        
+        .card {
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .card-title {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            border-top: none;
+        }
+        
+        .product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .product-name a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .product-name a:hover {
+            color: var(--primary-color);
+        }
+        
+        .product-meta {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0 8px;
+            padding: 5px;
+        }
+        
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background-color: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quantity-btn:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .quantity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .price-tag {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .price-per-item {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+        
+        .remove-btn {
+            color: #dc3545;
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .remove-btn:hover {
+            color: #b02a37;
+            transform: scale(1.15);
+        }
+        
+        .summary-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+        
+        .summary-title {
+            font-weight: 600;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            color: var(--primary-color);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .summary-label {
+            color: #6c757d;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+        
+        .total-value {
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+        }
+        
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: #333;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .empty-cart i {
+            font-size: 4rem;
+            color: #d1d1d1;
+            margin-bottom: 20px;
+        }
+        
+        .continue-shopping {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        
+        .continue-shopping:hover {
+            background-color: #2a75ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: white;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 991px) {
+            .product-column {
+                width: 100%;
+            }
+            
+            .summary-column {
+                width: 100%;
+                margin-top: 30px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .table-responsive {
+                border: none;
+            }
+            
+            .mobile-cart-item {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .mobile-cart-image {
+                margin-bottom: 15px;
+            }
+
+            .mobile-cart-details {
+                margin-bottom: 15px;
+            }
+            
+            .quantity-row {
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+
+
+    <main class="main">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-wrap">
+            <div class="container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/" class="no-style">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Cart</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Cart Content -->
+        <section class="cart-section">
+            <div class="container">
+                <div class="row">
+                    <!-- Cart Items -->
+                    <div class="col-lg-8 product-column">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Shopping Cart</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <% if (data.length > 0) { %>
+                                    <!-- Desktop View -->
+                                    <div class="table-responsive d-none d-md-block">
+                                        <table class="table align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Product</th>
+                                                    <th scope="col">Price</th>
+                                                    <th scope="col">Quantity</th>
+                                                    <th scope="col" class="text-center">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% var x = 0 %>
+                                                <% for (let i = 0; i < data.length; i++) { %>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="d-flex align-items-center">
+                                                                <img src="/uploads/re-image/<%= data[i].productDetails.productImage[0] %>" 
+                                                                    alt="<%= data[i].productDetails.productName %>" 
+                                                                    class="product-img me-3">
+                                                                <div>
+                                                                    <h6 class="product-name mb-1">
+                                                                        <a href="/details?id=<%=data[i].productDetails._id%>" class="no-style">
+                                                                            <%= data[i].productDetails.productName %>
+                                                                        </a>
+                                                                    </h6>
+                                                                    <div class="product-meta">
+                                                                        <%= data[i].productDetails.brand%> | 
+                                                                        <%= data[i].productDetails.category.name %>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="price-tag">₹<span id="subTotal<%= data[i].productDetails.id %>">
+                                                                <%= data[i].productDetails.salePrice * data[i].quantity %>
+                                                            </span></div>
+                                                            <div class="price-per-item">₹<%= data[i].productDetails.salePrice %> / item</div>
+                                                        </td>
+                                                        <% x += data[i].productDetails.salePrice * data[i].quantity %>
+                                                        <td>
+                                                            <% if(data[i].productDetails.quantity > 0) { %>
+                                                                <div class="quantity-control">
+                                                                    <button id="decrement<%= data[i].productDetails.id %>"
+                                                                        class="quantity-btn"
+                                                                        onclick="changeQuantity('<%= data[i].productDetails._id %>', -1, '<%= data[i].productDetails.salePrice %>', '<%= data[i].productDetails.id %>', '<%= data[i].productDetails.quantity %>')"
+                                                                        <% if (data[i].quantity === 1) { %> disabled <% } %>>
+                                                                        <i class="fas fa-minus"></i>
+                                                                    </button>
+                                                                    <input class="quantity-input"
+                                                                        id="cartProductQuantity<%= data[i].productDetails.id %>"
+                                                                        value="<%= data[i].quantity %>" type="text" readonly>
+                                                                    <button id="increment<%= data[i].productDetails.id %>"
+                                                                        class="quantity-btn"
+                                                                        onclick="changeQuantity('<%= data[i].productDetails._id %>', 1, '<%= data[i].productDetails.salePrice %>', '<%= data[i].productDetails.id %>', '<%= data[i].productDetails.quantity %>')">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                            <% } else { %>
+                                                                <span class="badge bg-danger">Out of Stock</span>
+                                                            <% } %>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button class="remove-btn" onclick="confirmRemove('<%= data[i].productDetails._id %>')">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- Mobile View -->
+                                    <div class="d-md-none p-3">
+                                        <% for (let i = 0; i < data.length; i++) { %>
+                                            <div class="mobile-cart-item">
+                                                <div class="d-flex align-items-center mobile-cart-image">
+                                                    <img src="/uploads/re-image/<%= data[i].productDetails.productImage[0] %>" 
+                                                        alt="<%= data[i].productDetails.productName %>" 
+                                                        class="product-img me-3">
+                                                    <div class="mobile-cart-details">
+                                                        <h6 class="product-name mb-1">
+                                                            <a href="/details?id=<%=data[i].productDetails._id%>" class="no-style">
+                                                                <%= data[i].productDetails.productName %>
+                                                            </a>
+                                                        </h6>
+                                                        <div class="product-meta">
+                                                            <%= data[i].productDetails.brand %> | 
+                                                            <%= data[i].productDetails.category.name %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <div class="price-tag">₹<span id="mobileSubTotal<%= data[i].productDetails.id %>">
+                                                        <%= data[i].productDetails.salePrice * data[i].quantity %>
+                                                    </span></div>
+                                                    <div class="price-per-item">₹<%= data[i].productDetails.salePrice %> / item</div>
+                                                </div>
+                                                
+                                                <div class="d-flex justify-content-between quantity-row">
+                                                    <% if(data[i].productDetails.quantity > 0) { %>
+                                                        <div class="quantity-control">
+                                                            <button id="mobileDec<%= data[i].productDetails.id %>"
+                                                                class="quantity-btn"
+                                                                onclick="changeQuantity('<%= data[i].productDetails._id %>', -1, '<%= data[i].productDetails.salePrice %>', '<%= data[i].productDetails.id %>', '<%= data[i].productDetails.quantity %>')"
+                                                                <% if (data[i].quantity === 1) { %> disabled <% } %>>
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                            <input class="quantity-input"
+                                                                id="mobileCartQuantity<%= data[i].productDetails.id %>"
+                                                                value="<%= data[i].quantity %>" type="text" readonly>
+                                                            <button id="mobileInc<%= data[i].productDetails.id %>"
+                                                                class="quantity-btn"
+                                                                onclick="changeQuantity('<%= data[i].productDetails._id %>', 1, '<%= data[i].productDetails.salePrice %>', '<%= data[i].productDetails.id %>', '<%= data[i].productDetails.quantity %>')">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    <% } else { %>
+                                                        <span class="badge bg-danger">Out of Stock</span>
+                                                    <% } %>
+                                                    
+                                                    <button class="remove-btn" onclick="confirmRemove('<%= data[i].productDetails._id %>')">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                
+                                <% } else { %>
+                                    <!-- Empty Cart -->
+                                    <div class="empty-cart">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <h4>Your cart is empty</h4>
+                                        <p>Looks like you haven't added any products to your cart yet.</p>
+                                        <a href="/shopnow" class="continue-shopping">
+                                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                                        </a>
+                                    </div>
+                                <% } %>
+                                <input type="hidden" id="totalabc" value="<%= x %>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="col-lg-4 summary-column">
+                        <div class="summary-card">
+                            <h5 class="summary-title">Price Details</h5>
+                            
+                            <div class="summary-row">
+                                <span class="summary-label">Total</span>
+                                <span class="summary-value total-value">₹<span id="total"><%= grandTotal %></span></span>
+                            </div>
+                            
+                            <% if (data.length > 0) { %>
+                                <a href="/checkout?userId=<%= user._id %>" class="checkout-btn">
+                                    <i class="fas fa-shopping-bag me-2"></i>Proceed to Checkout
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <%- include("../partials/user/footer") %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+ function changeQuantity(productId, count, salePrice, productElementId, maxStock) {
+    let quantityInput = $(`#cartProductQuantity${productElementId}`);
+    let mobileQuantityInput = $(`#mobileCartQuantity${productElementId}`);
+    let decrementButton = $(`#decrement${productElementId}`);
+    let incrementButton = $(`#increment${productElementId}`);
+    let mobileDecButton = $(`#mobileDec${productElementId}`);
+    let mobileIncButton = $(`#mobileInc${productElementId}`);
+
+    let currentQuantity = parseInt(quantityInput.val()) || 0;
+    let newQuantity = currentQuantity + count;
+    maxStock = parseInt(maxStock);
+
+    if (newQuantity > maxStock) {
+        Swal.fire({
+            icon: "warning",
+            title: "Stock limit reached",
+            text: `We only have ${maxStock} items in stock.`,
+            showConfirmButton: true
+        });
+        return;
+    }
+
+    if (newQuantity > 5) {
+        Swal.fire({
+            icon: "warning",
+            title: "Purchase Limit Reached",
+            text: "You can only buy a maximum of 5 products.",
+            showConfirmButton: true
+        });
+        return;
+    }
+
+    if (newQuantity < 1) {
+        newQuantity = 1;
+    }
+
+    // Update quantity inputs immediately
+    quantityInput.val(newQuantity);
+    if (mobileQuantityInput.length) {
+        mobileQuantityInput.val(newQuantity);
+    }
+
+    // Enable or disable decrement buttons immediately
+    decrementButton.prop("disabled", newQuantity === 1);
+    mobileDecButton.prop("disabled", newQuantity === 1);
+
+    $.ajax({
+        url: "/cart",
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+            productId: productId,
+            count: count,
+            currentQuantity: currentQuantity
+        }),
+        success: function(response) {
+            if (response.success) {
+                let newSubtotal = salePrice * newQuantity;
+                $(`#subTotal${productElementId}`).text(newSubtotal.toFixed(2));
+                $(`#mobileSubTotal${productElementId}`).text(newSubtotal.toFixed(2));
+
+                $("#total").text(response.grandTotal.toFixed(2));
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: response.message,
+                });
+            }
+        },
+        error: function() {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong! Try again.",
+            });
+        }
+    });
+}
+
+
+
+        async function confirmRemove(productId) {
+    const result = await Swal.fire({
+        title: "Remove Item?",
+        text: "This product will be removed from your cart",
+        icon: "warning",
+        position: 'center',
+        toast: false,
+        backdrop: true,
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, remove it!"
+    });
+
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch(`/cart?productId=${productId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                await Swal.fire({
+                    title: "Removed!",
+                    text: data.message,
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                const productRow = $(`tr:has(button[onclick="confirmRemove('${productId}')"]):first`);
+                if (productRow.length) {
+                    productRow.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }
+                const mobileProductRow = $(`.mobile-cart-item:has(button[onclick="confirmRemove('${productId}')"]):first`);
+                if (mobileProductRow.length) {
+                    mobileProductRow.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }
+                
+
+                $("#total").text(data.grandTotal || 0);
+                
+
+                if ($('tbody tr').length <= 1) { 
+                    setTimeout(function() {
+                        if ($('tbody tr').length === 0) {
+                            showEmptyCart();
+                        }
+                    }, 350);
+                }
+            } else {
+                Swal.fire("Error", data.error || "Failed to remove product.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            Swal.fire("Something went wrong. Please try again.");
+        }
+    }
+}
+
+
+function showEmptyCart() {
+    const emptyCartHtml = `
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h4>Your cart is empty</h4>
+            <p>Looks like you haven't added any products to your cart yet.</p>
+            <a href="/shop" class="continue-shopping">
+                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+            </a>
+        </div>
+    `;
+    
+    $('.table-responsive').html(emptyCartHtml);
+    $('.d-md-none.p-3').html(emptyCartHtml);
+    
+    $('.checkout-btn').hide();
+}
+    </script>
+</body>
+</html>

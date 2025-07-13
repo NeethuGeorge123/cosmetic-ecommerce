@@ -1,7 +1,7 @@
 const Product = require("../../models/productSchema");
 const Category = require("../../models/categorySchema");
 const Brand = require("../../models/brandSchema");
-const User = require("../../models/userSchema");
+const User = require("../../models/userSignupSchema");
 const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
@@ -26,37 +26,63 @@ const addProducts = async (req, res) => {
     const productExists = await Product.findOne({
       productName: products.productName,
     });
-
+    console.log("products EXISTS",productExists)
     if (!productExists) {
       const images = [];
-
+      
       if (req.files && req.files.length > 0) {
+        
         for (let i = 0; i < req.files.length; i++) {
+
           const originalImagePath = req.files[i].path;
+
+          const resizedImageName = "resized-" + req.files[i].filename;//newly added
 
           const resizedImagePath = path.join(
             "public",
             "uploads",
-            "product-images",
-            req.files[i].filename
+            "re-image",
+            resizedImageName
+           // req.files[i].filename
           );
-          await sharp(originalImagePath)
+          
+           await sharp(originalImagePath)
             .resize({ width: 440, height: 440 })
-            .toFile(resizedImagePath);
-          images.push(req.files[i].filename);
+             .toFile(resizedImagePath);
+
+             images.push(resizedImageName)
+           
+          //images.push(req.files[i].filename);
+      
         }
+        
       }
+      
 
-      const categoryId = await Category.findOne({ name: products.category });
+      //const categoryId = await Category.findOne({ name: products.category });
 
-      if (!categoryId) {
+      const categoryData = await Category.findOne({ name: products.category });
+
+      if (!categoryData) {
         return res.status(400).json("Invalid category name");
       }
+
+      const regularPrice = parseFloat(products.regularPrice);
+
+    // 👇 Calculate salePrice based on categoryOffer
+    let salePrice;
+    if (categoryData.categoryOffer > 0) {
+      salePrice = regularPrice - (regularPrice * categoryData.categoryOffer) / 100;
+    } else {
+      salePrice = parseFloat(products.salePrice) || regularPrice;
+    }
+
+
       const newProduct = new Product({
         productName: products.productName,
         description: products.description,
         brand: products.brand,
-        category: categoryId._id,
+        category: categoryData._id,
         regularPrice: products.regularPrice,
         salePrice: products.salePrice,
         createdOn: new Date(),
@@ -65,6 +91,8 @@ const addProducts = async (req, res) => {
         color: products.color,
         productImage: images,
         status: "Available",
+        categoryId:categoryData._id,
+        categoryOffer:categoryData.categoryOffer,
       });
 
       await newProduct.save();
@@ -72,7 +100,7 @@ const addProducts = async (req, res) => {
     } else {
       return res
         .status(400)
-        .json("Product already existb,pleasev try anither name");
+        .json("Product already existb,pleasev try another name");
     }
   } catch (error) {
     console.error("Error saving product", error);
@@ -84,7 +112,7 @@ const getAllProducts = async (req, res) => {
   try {
     const search = req.query.search || "";
     const page = req.query.page || 1;
-    const limit = 3;
+    const limit = 9;
     const productData = await Product.find({
       $or: [
         { productName: { $regex: new RegExp(".*" + search + ".*", "i") } },
@@ -114,7 +142,7 @@ const getAllProducts = async (req, res) => {
         brand: brand,
       });
     } else {
-      res.render("page-484");
+      res.render("page-404");
     }
   } catch (error) {
     res.redirect("/pageerror");
@@ -133,9 +161,7 @@ const addProductOffer = async (req, res) => {
       });
     }
 
-    // findProduct.salePrice = findProduct.salePrice.Math.floor(
-    //   findProduct.regularPrice * (percentage / 100)
-    // );
+   
 
     findProduct.salePrice = Math.floor(findProduct.regularPrice * ((100 - percentage) / 100));
     findProduct.productOffer = parseInt(percentage);
@@ -212,12 +238,12 @@ const getEditProduct=async (req,res)=>{
 const editProduct=async(req,res)=>{
     try {
         const id=req.params.id;
-        const product=await Product.findOne({_id:id});
+        const product=await Product.findOne({_id:id})
         const data=req.body;
         const existingProduct=await Product.findOne({productName:data.productName,
             _id:{$ne:id}
         })
-
+        console.log("REQUST :",data)
          if(existingProduct)  {
             return res.status(400).json({error:"Product with this name already exists.Please try withanother "})
          } 
@@ -230,16 +256,19 @@ const editProduct=async(req,res)=>{
          }
 
          const categoryId=await Category.findOne({name:data.category},{_id:1})
+
          const updateFields={
             productName:data.productName,
-            description:data.description,
+            description:data.descriptionData,
             category:categoryId,
             regularPrice:data.regularPrice,
             salePrice:data.salePrice,
             quantity:data.quantity,
             size:data.size,
-            color:data.color
+            color:data.color,
+            brand:data.brand
          }
+        
          if(req.files.length>0){
             updateFields.$push={productImage:{$each:images}};
 
@@ -276,6 +305,146 @@ const deleteSingleImage=async(req,res)=>{
 }
 
 
+const loadInventoryPage = async (req, res) => {
+  try {
+    const perPage = 5;
+    const page = parseInt(req.query.page) || 1;
+    const search = req.query.search?.trim() || "";
+
+    const query = search
+      ? { productName: { $regex: new RegExp(search, "i") } }
+      : {};
+
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / perPage);
+
+    const products = await Product.find(query)
+      .populate("category")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage);
+
+    res.render("admin/inventory", {
+      product: products,
+      currentPage: page,
+      totalPages,
+      searched: search,
+    });
+  } catch (err) {
+    console.error("Inventory load error:", err);
+    res.status(500).send("Server error");
+  }
+};
+
+
+
+
+const updateInventoryy = async (req, res) => {
+  try {
+    const productId = req.query.id;
+    const { quantity } = req.body;
+    console.log("Update button clicked for product ID:", productId);
+
+
+    if (!productId || quantity == null) {
+      return res.status(400).json({ success: false, error: "Missing product ID or quantity." });
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { quantity },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ success: false, error: "Product not found." });
+    }
+
+    res.status(200).json({ success: true, updatedQuantity: updatedProduct.quantity });
+  } catch (err) {
+    console.error("Error updating inventory:", err);
+    res.status(500).json({ success: false, error: "Internal server error." });
+  }
+};
+
+
+
+const deleteImage = async (req, res) => {
+  try {
+      const { imageNameToServer, productIdToServer } = req.body;
+
+      
+      if (!imageNameToServer || !productIdToServer) {
+          return res.status(400).json({ status: false, message: 'Image name and product ID are required.' });
+      }
+       console.log("imageName:",imageNameToServer)
+    
+      const product = await Product.findById(productIdToServer);
+      if (!product) {
+          return res.status(404).json({ status: false, message: 'Product not found.' });
+      }
+
+      
+      if (!product.productImage.includes(imageNameToServer)) {
+          return res.status(404).json({ status: false, message: 'Image not found in product.' });
+      }
+
+      await Product.findByIdAndUpdate(productIdToServer,{$pull:{productImage:imageNameToServer}})
+
+      
+      // product.productImage = product.productImage.filter(img => img !== imageNameToServer);
+      // await product.save();
+
+      
+      // const imagePath = path.join(__dirname, '../uploads/re-image', imageNameToServer);
+      // try {
+      //     await fs.access(imagePath); 
+      //     await fs.unlink(imagePath); 
+      // } catch (err) {
+      //     if (err.code !== 'ENOENT') {
+      //         throw err; 
+      //     }
+      //    
+      // }
+
+      return res.status(200).json({ status: true, message: 'Image deleted successfully.' });
+  } catch (error) {
+      console.error('Error deleting image:', error);
+      return res.status(500).json({ status: false, message: 'Server error while deleting image.' });
+  }
+};
+
+
+const deleteTempImage = async (req, res) => {
+  try {
+      const { imageNameToServer, productIdToServer } = req.body;
+
+    
+      if (!imageNameToServer || !productIdToServer) {
+          return res.status(400).json({ status: false, message: 'Image name and product ID are required.' });
+      }
+
+      
+      const tempImagePath = path.join(__dirname, '../uploads/temp', imageNameToServer);
+
+    
+      try {
+          await fs.access(tempImagePath); 
+          await fs.unlink(tempImagePath); 
+          return res.status(200).json({ status: true, message: 'Temporary image deleted successfully.' });
+      } catch (err) {
+          if (err.code === 'ENOENT') {
+              
+              return res.status(404).json({ status: false, message: 'Temporary image not found.' });
+          }
+          throw err; 
+      }
+  } catch (error) {
+      console.error('Error deleting temporary image:', error);
+      return res.status(500).json({ status: false, message: 'Server error while deleting temporary image.' });
+  }
+};
+
 
 module.exports = {
   getProductAddPage,
@@ -287,6 +456,10 @@ module.exports = {
   unblockProduct,
   getEditProduct,
   editProduct,
-  deleteSingleImage
+  deleteSingleImage,
+  loadInventoryPage,
+  updateInventoryy,
+  deleteImage,
+  deleteTempImage,
 
 };

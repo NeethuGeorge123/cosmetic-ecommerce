@@ -27,10 +27,18 @@ const userSignupSchema=new mongoose.Schema({
         default:false,
     },
     isVerified:{
-type:Boolean,
-default:false
+        type:Boolean,
+        default:false
     },
-    
+    referralCode: {
+        type: String,
+        unique: true,
+        sparse:true
+      },
+      referredBy: {
+        type: String,
+        default: null
+      },
     isAdmin:{
         type:Boolean,
         default:false
@@ -47,6 +55,27 @@ default:false
         type:Number,
         default:0,
     },
+    walletHistory: [
+        {
+          amount: {
+            type: Number,
+            required: true,
+          },
+          type: {
+            type: String,
+            enum: ['credit', 'debit'],
+            required: true,
+          },
+          description: {
+            type: String,
+            required: true,
+          },
+          date: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
     whishlist:[{
         type:Schema.Types.ObjectId,
         ref:"Wishlist"

@@ -11,11 +11,60 @@ const orderSchema=new Schema({
         default:()=>uuidv4(),
         unique:true
     },
+    userId:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
+        required:true
+    },
     orderedItems:[{
         product:{
-            type:Schema.Types.ObjectId,
-            ref:"Product",
-            required:true
+            productName:{
+                type:String,
+               
+            },
+            _id:{
+                type:Schema.Types.ObjectId,
+
+            },
+            description:{
+                type:String,
+                
+            },
+            brand:{
+                type:String,
+                
+            },
+            category:{
+                type:Schema.Types.ObjectId,
+                ref:"Category",
+                 
+            },
+            regularPrice:{
+                type:Number,
+               
+            },
+            salePrice:{
+                type:Number,
+               
+            },
+            productOffer:{
+                type:Number,
+                default:0,
+        
+            },
+            quantity:{
+                type:Number,
+                default:true
+        
+            },
+            color:{
+                type:String,
+               
+            },
+            productImage:{
+                type:[String],
+                
+            },
         },
         quantity:{
             type:Number,
@@ -24,7 +73,11 @@ const orderSchema=new Schema({
         price:{
             type:Number,
             default:0
-        }
+        },
+        cancellationStatus: { type: String, default: "active" }, // Added
+        cancellationReason: { type: String }, // Added
+        cancellationOtherReason: { type: String }, // Added
+        cancelledAt: { type: Date }, // Added
     }],
     totalPrice:{
         type:Number,
@@ -38,11 +91,66 @@ const orderSchema=new Schema({
         type:Number,
         required:true
     },
+    paymentMethod:{
+        type:String,
+        required:true,
+        enum:['cod','wallet','online payment']
+    },
+    cancellationReason: {
+        type: String,
+      },
+      returnReason: {
+         type: String
+         },
+    returnRequestedAt: { 
+        
+        type: Date 
+    },
+    requestStatus:{
+        type:String,
+        enum:['pending','approved','rejected']
+      },
+      rejectionCategory:{
+        type:String,
+      },
+      rejectionReason:{
+        type:String,
+      },
     address:{
-        type:Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+        addressType:{
+            type:String,
+            required:true,
 
+        },
+        name:{
+            type:String,
+            required:true,
+        },
+        city:{
+            type:String,
+            required:true,
+        },
+        landMark:{
+            type:String,
+            required:true,
+        },
+        state:{
+            type:String,
+            required:true
+        },
+        pincode:{
+            type:Number,
+            required:true
+        },
+        phone:{
+            type:String,
+            required:true,
+            
+        },
+        altPhone:{
+            type:String,
+            required:true
+        }  
     },
     invoiceDate:{
         type:Date,
@@ -51,7 +159,7 @@ const orderSchema=new Schema({
     status:{
         type:String,
         required:true,
-        enum:['Pending','Processing','Shipped','Delivered','Cancel','Return Request','Returned']
+        enum:['Pending','Processing','Shipped','delivered','cancelled','return requested','returned','returning']
     },
     createdOn:{
         type:Date,
@@ -61,7 +169,18 @@ const orderSchema=new Schema({
     couponApplied:{
         type:Boolean,
         default:false
-    }
+    },
+    razorpayOrderId:{
+        type:String,
+        unique:true,
+        sparse:true,
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['Success', 'Failed'],
+        default: 'Failed'
+      },
+      
 
 })
 

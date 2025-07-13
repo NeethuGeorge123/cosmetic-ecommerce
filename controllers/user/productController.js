@@ -10,6 +10,8 @@ const productDetails= async(req,res)=>{
         const userId=req.session.user;
         const userData= await User.findById(userId);
         const productId= req.query.id;
+
+    
         const product=await Product.findById(productId).populate('category');
         const findCategory= product.category;
         const categoryOffer=findCategory ?.categoryOffer || 0;

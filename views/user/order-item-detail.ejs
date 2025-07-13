@@ -1,0 +1,46 @@
+<%- include('../../partials/user/header') %>
+
+<div class="container mt-5 ordered-product-view">
+  <div class="row">
+    <!-- Product Image -->
+    <div class="col-md-5">
+      <img src="<%= item.product.image %>" class="img-fluid rounded shadow-sm" alt="<%= item.product.name %>">
+    </div>
+
+    <!-- Product and Order Info -->
+    <div class="col-md-7">
+      <h3><%= item.product.name %></h3>
+      <p class="text-muted">Category: <%= item.product.category.name %></p>
+      <p class="text-muted">Brand: <%= item.product.brand.name %></p>
+      <p><strong>Price:</strong> ₹<%= item.price.toFixed(2) %></p>
+      <p><strong>Quantity Ordered:</strong> <%= item.quantity %></p>
+
+      <hr>
+
+      <p><strong>Order ID:</strong> <%= order.orderId %></p>
+      <p><strong>Order Status:</strong> <%= order.status %></p>
+      <p><strong>Ordered on:</strong> <%= order.createdAt.toDateString() %></p>
+
+      <% if (order.status === 'Delivered') { %>
+        <a href="/user/review/<%= item.product._id %>" class="btn btn-outline-primary">Write a Review</a>
+      <% } %>
+
+      <a href="/user/order/<%= order._id %>" class="btn btn-secondary ms-2">Back to Order</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/user/footer') %>
+
+<style>
+.ordered-product-view img {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.ordered-product-view h3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+</style>

@@ -126,3 +126,33 @@ body {
     padding: 20px;
     overflow-y: auto;
 }
+/* Make all sidebar links white and bold */
+.sidebar ul li a {
+    color: white;
+    font-weight: bold;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  /* Optional: hover effect */
+  .sidebar ul li a:hover {
+    background-color: #444; /* or any hover background */
+    color: #00ffcc;         /* optional hover color */
+  }
+  
+  /* Active/selected link */
+  .sidebar ul li a.active {
+    background-color: white;
+    color: #2c3e50; /* Choose your preferred active color */
+    border-radius: 5px;
+  }
+  .page-item.active .page-link {
+    background-color: #28a745; /* Bootstrap green */
+    border-color: #28a745;
+    color: #fff;
+    font-weight: normal;
+  }
+  
+  

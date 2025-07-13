@@ -1,0 +1,313 @@
+<%- include("../../views/partials/user/header") %>
+
+<style>
+    /* wishlist.css */
+
+.main {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  padding-bottom: 40px;
+}
+
+.page-header {
+  background: #eef2f7;
+  padding: 30px 0;
+}
+
+.breadcrumb a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.breadcrumb span {
+  margin: 0 10px;
+  color: #6c757d;
+}
+
+.table-responsive {
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+}
+
+table.shopping-summery {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shopping-summery thead {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.shopping-summery th,
+.shopping-summery td {
+  padding: 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.product-thumbnail img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-name a {
+  color: #333;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.product-name a:hover {
+  color: #007bff;
+}
+
+.price span {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  background-color: #007bff;
+  transition: background-color 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.btn-sm:hover {
+  background-color: #0056b3;
+}
+
+.action .btn-sm {
+  background-color: #dc3545;
+}
+
+.action .btn-sm:hover {
+  background-color: #c82333;
+}
+
+.lead {
+  font-size: 1.25rem;
+  color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .shopping-summery thead {
+    display: none;
+  }
+
+  .shopping-summery tr {
+    display: block;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .shopping-summery td {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .shopping-summery td::before {
+    content: attr(data-title);
+    font-weight: bold;
+    color: #353534;
+  }
+
+  .shopping-summery td:last-child {
+    border-bottom: none;
+  }
+
+  .product-thumbnail img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+</style>
+<main class="main">
+
+
+   <div class="page-header breadcrumb-wrap">
+       <div class="container">
+           <div class="breadcrumb">
+               <a href="/" rel="nofollow">Home</a>
+               <span></span> <a href="/shopnow">Shop</a> 
+               <span active></span> My Wishlist
+           </div>
+       </div>
+   </div>
+
+
+   <section class="mt-50 mb-50">
+       <div class="container">
+           <div class="row">
+               <div class="col-12">
+                   <div class="table-responsive">
+                       <table class="table shopping-summery text-center clean">
+                           <thead>
+                               <tr class="main-heading">
+                                   <th scope="col">Image</th>
+                                   <th scope="col">Name</th>
+                                   <th scope="col">Price</th>
+                                   <th scope="col">Add to Cart</th>
+                                   <th scope="col">Remove</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                             
+                                <%if(wishlist.length>0){%>
+                                    <%for(let product of wishlist){%>
+                                       <tr>
+                                           <td class="image product-thumbnail">
+                                               <img src="/uploads/re-image/<%=product.productImage[0]%>" />
+                                           </td>
+                                           <td class="product-des product-name">
+                                               <h5 class="product-name">
+                                                   <a href="">
+                                                      <%=product.productName%>
+                                                   </a>
+                                               </h5>
+                                               <p class="font-xs">
+                                                <%=product.category.name%>
+                                                   <br />
+                                                 <%=product.brand%>
+                                               </p>
+                                           </td>
+                                           <td class="price" data-title="Price">₹<span>
+                                            <%=product.salePrice%>
+                                           </span></td>
+                                           <td class="text-center" data-title="Add to Cart">
+                                               <button  onclick="addToCart('<%=product._id%>')" class="btn btn-sm">Add to Cart</button>
+                                           </td>
+                                           <td class="action" data-title="Remove">
+                                           
+                                               <button class="btn btn-sm" onclick="confirmRemove('<%=product._id%>')">
+                                                   <i class="fas fa-trash"></i>
+                                               </button>
+                                           </td>
+                                       </tr>
+                                       <%}%>
+                                       <%}else{%>
+                                   <tr>
+                                       <td colspan="5" class="text-center">
+                                           <p class="lead mb-4">No items found in Wishlist</p>
+                                       </td>
+                                   </tr>
+                                   <%}%>
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </section>
+</main>
+<%- include("../../views/partials/user/footer") %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+   
+   function confirmRemove(productId){
+
+    Swal.fire({
+        title:'Are you sure?',
+        text:'You want to able to revert this',
+        icon:'warning',
+        showCancelButton:true,
+        confirmButtonColor:'#306366',
+        cancelButtonColor:'#d33',
+        confirmButtonText:'Yes,remove it',
+
+    }).then((result)=>{
+
+
+        if(result.isConfirmed){
+            fetch(`/wishlist?productId=${productId}`,{
+        method:"DELETE",
+        headers:{
+            'Content-Type':'application/json',
+        }
+    }).then(
+       response =>response.json()
+    ).then(data=>{
+        if(data.success){
+            Swal.fire({
+                title:'Product remove from wishlist',
+                icon:'success',
+                timer:2000,
+                timeProgressBar:true,
+
+            }).then((result)=>{
+                location.reload()
+            })
+        }else{
+            Swal.fire('Error','Failed to remove product','error')
+        }
+    }).catch(error=>{
+        Swal.fire('Error','An error occured while removing product ','error')
+    })
+
+ }
+    })
+   }
+
+
+
+
+   function addToCart(productId){
+        $.ajax({
+            url:'/cart',
+            method:'POST',
+            data:{productId:productId},
+            success:(response)=>{
+                if(response.status){
+                    Swal.fire({
+                        title:'Added to cart',
+                        text:'The product has been added to your cart',
+                        icon:'success',
+                        timer:2000
+
+                    }).then(()=>{
+                        location.reload()
+                    })
+                }else{
+                    Swal.fire({
+                        title:'Already in cart',
+                        text:response.message,
+                        icon:'info',
+                        timer:2000,
+
+                    })
+                }
+            },
+            error:(error)=>{
+               
+                Swal.fire({
+                    title:'Error',
+                    text:'There was an error adding the product to your cart',
+                    icon:'error',
+                    timer:2000,
+                })
+            }
+        })
+    }
+
+
+
+</script>
+
+
+

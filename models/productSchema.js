@@ -17,7 +17,7 @@ const productSchema=new Schema({
         required:true,
     },
     category:{
-        type:Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"Category",
         required:true,
 
@@ -37,7 +37,7 @@ const productSchema=new Schema({
     },
     quantity:{
         type:Number,
-        default:true
+        default:0
 
     },
     color:{

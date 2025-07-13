@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin-style.css">
+    <link rel="stylesheet" href="/css/product-add.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/admin/header') %>
+
+    <form class="add-product-form" method="POST" action="/admin/addProducts" onsubmit="return validateForm()" enctype="multipart/form-data">
+        <h2>Add New Product</h2>
+    
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" id="name" name="productName" required />
+            <div id="name-error" class="error-message"></div>
+        </div>
+    
+        <div class="form-group">
+            <label for="brand">Brand</label>
+            <select id="brand" name="brand" required>
+                <% for(let i=0; i<brand.length; i++) { %>
+                    <option value="<%=brand[i].brandName%>">
+                        <%=brand[i].brandName%>
+                    </option>
+                <%}%>
+            </select>
+            <div id="brand-error" class="error-message"></div>
+        </div>
+    
+        <div class="form-group">
+            <label for="description">Full Description</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+            <div id="description-error" class="error-message"></div>
+        </div>
+    
+        <div class="form-row">
+            <div class="form-group">
+                <label for="regularPrice">Regular Price</label>
+                <input type="text" id="regularPrice" name="regularPrice" required />
+                <div id="regularPrice-error" class="error-message"></div>
+            </div>
+    
+            <div class="form-group">
+                <label for="salePrice">Sale Price</label>
+                <input type="text" id="salePrice" name="salePrice" />
+                <div id="salePrice-error" class="error-message"></div>
+            </div>
+    
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="text" id="quantity" name="quantity" required />
+                <div id="quantity-error" class="error-message"></div>
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <label for="color">Color</label>
+            <input type="text" id="color" name="color" />
+            <div id="color-error" class="error-message"></div>
+        </div>
+    
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required               <%for(let i=0;i<cat.length;i++){%>
+                    <option value="<%=cat[i].name%>">
+                        <%=cat[i].name%>
+                    </option>
+                <%}%>
+            </select>
+            <div id="category-error" class="error-message"></div>
+        </div>
+
+        <div class="row">
+            <h5>Upload Product Images</h5>
+            <% for (let i = 1; i <= 4; i++) { %>
+                <div class="col-md-3">
+                    <div class="card-body p-2 d-flex flex-column align-items-center">
+                        <img src="" id="imgView<%= i %>" 
+                            style="max-width: 100px; max-height: 100px;" />
+                        <input class="form-control form-control-sm imageInputs" type="file" 
+                            name="images" id="input<%= i %>" 
+                            accept="image/png, image/jpeg, image/jpg" 
+                            onchange="viewImage(event, '<%= i %>')" />
+                    </div>
+                    <div class="image-cropper d-flex flex-column align-items-center" id="cropperContainer<%= i %> 
+                        style="display: 200px; height: none200px;" 
+                        id="croppedImg<%= i %> 
+                            style="width: 100px; height: 100px;" />
+                        <button type="button" id="saveButton<%= i %>" class="btn btn-sm btn-primary mt-2">Save</button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="images-error" id="images-error" class="error-message"></div>
+
+        <div class="button-group">
+            <button type="submit" class="publish-btn" onclick="validateAndSubmit(event)">Publish</button>
+        </div>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    <script>
+         function validateAndSubmit(e) {
+            e.preventDefault();
+            if (validateForm()) {
+                document.forms[0].submit();
+            }
+         }
+
+         function viewImage1(event) {
+            document.getElementById("imgView1").src = URL.createObjectURL(event.target.files[0]);
+         }
+
+         function viewImage2(event) {
+            document.getElementById("imgView2").src = URL.createObjectURL(event.target.files[0]);
+         }
+
+         function viewImage3(event) {
+            document.getElementById("imgView3").src = URL.createObjectURL(event.target.files[0]);
+         }
+
+         function viewImage(event, index) {
+            let input = event.target;
+            let reader = new FileReader();
+            reader.onload = function () {
+                let dataURL = reader.result;
+                let image = document.getElementById('imgView' + index);
+                image.src = dataURL;
+                let cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    guides: true,
+                    background: false,
+                    autoCropArea: 1,
+                    zoomable: true
+                });
+                let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+                cropperContainer.style.display = 'block';
+                let saveButton = document.querySelector('#saveButton' + index);
+                saveButton.addEventListener('click', async function () {
+                    let croppedCanvas = cropper.getCroppedCanvas();
+                    let croppedImage = document.getElementById("croppedImg" + index);
+                    croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+                    let timestamp = new Date().getTime();
+                    let fileName = `cropped-img-${timestamp}-${index}.png`;
+                    await croppedCanvas.toBlob(blob => {
+                        let input = document.getElementById('input' + index);
+                        let imgFile = new File([blob], fileName, { type: 'image/png' });
+                        const fileList = new DataTransfer();
+                        fileList.items.add(imgFile);
+                        input.files = fileList.files;
+                    });
+                    cropperContainer.style.display = 'none';
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+         }
+
+         const selectedImages = [];
+         document.getElementById("imageInput")?.addEventListener("change", handleFileSelect);
+
+         function handleFileSelect(event) {
+            const addedImagesContainer = document.getElementById("addedImagesContainer");
+            addedImagesContainer.innerHTML = "";
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                selectedImages.push(file);
+                const thumbnail = document.createElement("div");
+                thumbnail.classList.add("thumbnail");
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "thumbnail";
+                img.style.width = "50px";
+                img.style.height = "auto";
+                const removeIcon = document.createElement("span");
+                removeIcon.classList.add("remove-icon");
+                removeIcon.innerHTML = "×";
+                removeIcon.addEventListener("click", function () {
+                    const index = selectedImages.indexOf(file);
+                    if (index !== -1) {
+                        selectedImages.splice(index, 1);
+                    }
+                    thumbnail.remove();
+                });
+                thumbnail.appendChild(img);
+                thumbnail.appendChild(removeIcon);
+                addedImagesContainer.appendChild(thumbnail);
+            }
+         }
+
+         function validateForm() {
+            clearErrorMessages();
+            let isValid = true;
+
+            // Product Name
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                displayErrorMessage('name-error', 'Please enter a product name.');
+                isValid = false;
+            } else if (!/^[a-zA-Z0-9\s\-']{2,25}$/.test(name)) {
+                displayErrorMessage('name-error', 'Product name must be 2-25 characters and contain only letters, numbers, spaces, hyphens, or apostrophes.');
+                isValid = false;
+            }
+
+            // Brand
+            const brand = document.getElementById('brand').value.trim();
+            if (!brand) {
+                displayErrorMessage('brand-error', 'Please select a brand.');
+                isValid = false;
+            }
+
+            // Description
+            const description = document.getElementById('description').value.trim();
+            if (!description) {
+                displayErrorMessage('description-error', 'Please enter a product description.');
+                isValid = false;
+            } else if (!/^[a-zA-Z0-9\s.,\-'!]{10,30}$/.test(description)) {
+                displayErrorMessage('description-error', 'Description must be 10-30 characters and contain only letters, numbers, spaces, commas, periods, hyphens, or apostrophes.');
+                isValid = false;
+            }
+
+            // Regular Price
+            const regularPrice = document.getElementById('regularPrice').value.trim();
+            if (!regularPrice) {
+                displayErrorMessage('regularPrice-error', 'Please enter a regular price.');
+                isValid = false;
+            } else if (!/^\d+(\.\d{1,2})?$/.test(regularPrice) || parseFloat(regularPrice) <= 0) {
+                displayErrorMessage('regularPrice-error', 'Regular price must be a positive number with up to two decimal places (e.g., 99.99).');
+                isValid = false;
+            }
+
+            // Sale Price
+            const salePrice = document.getElementById('salePrice').value.trim();
+            if (salePrice) {
+                if (!/^\d+(\.\d{1,2})?$/.test(salePrice) || parseFloat(salePrice) <= 0) {
+                    displayErrorMessage('salePrice-error', 'Sale price must be a positive number with up to two decimal places (e.g., 99.99).');
+                    isValid = false;
+                } else if (parseFloat(salePrice) > parseFloat(regularPrice)) {
+                    displayErrorMessage('salePrice-error', 'Sale price must be less than regular price.');
+                    isValid = false;
+                }
+            }
+
+            // Quantity
+            const quantity = document.getElementById('quantity').value.trim();
+            if (!quantity) {
+                displayErrorMessage('quantity-error', 'Please enter a quantity.');
+                isValid = false;
+            } else if (!/^\d+$/.test(quantity) || parseInt(quantity) <= 0) {
+                displayErrorMessage('quantity-error', 'Quantity must be a positive integer.');
+                isValid = false;
+            }
+
+            // Color
+            const color = document.getElementById('color').value.trim();
+            if (!color) {
+                displayErrorMessage('color-error', 'Please enter a color.');
+                isValid = false;
+            } else if (!/^[a-zA-Z\s]{2,50}$/.test(color)) {
+                displayErrorMessage('color-error', 'Color must be 2-50 alphabetic characters.');
+                isValid = false;
+            }
+
+            // Category
+            const category = document.getElementById('category').value.trim();
+            if (!category) {
+                displayErrorMessage('category-error', 'Please select a category.');
+                isValid = false;
+            }
+
+            // Images
+            let hasImage = false;
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`input${i}`);
+                if (input.files.length > 0) {
+                    hasImage = true;
+                    const file = input.files[0];
+                    const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                    if (!validTypes.includes(file.type)) {
+                        displayErrorMessage('images-error', `Image ${i} must be a PNG, JPEG, or JPG file.`);
+                        isValid = false;
+                    } else if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        displayErrorMessage('images-error', `Image ${i} must be less than 5MB.`);
+                        isValid = false;
+                    }
+                }
+            }
+            if (!hasImage) {
+                displayErrorMessage('images-error', 'Please upload at least one image.');
+                isValid = false;
+            }
+
+            return isValid;
+         }
+
+         function displayErrorMessage(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.innerText = message;
+                errorElement.style.display = 'block';
+                errorElement.style.color = 'red';
+                errorElement.style.fontSize = '0.9em';
+            }
+         }
+
+         function clearErrorMessages() {
+            const errorElements = document.getElementsByClassName('error-message');
+            Array.from(errorElements).forEach(element => {
+                element.innerText = '';
+                element.style.display = 'none';
+            });
+         }
+    </script>
+</body>
+</html>
