@@ -8,6 +8,7 @@ const productController=require("../controllers/admin/productController")
 const bannerController=require("../controllers/admin/bannerController")
 const adminOrderController=require("../controllers/admin/adminOrderController")
 const couponController=require("../controllers/admin/couponController")
+const walletController=require("../controllers/admin/walletController")
 //const walletController=require("../controllers/admin/walletController")
 
 const {userAuth,adminAuth}=require("../middlewares/auth")
@@ -115,7 +116,8 @@ router.put("/handleReturn",adminAuth,adminOrderController.handleReturn)
  router.put("/updateReturnStatus",adminAuth,adminOrderController.updateReturnStatus)
  router.get("/sales",adminAuth,adminOrderController.loadSales)
  router.get("/salesReport",adminAuth,adminOrderController.loadSalesReport)
-
+//wallet
+router.get("/walletHistory",adminAuth,walletController.loadWalletHistory)
 
 
 

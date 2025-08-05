@@ -69,7 +69,7 @@ const loadHomepage = async (req, res) => {
   }
 };
 
-//const mongoose = require('mongoose'); 
+const mongoose = require('mongoose'); 
 
 const shopNow = async (req, res) => {
   try {
@@ -78,8 +78,6 @@ const shopNow = async (req, res) => {
     const brand = req.query.brand;
     const gt = parseInt(req.query.gt) || 0;
     const lt = parseInt(req.query.lt) || 0;
-    const sortOrder=req.query.sort;
-    let sortQuery={}
 
     const userId = req.session.user;
     const user = await User.findById(userId);
@@ -88,8 +86,6 @@ const shopNow = async (req, res) => {
       status: "Available",
       isBlocked: false
     };
-
-    
 
     if (searchQuery) {
       filter.productName = { $regex: new RegExp(searchQuery, 'i') };
@@ -113,11 +109,7 @@ const shopNow = async (req, res) => {
       filter.salePrice = { $lte: lt };
     }
     
-    if (sortOrder === 'lowToHigh') {
-      sortQuery.salePrice = 1;
-    } else if (sortOrder === 'highToLow') {
-      sortQuery.salePrice = -1;
-    }
+
     const ITEMS_PER_PAGE = 9;
     const page = parseInt(req.query.page) || 1;
     const totalProducts = await Product.countDocuments(filter);
@@ -131,7 +123,6 @@ const shopNow = async (req, res) => {
 
     const productData = await Product.find(filter)
       .populate("category")
-      .sort(sortQuery)
       .skip((page - 1) * ITEMS_PER_PAGE)
       .limit(ITEMS_PER_PAGE);
 
@@ -146,7 +137,6 @@ const shopNow = async (req, res) => {
       user,
       currentPage: page,
       totalPages,
-      filters:req.query
     });
 
   } catch (error) {
@@ -201,7 +191,6 @@ const signup = async (req, res, next) => {
 
     const otp = generateOtp();
     const emailSent = await sendVerificationEmail(email, otp);
-    console.log("OTP",otp)
     
     if (!emailSent) {
       return res.status(500).json({ error: "Error sending OTP" });
@@ -239,9 +228,7 @@ function generateReferralCode(input) {
 
 const loadLogin = async (req, res) => {
   try {
-    if(req.session.user){
-     return res.redirect("/")
-    }
+    
     return res.render("user/login.ejs", { message: null });
   } catch (error) {
     console.error("Home page not found", error);

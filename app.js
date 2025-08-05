@@ -13,10 +13,11 @@ const adminRouter=require('./routes/adminRouter')
 //db();
 //middleware
 connectDatabase();
+app.use(nocache());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
-app.use(nocache());
+
 
 app.use(session({
     secret:process.env.SESSION_SECRET,
@@ -31,10 +32,10 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use((req,res,next)=>{
-//     res.set('cache-control','no-store')
-//     next()
-// })
+app.use((req,res,next)=>{
+    res.set('cache-control','no-store')
+    next()
+})
 app.use(express.static(path.join(__dirname,"public")));
 app.set("view engine","ejs")
 //app.use("/public", express.static(__dirname + "/public"));

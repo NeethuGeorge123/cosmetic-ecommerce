@@ -371,11 +371,24 @@ function validateForm() {
     if (name.trim() === "") {
         displayErrorMessage('productName-error', 'Please enter a product name.');
         isValid = false;
-    }
-    if (description === '') {
-        displayErrorMessage('description-error', 'Please enter a product description.');
-        isValid = false;
-    }
+    }else if (!/[A-Za-z0-9]/.test(name)) {
+    // Contains only special characters (no letters or numbers)
+    displayErrorMessage('productName-error', 'Product name should not contain only special characters.');
+    isValid = false;
+}
+
+if (description.trim() === '') {
+    displayErrorMessage('description-error', 'Please enter a product description.');
+    isValid = false;
+} else if (/^\d+$/.test(description)) {
+    displayErrorMessage('description-error', 'Description should not contain only numbers.');
+    isValid = false;
+} else if (!/[A-Za-z0-9]/.test(description)) {
+    // Contains only special characters (no letters or numbers)
+    displayErrorMessage('description-error', 'Description should not contain only special characters.');
+    isValid = false;
+}
+
     if (parseInt(quantity) < 0 || quantity.trim() === "" || isNaN(quantity)) {
         displayErrorMessage('quantity-error', 'Please enter a valid non-negative quantity.');
         isValid = false;
@@ -396,10 +409,22 @@ function validateForm() {
         displayErrorMessage('color-error', 'Please enter a valid color.');
         isValid = false;
     }
-    if (!imageDatas && images.files.length === 0) {
-        displayErrorMessage("images-error", 'Please select an image.');
-        isValid = false;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+if ((!imageDatas || imageDatas.length === 0) && images.files.length === 0) {
+    displayErrorMessage("images-error", 'Please select an image.');
+    isValid = false;
+} else {
+    for (let i = 0; i < images.files.length; i++) {
+        const file = images.files[i];
+        if (!allowedTypes.includes(file.type)) {
+            displayErrorMessage("images-error", 'Only image files (jpg, jpeg, png, webp) are allowed.');
+            isValid = false;
+            break;
+        }
     }
+}
+
     return isValid;
 }
 

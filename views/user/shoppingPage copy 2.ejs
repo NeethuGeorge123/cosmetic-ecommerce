@@ -554,7 +554,7 @@
                                         <span><%= user.name%></span>
                                     </div>
                                     <div class="user-dropdown-content">
-                                        <a href="/my-profile">Profile</a>
+                                        <a href="/userProfile">Profile</a>
                                         <a href="/logout">Logout</a>
                                     </div>
                                 </div>
@@ -575,24 +575,23 @@
                     
                     <div class="row">
                         <%for(let i=0;i<products.length;i++){%>
-                            <% if (products[i].quantity > 0) { %>
                         <div class="col-lg-4 col-md-6">
                             <div class="product-card">
                                 <div class="product-img">
 
 
                                     <% 
-                                        let image = '';
-                                        if (products[i].productImage[0]) {
-                                            image = products[i].productImage[0];
-                                        } else if (products[i].productImage[1]) {
-                                            image = products[i].productImage[1];
-                                        } else if (products[i].productImage[2]) {
-                                            image = products[i].productImage[2];
-                                        } else {
-                                            image = 'default.jpg'; // Optional: fallback image
-                                        }
-                                    %>
+    let image = '';
+    if (products[i].productImage[0]) {
+        image = products[i].productImage[0];
+    } else if (products[i].productImage[1]) {
+        image = products[i].productImage[1];
+    } else if (products[i].productImage[2]) {
+        image = products[i].productImage[2];
+    } else {
+        image = 'default.jpg'; // Optional: fallback image
+    }
+%>
 
 <a href="/productDetails?id=<%= products[i]._id %>">
     <img src="/uploads/re-image/<%= image %>" alt="<%= products[i].productName %>">
@@ -623,7 +622,6 @@
                                 </div>
                             </div>
                         </div>
-                        <%}%>
                         <%}%>
                     </div>
                 </div>
@@ -684,23 +682,7 @@
 </html>
 
 <script>
-    function updateQueryParam(param, value) {
-        const url = new URL(window.location.href);
-        url.searchParams.set(param, value);
-        window.location.href = url.toString();
-    }
-
-    function updatePriceRange(gt, lt) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('gt', gt);
-        url.searchParams.set('lt', lt);
-        url.searchParams.set('page', 1);
-        window.location.href = url.toString();
-    }
-
-    function updateSortOrder(order) {
-        document.getElementById('sort-input').value = order;
-    }
+    // ... other functions (addToWishlist, updateQueryParam, etc.)
 
     function updateCartCount() {
         $.ajax({
@@ -723,46 +705,12 @@
         updateCartCount();
     });
 
-    function addToWishlist(productId) {
-        $.ajax({
-            url: '/addToWishlist',
-            method: 'POST',
-            data: { productId: productId },
-            success: (response) => {
-                if (response.status) {
-                    Swal.fire({
-                        title: 'Added to Wishlist',
-                        text: 'The product has been added to your wishlist',
-                        icon: 'success',
-                        timer: 2000
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Warning',
-                        text: response.message,
-                        icon: 'warning',
-                        timer: 2000
-                    });
-                }
-            },
-            error: (error) => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'There was an error adding the product to your wishlist',
-                    icon: 'error',
-                    timer: 2000
-                });
-            }
-        });
-    }
-
     function addToCart(productId) {
         $.ajax({
             url: '/cart',
             method: 'POST',
             data: { productId: productId },
             success: (response) => {
-                console.log('addToCart response:', response); // Debug: Log response
                 if (response.status) {
                     Swal.fire({
                         title: 'Added to Cart',
@@ -771,11 +719,11 @@
                         timer: 2000
                     });
                     if (response.count !== undefined) {
-                        $('#cart-count').text(response.count); // Update badge
-                    } else {
-                        console.warn('No count in response, falling back to updateCartCount');
-                        updateCartCount(); // Fallback
-                    }
+    $('#cart-count').text(response.count);
+} else {
+    console.warn('No count in response, falling back to updateCartCount');
+    updateCartCount();
+} // Update badge with response count
                 } else {
                     Swal.fire({
                         title: 'Already in Cart',
@@ -786,7 +734,6 @@
                 }
             },
             error: (error) => {
-                console.error('addToCart error:', error); // Debug: Log error
                 Swal.fire({
                     title: 'Error',
                     text: 'There was an error adding the product to your cart',
@@ -796,4 +743,112 @@
             }
         });
     }
+</script>
+
+
+
+<script>
+    function updateQueryParam(param, value) {
+      const url = new URL(window.location.href);
+      url.searchParams.set(param, value);
+      window.location.href = url.toString();
+    }
+  </script>
+
+<script>
+    function updatePriceRange(gt, lt) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('gt', gt);
+      url.searchParams.set('lt', lt);
+      url.searchParams.set('page', 1); // Optional: Reset pagination on filter
+      window.location.href = url.toString();
+    }
+  </script>
+  <script>
+     function updateSortOrder(order) {
+    document.getElementById('sort-input').value = order;
+  }
+  </script>
+  
+  
+
+<script>
+
+
+    function addToWishlist(productId){
+        $.ajax({
+            url:'/addToWishlist',
+            method:'POST',
+            data:{productId:productId},
+            success:(response)=>{
+                if(response.status){
+                    Swal.fire({
+                        title:'Added to wishlist',
+                        text:'The product has been added to your wishlist',
+                        icon:'success',
+                        timer:2000
+                    });
+                }else{
+                    Swal.fire({
+                        title:'Warning',
+                        text:response.message,
+                        icon:'warning',
+                        timer:2000,
+
+                    })
+                }
+            },
+            error:(error)=>{
+                Swal.fire({
+                    title:'Error',
+                    text:'There was an error adding the product to your wishlist',
+                    icon:'error',
+                    timer:2000,
+                })
+            }
+        })
+    }
+
+
+
+
+    function addToCart(productId){
+        $.ajax({
+            url:'/cart',
+            method:'POST',
+            data:{productId:productId},
+            success:(response)=>{
+                if(response.status){
+                    Swal.fire({
+                        title:'Added to cart',
+                        text:'The product has been added to your cart',
+                        icon:'success',
+                        timer:2000
+                    });
+                }else{
+                    Swal.fire({
+                        title:'Already in cart',
+                        text:response.message,
+                        icon:'info',
+                        timer:2000,
+
+                    })
+                }
+            },
+            error:(error)=>{
+               
+                Swal.fire({
+                    title:'Error',
+                    text:'There was an error adding the product to your cart',
+                    icon:'error',
+                    timer:2000,
+                })
+            }
+        })
+    }
+
+
+
+
+
 </script>

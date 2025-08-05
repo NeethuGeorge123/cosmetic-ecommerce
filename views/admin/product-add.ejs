@@ -162,7 +162,7 @@
       let isValid = true;
 
       const name = document.getElementById('name').value.trim();
-      if (!name || !/^[a-zA-Z0-9\s\-']{2,25}$/.test(name)) {
+      if (!name || !/^[a-zA-Z0-9\s\-']{2,25}$/.test(name) || !/[a-zA-Z]/.test(name)  ) {
         displayErrorMessage('name-error', 'Product name must be 2–25 valid characters.');
         isValid = false;
       }

@@ -553,20 +553,12 @@
                 $(`#mobileSubTotal${productElementId}`).text(newSubtotal.toFixed(2));
 
                 $("#total").text(response.grandTotal.toFixed(2));
-                $("totalabc").val(response.grandTotal.toFixed(2))
             } else {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     text: response.message,
                 });
-
-                quantityInput.val(currentQuantity);
-                if (mobileQuantityInput.length) {
-                    mobileQuantityInput.val(currentQuantity);
-                }
-                decrementButton.prop("disabled", currentQuantity === 1);
-                mobileDecButton.prop("disabled", currentQuantity === 1);
             }
         },
         error: function() {
@@ -575,12 +567,6 @@
                 title: "Oops...",
                 text: "Something went wrong! Try again.",
             });
-            quantityInput.val(currentQuantity);
-            if (mobileQuantityInput.length) {
-                mobileQuantityInput.val(currentQuantity);
-            }
-            decrementButton.prop("disabled", currentQuantity === 1);
-            mobileDecButton.prop("disabled", currentQuantity === 1);
         }
     });
 }
@@ -635,8 +621,7 @@
                 }
                 
 
-                $("#total").text(data.grandTotal.toFixed(2) || 0);
-                $("#totalabc").val(data.grandTotal.toFixed(2) || 0)
+                $("#total").text(data.grandTotal || 0);
                 
 
                 if ($('tbody tr').length <= 1) { 

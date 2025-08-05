@@ -1,0 +1,190 @@
+<%- include("../partials/admin/header") %>
+
+<div class="wallet-container">
+  <h2 class="wallet-title">Wallet Transactions History</h2>
+
+  <div class="table-responsive">
+    <table class="wallet-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User Name</th>
+          <th>Email</th>
+          <th>Transaction ID</th>
+          <th>Order ID</th>
+          <th>Amount</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (transactions.length === 0) { %>
+          <tr>
+            <td colspan="9" class="no-data">No transactions found.</td>
+          </tr>
+        <% } else { %>
+          <% transactions.forEach((txn, index) => { %>
+            <tr>
+              <td><%= (currentPage - 1) * 10 + index + 1 %></td>
+              <td><%= txn.userName %></td>
+              <td><%= txn.userEmail %></td>
+              <td><%= txn.transactionId %></td>
+              <td><%= txn.orderId %></td>
+              <td>₹<%= txn.amount %></td>
+              <td class="<%= txn.type === 'credit' ? 'credit' : 'debit' %>">
+                <%= txn.type %>
+              </td>
+              <td><%= txn.description %></td>
+              <td><%= txn.date.toLocaleString() %></td>
+            </tr>
+          <% }); %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <nav class="pagination-nav">
+    <ul class="pagination">
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+<!-- Move CSS inside <style> -->
+<style>
+  .wallet-container {
+    max-width: 95%;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+
+  .wallet-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
+  .wallet-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    min-width: 900px; /* Makes table scroll on smaller screens */
+  }
+
+  .wallet-table thead {
+    background: #222;
+    color: #fff;
+  }
+
+  .wallet-table th, .wallet-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    word-break: break-word;
+  }
+
+  .wallet-table tbody tr:nth-child(even) {
+    background: #f8f8f8;
+  }
+
+  .wallet-table tbody tr:hover {
+    background: #f1f1f1;
+  }
+
+  .no-data {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+  }
+
+  .credit {
+    color: green;
+    font-weight: bold;
+  }
+
+  .debit {
+    color: red;
+    font-weight: bold;
+  }
+
+  /* Pagination styling */
+  .pagination-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .pagination {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+    padding: 0;
+  }
+
+  .pagination .page-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .pagination .page-item a {
+    display: block;
+    padding: 8px 14px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .pagination .page-item.active {
+    background: #007bff;
+    border-color: #007bff;
+  }
+
+  .pagination .page-item.active a {
+    color: #fff;
+  }
+
+  /* RESPONSIVE DESIGN */
+  @media (max-width: 768px) {
+    .wallet-title {
+      font-size: 1.5rem;
+    }
+
+    .wallet-table th, .wallet-table td {
+      padding: 8px;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .wallet-title {
+      font-size: 1.2rem;
+    }
+
+    .wallet-table th, .wallet-table td {
+      font-size: 0.8rem;
+      padding: 6px;
+    }
+
+    .pagination .page-item a {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+  }
+</style>

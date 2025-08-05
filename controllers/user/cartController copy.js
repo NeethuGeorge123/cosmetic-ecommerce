@@ -60,10 +60,9 @@ const addToCart = async (req, res) => {
     
 
     await cart.save();
-    const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
     
-    return res.status(200).json({ status:true,message: "Product added to cart",count });
+    return res.status(200).json({ status:true,message: "Product added to cart" });
 
   } catch (error) {
     console.error(error);
@@ -146,17 +145,9 @@ const updateCartQuantity = async (req, res) => {
     }
 
     item.quantity = newQuantity;
-    item.totalPrice=newQuantity * item.productId.salePrice;
-    
-    const grandTotal=cartItem.items.reduce((total,item)=>{
-      return total+(item.quantity*item.productId.salePrice)
-    },0)
-
     await cartItem.save();
 
-    res.json({ success: true ,
-      grandTotal:grandTotal
-    });
+    res.json({ success: true });
   } catch (err) {
     console.error('updateCartQuantity error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
@@ -247,30 +238,8 @@ const deleteFromCart = async (req, res) => {
     
 
 
-    const getCartCount = async (req, res) => {
-      try {
-          const userId = req.session.user;
-          if (!userId) {
-              return res.status(200).json({ status: false, count: 0 });
-          }
   
-          const cart = await Cart.findOne({ userId });
-          if (!cart) {
-              return res.status(200).json({ status: false, count: 0 });
-          }
-  
-          //const count = cart.items.length; 
-           
-           const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-  
-          return res.status(200).json({ status: true, count });
-      } catch (error) {
-          console.error('getCartCount error:', error);
-          res.status(500).json({ status: false, count: 0 });
-      }
-  };
-  
-  
+
 
 module.exports={
     addToCart,
@@ -278,6 +247,5 @@ module.exports={
     updateCartQuantity,
     deleteFromCart,
     getCheckout,
-    getCartCount,
   
 }

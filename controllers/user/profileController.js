@@ -340,7 +340,7 @@ const postAddAddress= async(req,res)=>{
             await userAddress.save();
         }
 
-        res.redirect("/userProfile")
+        res.redirect("/my-profile")
     } catch (error) {
        res.error("Error adding address",error)
        res.redirect("/pageNotFound")

@@ -71,6 +71,7 @@ router.get("/productDetails",userAuth,productController.productDetails)
 
 router.post("/cart",userAuth,cartController.addToCart)
 router.get("/cart",userAuth,cartController.getCart)
+// router.get("/cart/count", userAuth, cartController.getCartCount);
 router.put("/cart",userAuth,cartController.updateCartQuantity)
 router.delete("/cart",userAuth,cartController.deleteFromCart)
 
@@ -86,6 +87,7 @@ router.delete("/removeCoupon",userAuth,orderController.removeCoupon)
 router.post("/placeOrder",userAuth,orderController.placeOrder)
 router.get("/confirmation",userAuth,orderController.orderConfirmation)
 router.get("/orders",userAuth,orderController.getOrders)
+router.post("/orderSearch",userAuth,orderController.searchOrder)
 router.get("/viewOrderDetails",userAuth,orderController.getOrderDetails)
 router.get("/invoice",userAuth,orderController.getInvoice)
 router.put("/cancelOrder",userAuth,orderController.cancelOrder)

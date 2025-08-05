@@ -69,7 +69,7 @@ const addProducts = async (req, res) => {
 
       const regularPrice = parseFloat(products.regularPrice);
 
-    // 👇 Calculate salePrice based on categoryOffer
+    
     let salePrice;
     if (categoryData.categoryOffer > 0) {
       salePrice = regularPrice - (regularPrice * categoryData.categoryOffer) / 100;

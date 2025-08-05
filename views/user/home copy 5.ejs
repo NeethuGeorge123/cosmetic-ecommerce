@@ -3,179 +3,6 @@
 <!-- Bootstrap CSS -->
 
 <style>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <style>
-        .header-row {
-            background-color: #FFEBD9; /* Light peach color */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo-img {
-            height: 50px;
-            width: 60px;
-            border-radius: 8px;
-        }
-        
-        .search-section {
-            max-width: 350px;
-        }
-        
-        .search-input {
-            border: 2px solid #f0f0f0;
-            border-radius: 25px;
-            padding: 8px 15px;
-        }
-        
-        .search-btn {
-            border-radius: 0 25px 25px 0;
-            border: 2px solid #f0f0f0;
-            border-left: none;
-            background: white;
-            color: #ff6b35;
-        }
-        
-        .search-btn:hover {
-            background: #ff6b35;
-            color: white;
-        }
-        
-        .category-nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .category-link {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-        
-        .category-link:hover,
-        .category-link.active {
-            background: #ff6b35;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .cart-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .cart-btn {
-            position: relative;
-            background: white;
-            border: 2px solid #f0f0f0;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ff6b35;
-            transition: all 0.3s ease;
-        }
-        
-        .cart-btn:hover {
-            background: #ff6b35;
-            color: white;
-            border-color: #ff6b35;
-        }
-        
-        .cart-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #ff6b35;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .user-dropdown .dropdown-toggle {
-            background: white;
-            border: 2px solid #f0f0f0;
-            color: #333;
-            border-radius: 25px;
-            padding: 8px 15px;
-            font-weight: 500;
-        }
-        
-        .user-dropdown .dropdown-toggle:hover {
-            background: #ff6b35;
-            color: white;
-            border-color: #ff6b35;
-        }
-        
-        .dropdown-menu {
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 10px;
-        }
-        
-        .dropdown-item {
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin: 2px 8px;
-        }
-        
-        .dropdown-item:hover {
-            background: #f8f9fa;
-        }
-        
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .category-nav {
-                display: none;
-            }
-            
-            .search-section {
-                max-width: 200px;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-                background: white;
-                border: 2px solid #f0f0f0;
-                border-radius: 8px;
-                padding: 8px 12px;
-                color: #ff6b35;
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .mobile-menu-btn {
-                display: none;
-            }
-        }
-        
-        /* Carousel adjustments */
-        .carousel-item {
-            height: 400px;
-        }
-        
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
     /* CSS for responsive image alignment */
 .product-img {
     aspect-ratio: 4 / 3; /* Consistent aspect ratio for all images */
@@ -266,191 +93,156 @@
     background-color: #d4e9d2;
     color: #78a670 !important;
 }
-/* Dropdown styling */
-.nav-item .dropdown-menu {
-    border-radius: 10px;
-    min-width: 160px;
-    padding: 10px 0;
-    font-size: 0.95rem;
-}
-
-.nav-item .dropdown-menu a {
-    padding: 8px 20px;
-    color: #343a40;
-    transition: background 0.2s;
-}
-
-.nav-item .dropdown-menu a:hover {
-    background-color: #f8f9fa;
-}
-
-.btn-outline-dark:hover {
-    background-color: #343a40;
-    color: white !important;
-}
-
-.btn-outline-success:hover {
-    background-color: #28a745;
-    color: white !important;
-}
-
-.btn-primary:hover {
-    background-color: #0069d9;
-    border-color: #0062cc;
-}
-
-
 
 </style>
 <body>
     
     <div class="container-fluid">
-        <!-- Main Header Row -->
-        <div class="row header-row align-items-center py-3 px-xl-4">
-            <!-- Logo Section -->
-            <div class="col-lg-2 col-md-2 col-4">
-                <div class="logo-section">
-                    <a href="/" class="text-decoration-none">
-                        <img src="/img/logo 2.jpg" alt="Leaf Logo" class="logo-img">
+        <!-- <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark" href="">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Help</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Support</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-dark pl-2" href="">
+                        <i class="fab fa-youtube"></i>
                     </a>
                 </div>
             </div>
-            
-            <!-- Search Section -->
-            <div class="col-lg-3 col-md-4 col-8">
-                <div class="search-section">
-                    <form action="/shopnow" method="get">
-                        <div class="input-group">
-                            <input type="text" class="form-control search-input" name="search" placeholder="Search products...">
-                            <div class="input-group-append">
-                                <button class="btn search-btn" type="submit">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </div>
+        </div> -->
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+              
+                <img src="/img/logo 2.jpg" alt="" style="height: 60px;width: 70px;">
+            </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="/shopnow" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <button class="input-group-text bg-transparent text-primary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Categories/Menu Section -->
-            <div class="col-lg-4 d-none d-lg-block">
-                <nav class="category-nav">
-                    <!-- Static categories - replace with dynamic backend data -->
-                    <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                        <% categories.slice(0, 5).forEach((category, index) => { %>
-                            <a href="/category/<%= category.slug || category._id %>" class="category-link <%= index === 0 ? 'active' : '' %>">
-                                <%= category.name %>
-                            </a>
-                        <% }) %>
-                    <% } else { %>
-                        <!-- Fallback static categories -->
-                        <a href="/shopnow" class="category-link active">Skin</a>
-                        <a href="/shopnow" class="category-link">Face</a>
-                        <a href="/shopnow" class="category-link">Lips</a>
-                        <a href="/shopnow" class="category-link">Eyes</a>
-                        <a href="/shopnow" class="category-link">Nail</a>
-                    <% } %>
-                </nav>
-            </div>
-            
-            <!-- Cart & User Section -->
-            <div class="col-lg-3 col-md-6 col-12 text-right">
-                <div class="cart-section justify-content-end">
-                    <!-- Wishlist Button -->
-                    <a href="/wishlist" class="cart-btn">
-                        <i class="fas fa-heart"></i>
-                        <span class="cart-badge">0</span>
-                    </a>
-                    
-                    <!-- Shopping Cart Button -->
-                    <a href="/cart" class="cart-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-badge">0</span>
-                    </a>
-                    
-                    <!-- User Dropdown -->
-                    <div class="dropdown user-dropdown d-inline-block ml-2">
-                        <% if (typeof user === 'undefined' || !user) { %>
-                            <!-- Guest dropdown -->
-                            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                                <i class="fas fa-user mr-1"></i> Guest
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="/login">
-                                    <i class="fas fa-sign-in-alt mr-2 text-success"></i> Login
-                                </a>
-                                <a class="dropdown-item" href="/signup">
-                                    <i class="fas fa-user-plus mr-2 text-primary"></i> Register
-                                </a>
-                            </div>
-                        <% } else { %>
-                            <!-- Logged-in user dropdown -->
-                            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-                                <i class="fas fa-user mr-1"></i> <%= user.name %>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="/my-profile">
-                                    <i class="fas fa-user-circle mr-2 text-primary"></i> Profile
-                                </a>
-                                <a class="dropdown-item" href="/logout">
-                                    <i class="fas fa-sign-out-alt mr-2 text-danger"></i> Logout
-                                </a>
-                            </div>
-                        <% } %>
                     </div>
-                    
-                    <!-- Mobile Menu Button -->
-                    <button class="btn mobile-menu-btn ml-2" type="button" data-toggle="collapse" data-target="#mobileMenu">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
+                </form>
             </div>
-        </div>
-        
-        <!-- Mobile Menu (Collapsible) -->
-        <div class="collapse" id="mobileMenu">
-            <div class="row bg-light p-3">
-                <div class="col-12">
-                    <nav class="d-flex flex-column">
-                        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                            <% categories.forEach(category => { %>
-                                <a href="/category/<%= category.slug || category._id %>" class="py-2 text-dark">
-                                    <%= category.name %>
-                                </a>
-                            <% }) %>
-                        <% } else { %>
-                            <a href="/category/skin" class="py-2 text-dark">Skin</a>
-                            <a href="/category/face" class="py-2 text-dark">Face</a>
-                            <a href="/category/lips" class="py-2 text-dark">Lips</a>
-                            <a href="/category/eyes" class="py-2 text-dark">Eyes</a>
-                            <a href="/category/nail" class="py-2 text-dark">Nail</a>
-                        <% } %>
-                    </nav>
-                </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="" class="btn border">
+                    <i class="fas fa-heart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a href="" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
             </div>
         </div>
     </div>
     
-    <!-- Banner Carousel -->
+
+
+   
     <div class="container-fluid mb-5">
-        <div class="row">
-            <div class="col-12">
+        <div class="row border-top px-xl-5">
+           
+                        <!-- </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Skin Type <i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">Dry</a>
+                                <a href="" class="dropdown-item">Oily</a>
+                                <a href="" class="dropdown-item">Normal</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Color<i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">Gold</a>
+                                <a href="" class="dropdown-item">Peach</a>
+                                <a href="" class="dropdown-item">RoseGold</a>
+                            </div>
+                        </div>
+                        
+                    </div> -->
+                </nav>
+            </div> 
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1"></span>Leaf</h1>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between d-flex " id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            
+                            <a href="index.html" class="nav-item nav-link active">Skin</a>
+                            <a href="face.html" class="nav-item nav-link">Face</a>
+                            <a href="lips.html" class="nav-item nav-link">Lips</a>
+                            <a href="eyes.html" class="nav-item nav-link ">Eyes</a>
+                            <a href="nail.html" class="nav-item nav-link ">Nail</a>
+                        </div>
+                            
+                        <div class="navbar-nav ml-auto py-0 ">
+                            <%if(!user){%>
+                            <a href="/login" class="nav-item nav-link">Login</a>
+                            <a href="/signup" class="nav-item nav-link">Register</a>
+                            <%}else{%> 
+                                <div class="dropdown" >
+                                    <span><%= user.name%></span>
+                              
+                                <div class="dropdown-content" >
+                                    <a href="/my-profile">Profile</a>
+                                    <a href="/logout">Logout</a>
+        
+                                </div>
+                                </div>
+                            </div>
+                                    
+                        <%}%>
+                        
+                    </div>
+                </nav>
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        <% if (typeof banner !== 'undefined' && banner.length > 0) { %>
-                            <% banner.slice(0,2).forEach((bannerItem, index) => { %>
-                                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                    <img class="img-fluid" src="/uploads/re-image/<%= bannerItem.image %>" alt="<%= bannerItem.title %>">
-                                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                                        <div class="p-3" style="max-width: 700px;">
-                                            <h4 class="text-light text-uppercase font-weight-medium mb-3"><%= bannerItem.description %></h4>
-                                            <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%= bannerItem.title %></h3>
-                                            <a href="/shopnow" class="btn btn-light py-2 px-3">Shop Now</a>
-                                        </div>
-                                    </div>
+                        <% banner.slice(0,2).forEach((bannerItem, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>" style="height: 410px;">
+                              <img class="img-fluid" src="/uploads/re-image/<%= bannerItem.image %>" alt="<%= bannerItem.title %>">
+                              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                  <h4 class="text-light text-uppercase font-weight-medium mb-3"><%= bannerItem.description %></h4>
+                                  <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%= bannerItem.title %></h3>
+                                  <a href="/shopnow" class="btn btn-light py-2 px-3">Shop Now</a>
                                 </div>
-                            <% }) %>
-                        <% } %>
+                              </div>
+                            </div>
+                          <% }) %>
+                           
+                       
                     </div>
                     <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
                         <div class="btn btn-dark" style="width: 45px; height: 45px;">
@@ -460,13 +252,13 @@
                     <a class="carousel-control-next" href="#header-carousel" data-slide="next">
                         <div class="btn btn-dark" style="width: 45px; height: 45px;">
                             <span class="carousel-control-next-icon mb-n2"></span>
-        </div>
+                        </div>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <div class="container-fluid pt-5">
         <div class="row px-xl-5 pb-3">
             <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -545,10 +337,10 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
                         <button class="wishlist-btn" onclick="addToWishlist('<%= products[i]._id %>')">
-                            <i class="fas fa-heart text-danger mr-1"></i>
+                            <i class="fas fa-heart text-danger mr-1"></i>Add to Wishlist
                         </button>
                         <button class="cart-btn" onclick="addToCart('<%= products[i]._id %>')">
-                            <i class="fas fa-shopping-cart text-primary mr-1"></i>
+                            <i class="fas fa-shopping-cart text-primary mr-1"></i>Add to Cart
                         </button>
                     </div>
                 </div>
@@ -599,7 +391,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
                         <a href="/productDetails?id=<%= product._id %>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="/addToCart?id=<%= product._id %>" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i></a>
+                        <a href="/addToCart?id=<%= product._id %>" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
                     </div>
                 </div>
             </div>

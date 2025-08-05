@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Header1 - Leaf Organics</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+  <!-- Inline CSS -->
+  <style>
+    /* Topbar */
+    .topbar {
+      background-color: #f8f9fa;
+      font-size: 0.9rem;
+    }
+
+    .topbar a {
+      color: #333;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .topbar a:hover {
+      color: #007bff;
+    }
+
+    .topbar .text-muted {
+      color: #999 !important;
+    }
+
+    /* Social Icons */
+    .social-icons a {
+      color: #555;
+      font-size: 14px;
+      margin-left: 12px;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: #007bff;
+    }
+
+    /* Main Header */
+    .main-header {
+      background-color: #fff;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .main-header .navbar-brand img {
+      max-height: 50px;
+    }
+
+    .main-header .btn {
+      position: relative;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .main-header .btn .badge {
+      font-size: 0.65rem;
+      padding: 3px 6px;
+    }
+
+    @media (max-width: 767.98px) {
+      .topbar .d-flex {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .main-header {
+        text-align: center;
+      }
+
+      .main-header .col-lg-3,
+      .main-header .col-md-3 {
+        justify-content: center !important;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar py-2">
+    <div class="container">
+      <div class="row justify-content-between align-items-center">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center small">
+            <a href="#" class="me-3">FAQs</a>
+            <span class="text-muted mx-2">|</span>
+            <a href="#" class="me-3">Help</a>
+            <span class="text-muted mx-2">|</span>
+            <a href="#">Support</a>
+          </div>
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <div class="main-header py-3">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Logo -->
+        <div class="col-lg-2 col-md-3 mb-3 mb-md-0">
+          <a href="#" class="navbar-brand d-flex align-items-center justify-content-center justify-content-md-start">
+            <img src="/img/logo 2.jpg" alt="Leaf Organics Logo" class="img-fluid">
+          </a>
+        </div>
+
+        <!-- (Optional) Center Section -->
+        <div class="col-lg-7 col-md-6">
+          <!-- You can add a search bar or nav links here later -->
+        </div>
+
+        <!-- Cart & Wishlist -->
+        <div class="col-lg-3 col-md-3 d-flex justify-content-end">
+          <div class="d-flex align-items-center">
+            <a href="/wishlist" class="btn position-relative me-3" aria-label="Wishlist">
+              <i class="fas fa-heart fs-5 text-danger"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </a>
+            <a href="/cart" class="btn position-relative" aria-label="Cart">
+              <i class="fas fa-shopping-cart fs-5 text-primary"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

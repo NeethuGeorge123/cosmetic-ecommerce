@@ -1,0 +1,396 @@
+
+<%- include("../../views/partials/user/header") %>
+<!-- Bootstrap CSS -->
+
+<style>
+    /* CSS for responsive image alignment */
+.product-img {
+    aspect-ratio: 4 / 3; /* Consistent aspect ratio for all images */
+    overflow: hidden;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures images fill the container without distortion */
+    display: block; /* Removes extra space below images */
+}
+
+/* Ensure cards are flexible */
+.card.product-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Makes cards stretch to equal height in a row */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .product-img {
+        aspect-ratio: 4 / 3; /* Maintain aspect ratio on smaller screens */
+    }
+    
+    .card-body h6 {
+        font-size: 0.9rem; /* Smaller font for product name */
+    }
+    
+    .card-footer a {
+        font-size: 0.8rem; /* Smaller buttons on mobile */
+    }
+}
+
+@media (max-width: 576px) {
+    .product-img {
+        aspect-ratio: 1 / 1; /* Square images for very small screens to save space */
+    }
+    
+    .card-body {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .card-body h6 {
+        font-size: 0.8rem; /* Even smaller font for mobile */
+    }
+    
+    .card-footer {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+/*for brand print bar*/
+.vendor-carousel .vendor-item {
+  width: 180px;               /* Set a fixed width */
+  height: 120px;              /* Set a fixed height */
+  display: flex;
+  align-items: center;        /* Vertically center image */
+  justify-content: center;     /* Horizontally center image */
+  margin: auto;
+}
+
+.vendor-carousel .vendor-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;        /* Keep image ratio inside box */
+}
+
+</style>
+<body>
+    
+    <div class="container-fluid">
+        <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark" href="">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Help</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="">Support</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-dark px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-dark pl-2" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+              
+                <img src="/img/logo 2.jpg" alt="" style="height: 60px;width: 70px;">
+            </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="" class="btn border">
+                    <i class="fas fa-heart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a href="" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+
+
+   
+    <div class="container-fluid mb-5">
+        <div class="row border-top px-xl-5">
+           
+                        <!-- </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Skin Type <i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">Dry</a>
+                                <a href="" class="dropdown-item">Oily</a>
+                                <a href="" class="dropdown-item">Normal</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-toggle="dropdown">Color<i class="fa fa-angle-down float-right mt-1"></i></a>
+                            <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                                <a href="" class="dropdown-item">Gold</a>
+                                <a href="" class="dropdown-item">Peach</a>
+                                <a href="" class="dropdown-item">RoseGold</a>
+                            </div>
+                        </div>
+                        
+                    </div> -->
+                </nav>
+            </div> 
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1"></span>Leaf</h1>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between d-flex " id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            
+                            <a href="index.html" class="nav-item nav-link active">Skin</a>
+                            <a href="face.html" class="nav-item nav-link">Face</a>
+                            <a href="lips.html" class="nav-item nav-link">Lips</a>
+                            <a href="eyes.html" class="nav-item nav-link ">Eyes</a>
+                            <a href="nail.html" class="nav-item nav-link ">Nail</a>
+                        </div>
+                            
+                        <div class="navbar-nav ml-auto py-0 ">
+                            <%if(!user){%>
+                            <a href="/login" class="nav-item nav-link">Login</a>
+                            <a href="/signup" class="nav-item nav-link">Register</a>
+                            <%}else{%> 
+                                <div class="dropdown" >
+                                    <span><%= user.name%></span>
+                              
+                                <div class="dropdown-content" >
+                                    <a href="/my-profile">Profile</a>
+                                    <a href="/logout">Logout</a>
+        
+                                </div>
+                                </div>
+                            </div>
+                                    
+                        <%}%>
+                        
+                    </div>
+                </nav>
+                <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <% banner.slice(0,2).forEach((bannerItem, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>" style="height: 410px;">
+                              <img class="img-fluid" src="/uploads/re-image/<%= bannerItem.image %>" alt="<%= bannerItem.title %>">
+                              <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                  <h4 class="text-light text-uppercase font-weight-medium mb-3"><%= bannerItem.description %></h4>
+                                  <h3 class="display-4 text-white font-weight-semi-bold mb-4"><%= bannerItem.title %></h3>
+                                  <a href="/shopnow" class="btn btn-light py-2 px-3">Shop Now</a>
+                                </div>
+                              </div>
+                            </div>
+                          <% }) %>
+                           
+                       
+                    </div>
+                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-prev-icon mb-n2"></span>
+                        </div>
+                    </a>
+                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-next-icon mb-n2"></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid offer pt-5">
+        <div class="row px-xl-5">
+            <div class="col-md-6 pb-4">
+                <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
+                    <img src="img/offer-1.png" alt="">
+                    <div class="position-relative" style="z-index: 1;">
+                        <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
+                        <h1 class="mb-4 font-weight-semi-bold">For Spring </h1>
+                        <a href="/shopnow" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pb-4">
+                <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
+                    <img src="img/offer-2.png" alt="">
+                    <div class="position-relative" style="z-index: 1;">
+                        <h5 class="text-uppercase text-primary mb-3">20% off the all order</h5>
+                        <h1 class="mb-4 font-weight-semi-bold">For Winter</h1>
+                        <a href="/shopnow" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Trandy Products</span></h2>
+        </div>
+
+        <div class="row px-xl-5 pb-3">
+            <% for(let i=0; i<products.length; i++) { %>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <a href="/productDetails?id=<%= products[i]._id %>">
+                            <img class="img-fluid w-100" src="/Uploads/re-image/<%= products[i].productImage[0] %>" alt="<%= products[i].productName %>">
+                        </a>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"><%= products[i].productName %></h6>
+                        <p class="product-brand">Brand: <%= products[i].brand %></p>
+                        <div class="d-flex justify-content-center">
+                            <h6>₹<%= products[i].salePrice.toLocaleString('en-IN') %></h6>
+                            <h6 class="text-muted ml-2"><del>₹<%= products[i].regularPrice.toLocaleString('en-IN') %></del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                        <a href="/cart?id=<%= products[i]._id %>" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    
+    <div class="container-fluid bg-secondary my-5">
+        <div class="row justify-content-md-center py-5 px-xl-5">
+            <div class="col-md-6 col-12 py-5">
+                <div class="text-center mb-2 pb-2">
+                    <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Stay Updated</span></h2>
+                    <p>Leaf is an e-commerce platform dedicated to organic cosmetics, providing a seamless shopping experience for users while offering comprehensive admin functionalities</p>
+                </div>
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-white p-4" placeholder="Email Goes Here">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary px-4">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Just Arrived</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <% products.forEach(product => { %>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <a href="/productDetails?id=<%= product._id %>">
+                            <img class="img-fluid w-100" src="/uploads/re-image/<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                        </a>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3"><%= product.productName %></h6>
+                        <p class="product-brand">Brand: <%= product.brand %></p>
+                        <div class="d-flex justify-content-center">
+                            <h6>₹<%= product.salePrice.toLocaleString('en-IN') %></h6>
+                            <h6 class="text-muted ml-2"><del>₹<%= product.regularPrice.toLocaleString('en-IN') %></del></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="/productDetails?id=<%= product._id %>" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                        <a href="/addToCart?id=<%= product._id %>" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+   
+    <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="owl-carousel vendor-carousel">
+                    <% if (brands && brands.length > 0) { %>
+                        <% brands.forEach(function(brand) { %>
+                            <div class="vendor-item border p-4">
+                                <img src="/uploads/re-image/<%= brand.brandImage %>" alt="<%= brand.brandName %>" class="img-fluid">
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="text-center w-100">No brands available</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <%- include("../../views/partials/user/footer") %>

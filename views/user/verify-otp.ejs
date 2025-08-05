@@ -67,7 +67,7 @@
           <input type="text" maxlength="1" name="otp5" class="otp" required />
           <input type="text" maxlength="1" name="otp6" class="otp" required />
         </div>
-        <p class="timer">Time left: <span id="countdown">30</span> seconds</p>
+        <p class="timer">Time left: <span id="countdown">60</span> seconds</p>
         <button type="submit">Verify OTP</button>
       </form>
       <button type="submit"  id="resendBtn" disabled>Resend OTP</button>
@@ -75,11 +75,11 @@
 
     <script>
       
-      let timeLeft = 30;
+      let timeLeft = 60;
       let timer;
 
       function startTimer() {
-        timeLeft = 30; // Reset timer
+        timeLeft = 60; // Reset timer
         document.getElementById("countdown").innerText = timeLeft;
         document.getElementById("resendBtn").disabled = true; // Disable resend button
 

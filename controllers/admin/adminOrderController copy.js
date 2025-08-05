@@ -1,12 +1,8 @@
 const Product = require("../../models/productSchema");
 const Category = require("../../models/categorySchema");
 const Brand = require("../../models/brandSchema");
-const Wallet=require("../../models/walletSchema")
 const User = require("../../models/userSignupSchema");
 const Order= require("../../models/orderSchema");
-
-const refundToWallet = require("../../util/refundToWallet");
-
 const { v4: uuidv4 } = require('uuid');
 const moment = require('moment');
 const PDFDocument = require('pdfkit');
@@ -82,65 +78,47 @@ const updateStatus = async (req, res) => {
   
 
 
-
 const cancelOrder = async (req, res) => {
-  try {
-      const { orderId } = req.body;  
+    try {
+        const { orderId } = req.body;  
 
-      if (!orderId) {
-        return res.status(400).json({ success: false, message: "Order ID is required" });
-    }
+        if (!orderId) {
+          return res.status(400).json({ success: false, message: "Order ID is required" });
+      }
 
-      // const order=await Order.findById(orderId)
+        // const order=await Order.findById(orderId)
 
-     const order=await Order.findOne({orderId})
-  //    if (!order) {
-  //     return res.status(400).json({ success: false, message: "Order not found" });
-  // }
-      
-      // const updatedOrder = await Order.findOneAndUpdate(
-      //     { orderId: orderId },
-      //     { $set: { status: 'Cancel' } },
-      //     { new: true }
-      // );
+       
 
-      order.status="cancelled";
-      order.cancellationReason="Cancelled by admin";
-      order.cancelledAt= new Date()
-    await order.save()
-
-      // if (!updatedOrder) {
-      //     return res.status(404).json({ success: false, message: "Order not found" });
-      // }
-
-      let wallet=null
-      if(order.paymentMethod!=="cod" && order.finalAmount>0){
-        wallet=await refundToWallet(
-          order.userId,
-          order.finalAmount,
-          order._id,
-          `Refund for admin-cancelled order #${orderId}`
+        
+        const updatedOrder = await Order.findOneAndUpdate(
+            { orderId: orderId },
+            { $set: { status: 'Cancel' } },
+            { new: true }
         );
-      }
 
-      for(const item of order.orderedItems){
-        await Product.findByIdAndUpdate(item.product._id,{$inc:{quantity:item.quantity}})
-      }
-      return res.status(200).json({
-          success: true,
-          message: "Order cancelled successfully",
-          order: order,
-          wallet,
-      });
+        
 
-  } catch (error) {
-      console.error("Error cancelling order:", error);
-      return res.status(500).json({
-          success: false,
-          message: "Internal server error"
-      });
-  }
+
+        if (!updatedOrder) {
+            return res.status(404).json({ success: false, message: "Order not found" });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Order cancelled successfully",
+            order: updatedOrder
+        });
+
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
 };
+
 
 const getOrderDetails = async (req, res) => {
   try {
@@ -226,97 +204,78 @@ if(action==='approved'){
 }
 
 
-const updateReturnStatus = async (req, res) => {
+const updateReturnStatus = async(req,res)=>{
   try {
-    const { orderId, status } = req.body;
-
-    if (status === 'returning') {
-      const order = await Order.findByIdAndUpdate(
-        orderId,
-        { $set: { status: status } },
-        { new: true }
-      );
-
-      if (order) {
-        return res.status(200).json({ success: true, message: "Returning Success" });
-      } else {
-        return res.status(404).json({ success: false, message: "Order not found" });
+    const {orderId,status}=req.body;
+    if(status==='returning'){
+      const order=await  Order.findByIdAndUpdate(orderId,{$set:{status:status}},{new:true})
+      if(order){
+      return  res.status(200).json({success:true,message:"Returning Success"})
+      }else{
+        return res.status(404).json({success:false,message:"Order not found"})
       }
-
-    } else if (status === 'returned') {
-      const order = await Order.findById(orderId).populate("userId");
-
-      // const order = await Order.findByIdAndUpdate(orderId, { $set: { status: status } }, { new: true });
-      // if (order) {
-      //   return res.status(200).json({ success: true, message: "Return success" });
-      // } else {
-      //   return res.status(404).json({ success: false, message: "Order Not Found" });
+    }else if(status==='returned'){
+      const order=await Order.findByIdAndUpdate(orderId,{$set:{status:status}},{new:true})
+      // if(order){
+      //   return res.status(200).json({success:true,message:"Return success"})
+      // }else{
+      //   return res.status(404).json({success:false,message:"Order Not Found"})
       // }
-
-      if (!order) {
-        return res.status(404).json({ success: false, message: "Order Not Found" });
+      if(!order){
+        return res.status(404).json({success:false,message:"Order Not Found"})
       }
 
-      console.log("order payment method", order.paymentMethod);
+     
+     order.status = 'returned';
+     await order.save();
 
-      
-      if (order.paymentMethod === "online payment" || order.paymentMethod === "wallet") {
-        const userId = order.userId;
-        const refundAmount = order.finalAmount;
-        console.log("refunding amount", refundAmount, "userId", userId);
+    
 
-        let userWallet = await Wallet.findOne({ userId });
-        console.log("Existing wallet", userWallet);
+     if(order.paymentMethod==="online payment" || order.paymentMethod==="wallet"){
+      const userId=order.userId;
+      const refundAmount=order.finalAmount;
+      let userWallet=await Wallet.findOne({userId})
 
-        const transaction = {
-          amount: refundAmount,
-          type: "credit",
-          description: `Refund for returned order #${order.orderId}`,
-          orderId: order._id,
-        };
+      const transaction={
+        amount:refundAmount,
+        type:"credit",
+        description:`Refund for returned order #${order.orderId}`,
+        orderId:order._id
+      };
 
-        if (userWallet) {
-          userWallet.balance += refundAmount;
-          userWallet.transactions.push(transaction);
-          await userWallet.save();
-        } else {
-          const newWallet = new Wallet({
-            userId,
-            balance: refundAmount,
-            transactions: [transaction],
-          });
-          await newWallet.save();
-        }
+      if(userWallet){
+        userWallet.balance+=refundAmount;
+        userWallet.transactions.push(transaction)
+        await userWallet.save();
+      }else{
+        const newWallet=new Wallet({
+          userId,
+          balance:refundAmount,
+          transactions:[transaction]
+        });
+        await newWallet.save()
       }
+     }
 
-      
-      for (const item of order.orderedItems) {
-        if (item.product && item.quantity) {
-          await Product.findByIdAndUpdate(
-            item.product._id,
-            { $inc: { quantity: item.quantity } }
-          );
-        }
+    
+    for (const item of order.orderedItems) {
+      if (item.product && item.quantity) {
+        await Product.findByIdAndUpdate(
+          item.product._id,
+          { $inc: { quantity: item.quantity } }
+        );
       }
+    }
 
-      
-      order.status = 'returned';
-      await order.save();
 
-      return res.status(200).json({
-        success: true,
-        message: "Return processed, stock updated and refund added"
-      });
+
     }
 
   } catch (error) {
-    console.error("Return status update error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error"
-    });
+    res.status(500).send("Internal server error");  
   }
-};
+}
+
 
 
 
