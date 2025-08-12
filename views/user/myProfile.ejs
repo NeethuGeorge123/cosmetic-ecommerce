@@ -1,331 +1,440 @@
-<%- include("../../views/partials/user/header") %>
-<%- include("../../views/partials/user/header1") %>
-<style>
- .card-green {
-   background-color: #ADD8E6;
- }
- .main {
-   padding: 30px 0;
- }
-
-
- .dashboard-menu {
-   background-color: #cce3e6;
-   border-radius: 10px;
-   padding: 15px;
-   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
- }
-
-
- .dashboard-menu .nav-link {
- font-weight: bold;
- color: #30683c;
- box-shadow: 0 4px 10px rgba(123, 131, 112, 0.3), 0 4px 20px rgba(0, 191, 255, 0.2);
- transition: box-shadow 0.3s ease;
-}
-
-
-.dashboard-menu .nav-link:hover {
- color: #00bfff;
- box-shadow: 0 4px 15px rgba(173, 255, 47, 0.5), 0 6px 25px rgba(0, 191, 255, 0.4);
-}
-
-
- .card {
-   border-radius: 10px;
-   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-   margin-bottom: 20px;
- }
-
-
- .card-header {
-   background-color: #5d8a7b;
-   color: white;
-   border-radius: 10px 10px 0 0;
- }
-
-
- .btn-success {
-   background-color: #577194;
-   border-color: #6bb87d;
- }
-
-
- .btn-success:hover {
-   background-color: #506955;
- }
-
-
- .form-group {
-   margin-bottom: 15px;
- }
-
-
- .required {
-   color: red;
- }
-
-
-  @media (max-width: 768px) {
-   .dashboard-menu {
-     padding: 10px;
-   }
-
-
-   .card {
-     margin-bottom: 15px;
-   }
- }
- .page-header.breadcrumb-wrap {
- background-color: #eee2e9;
- padding: 15px 0;
-}
-
-
-.breadcrumb {
- display: flex;
- align-items: center;
- font-family: 'Arial', sans-serif;
- font-size: 16px;
- color: #121311;
-}
-
-
-.breadcrumb a {
- color: #007bff;
- text-decoration: none;
- position: relative;
- margin: 0 5px;
-}
-
-
-.breadcrumb a:hover {
- color: #0056b3;
-}
-
-
-.breadcrumb span {
- margin: 0 5px;
- color: #999;
-}
-
-
-.breadcrumb a::after {
- content: '';
- position: absolute;
- width: 100%;
- height: 2px;
- background: #6e6e3a;
- left: 0;
- bottom: -2px;
- transform: scaleX(0);
- transition: transform 0.3s ease;
-}
-
-
-.breadcrumb a:hover::after {
- transform: scaleX(1);
-}
-</style>
-
-
-<!-- main.ejs - Responsive Layout -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard </title>
+    <title>User Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --text-color: #333;
-            --light-bg: #f8f9fa;
-            --border-color: #e9ecef;
-            --hover-color: #f1f8ff;
+            --primary-peach: #F5E6D3;
+            --secondary-peach: #F0D7C7;
+            --accent-peach: #E8B4A0;
+            --dark-peach: #D4A484;
+            --deep-peach: #C8956D;
+            --gradient-peach: linear-gradient(135deg, #F5E6D3 0%, #F0D7C7 50%, #E8B4A0 100%);
+            --gradient-accent: linear-gradient(135deg, #E8B4A0 0%, #D4A484 50%, #C8956D 100%);
+            --gradient-subtle: linear-gradient(135deg, #FAF6F2 0%, #F5E6D3 100%);
+            --text-primary: #3A2F2A;
+            --text-secondary: #6B5B54;
+            --text-light: #9B8B82;
+            --white: #FFFFFF;
+            --light-gray: #FAF6F2;
+            --border-light: #E8DDD4;
+            --shadow-light: rgba(196, 149, 109, 0.08);
+            --shadow-medium: rgba(196, 149, 109, 0.15);
+            --shadow-hover: rgba(212, 164, 132, 0.2);
+            --shadow-peach: rgba(232, 180, 160, 0.25);
+        }
+        
+        * {
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--text-color);
-            background-color: #f5f5f5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+            background: #FAFAFA;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
         }
         
         .main {
             min-height: 100vh;
-            padding-bottom: 30px;
+            padding-bottom: 40px;
         }
         
-        /* Breadcrumb */
+        /* Enhanced Breadcrumb */
         .breadcrumb-wrap {
-            background-color: var(--light-bg);
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 30px !important;
+            background: var(--gradient-peach);
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 0 !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .breadcrumb-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3));
+            transform: skewX(-15deg);
         }
         
         .breadcrumb {
             margin-bottom: 0;
             font-size: 14px;
+            font-weight: 500;
+            background: none;
+            padding: 0;
         }
         
         .breadcrumb a {
-            color: var(--primary-color);
+            color: var(--text-primary);
             text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--deep-peach);
+            transform: translateY(-1px);
+        }
+        
+        .breadcrumb a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--deep-peach);
+            transition: width 0.3s ease;
+        }
+        
+        .breadcrumb a:hover::after {
+            width: 100%;
         }
         
         .breadcrumb span {
-            padding: 0 10px;
-            color: #ccc;
+            padding: 0 12px;
+            color: var(--text-light);
         }
         
-        /* Dashboard sidebar */
+        /* Enhanced Dashboard Menu */
         .dashboard-menu {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--shadow-light);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+        
+        .dashboard-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
         }
         
         .dashboard-menu .nav-link {
-            color: var(--text-color);
-            padding: 15px 20px;
-            border-left: 4px solid transparent;
-            transition: all 0.3s ease;
+            color: var(--text-primary);
+            padding: 18px 24px;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 500;
             display: flex;
             align-items: center;
+            position: relative;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        .dashboard-menu .nav-link:last-child {
+            border-bottom: none;
+        }
+        
+        .dashboard-menu .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: var(--gradient-accent);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .dashboard-menu .nav-link i {
-            margin-right: 10px;
+            margin-right: 16px;
             width: 20px;
             text-align: center;
             font-size: 18px;
+            transition: all 0.3s ease;
         }
         
         .dashboard-menu .nav-link:hover {
-            background-color: var(--hover-color);
-            color: var(--primary-color);
+            background: var(--gradient-subtle);
+            color: var(--text-primary);
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px var(--shadow-peach);
+        }
+        
+        .dashboard-menu .nav-link:hover::before {
+            width: 4px;
+        }
+        
+        .dashboard-menu .nav-link:hover i {
+            color: var(--deep-peach);
+            transform: scale(1.1);
         }
         
         .dashboard-menu .nav-link.active {
-            background-color: var(--hover-color);
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
+            background: var(--gradient-peach);
+            color: var(--text-primary);
+            font-weight: 600;
         }
         
-        /* Content area */
-        .dashboard-content .card {
+        .dashboard-menu .nav-link.active::before {
+            width: 4px;
+        }
+        
+        .dashboard-menu .nav-link.active i {
+            color: var(--deep-peach);
+        }
+        
+        /* Enhanced Profile Card */
+        .card {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px var(--shadow-light);
+            margin-bottom: 30px;
             overflow: hidden;
-        }
-        
-        .dashboard-content .card-header {
-            background-color: white;
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 20px;
-        }
-        
-        .dashboard-content .card-body {
-            padding: 20px;
-        }
-        
-        .card-green {
-            border-top: 4px solid var(--secondary-color) !important;
-        }
-        
-        /* Buttons */
-        .btn-success {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            padding: 8px 20px;
-            border-radius: 5px;
+            background: var(--white);
             transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px var(--shadow-medium);
+        }
+        
+        .card-green::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-accent);
+        }
+        
+        .card-header {
+            background: var(--gradient-peach);
+            border-bottom: 1px solid var(--border-light);
+            padding: 24px 32px;
+            position: relative;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 2px;
+        }
+        
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+        
+        .card-body {
+            padding: 40px 32px;
+        }
+        
+        /* Enhanced Avatar */
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        
+        .avatar-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-wrapper:hover::before {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .avatar-wrapper img {
+            width: 120px !important;
+            height: 120px !important;
+            object-fit: cover;
+            border: 4px solid var(--white);
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .avatar-wrapper:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* User Info Cards */
+        .user-info-item {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            height: 100%;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--shadow-light);
+        }
+        
+        .user-info-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .user-info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px var(--shadow-light);
+        }
+        
+        .user-info-item:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .user-info-item label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .user-info-item p {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        /* Enhanced Buttons */
+        .btn-success {
+            background: var(--gradient-accent);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
         }
         
         .btn-success:hover {
-            background-color: #27ae60;
-            border-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px var(--shadow-peach);
+            background: var(--gradient-accent);
+            border: none;
+            color: var(--white);
         }
         
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 8px 20px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+        .btn-success:hover::before {
+            left: 100%;
         }
         
-        .btn-primary:hover {
-            background-color: #2980b9;
-            border-color: #2980b9;
-        }
-        
-        .btn-small {
-            padding: 5px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            color: var(--primary-color);
-            background-color: var(--hover-color);
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-small:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Tables */
-        .table {
-            margin-bottom: 0;
-        }
-        
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            padding: 15px 10px;
-            color: #666;
-        }
-        
-        .table td {
-            padding: 15px 10px;
-            vertical-align: middle;
+        .btn-success:active {
+            transform: translateY(0);
         }
         
         /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
-            background-color: var(--primary-color);
-            color: white;
+            background: var(--gradient-accent);
+            color: var(--white);
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
             width: 100%;
             text-align: left;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px var(--shadow-light);
+        }
+        
+        .mobile-menu-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow-medium);
         }
         
         /* Footer */
         footer {
-            background-color: white;
-            padding: 20px 0;
+            background: var(--white);
+            padding: 32px 0;
             text-align: center;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-light);
+            margin-top: 60px;
         }
         
-        /* Responsive design */
+        footer p {
+            color: var(--text-light);
+            margin: 0;
+            font-weight: 400;
+        }
+        
+        /* Profile Title Enhancement */
+        .profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 991px) {
             .breadcrumb-wrap {
                 margin-bottom: 20px !important;
@@ -333,6 +442,10 @@
             
             .dashboard-menu {
                 margin-bottom: 30px;
+            }
+            
+            .card-body {
+                padding: 30px 24px;
             }
         }
         
@@ -350,51 +463,66 @@
             
             .dashboard-menu.show {
                 display: block;
+                animation: slideDown 0.3s ease;
             }
             
-            .card {
-                margin-bottom: 20px;
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
             
-            .table-responsive {
-                margin-bottom: 0;
+            .card-body {
+                padding: 24px 20px;
+            }
+            
+            .user-info-item {
+                padding: 20px;
+                margin-bottom: 16px;
+            }
+            
+            .avatar-wrapper img {
+                width: 100px !important;
+                height: 100px !important;
+            }
+            
+            .btn-success {
+                padding: 10px 20px;
+                font-size: 13px;
+                margin-bottom: 8px;
+                width: 100%;
             }
         }
-
-/*new css*/
-
-.user-info-item {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
-      height: 100%;
-    }
-    
-    .user-info-item label {
-      font-weight: 600;
-      color: #666;
-      margin-bottom: 5px;
-      display: block;
-    }
-    
-    .user-info-item p {
-      font-size: 16px;
-    }
-    
-    .avatar-wrapper {
-      display: inline-block;
-    }
-    
-    @media (max-width: 767px) {
-      .btn-sm {
-        padding: 8px 16px;
-      }
-    }
-
+        
+        /* Additional Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card {
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .dashboard-menu {
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
     </style>
 </head>
 <body>
-    <!-- Header can be included here -->
+    <%- include("../../views/partials/user/header") %>
+    <%- include("../../views/partials/user/header1") %>
     
     <main class="main">
         <div class="page-header breadcrumb-wrap">
@@ -406,10 +534,10 @@
             </div>
         </div>
         
-        <section class="pt-4 pb-4">
+        <section class="pt-5 pb-4">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-10 m-auto">
+                    <div class="col-12">
                         <!-- Mobile Menu Toggle Button -->
                         <button class="mobile-menu-toggle" id="toggleMenu">
                             <span>Menu</span>
@@ -418,32 +546,31 @@
                         
                         <div class="row">
                             <!-- Sidebar Menu -->
-                            <div class="col-lg-4 col-md-5">
+                            <div class="col-lg-3 col-md-4">
                                 <div class="dashboard-menu" id="sidebarMenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link " href="/my-profile">
+                                            <a class="nav-link active" href="/my-profile">
                                                 <i class="fas fa-tachometer-alt"></i> Dashboard
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link " href="/myAddress">
+                                            <a class="nav-link" href="/myAddress">
                                                 <i class="fas fa-map-marker-alt"></i> My Address
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link " href="/orders">
+                                            <a class="nav-link" href="/orders">
                                                 <i class="fas fa-shopping-bag"></i> Orders
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link " href="/wallet">
+                                            <a class="nav-link" href="/wallet">
                                                 <i class="fas fa-wallet"></i> Wallet 
                                             </a>
                                         </li>
-                                        
                                         <li class="nav-item">
-                                            <a class="nav-link " href="/referrals">
+                                            <a class="nav-link" href="/referrals">
                                                 <i class="fas fa-user-plus"></i> Referrals
                                             </a>
                                         </li>
@@ -457,49 +584,45 @@
                             </div>
                             
                             <!-- Content Area -->
-                            <div class="col-lg-8 col-md-7">
+                            <div class="col-lg-9 col-md-8">
                                 <div class="dashboard-content">
-                                    <!-- Page content will be included here -->
-
                                     <div class="card card-green">
                                         <div class="card-header">
-                                          <h5 class="mb-0 text-center">User Profile</h5>
+                                            <h5 class="mb-0 text-center">User Profile</h5>
                                         </div>
                                         <div class="card-body">
-                                          <div class="text-center mb-4">
-                                            <div class="avatar-wrapper mb-3">
-                                              <img src="uploads/re-image/profile.jpg" alt="Profile Avatar" class="rounded-circle img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;">
+                                            <div class="text-center mb-4">
+                                                <div class="avatar-wrapper">
+                                                    <img src="uploads/re-image/profile.jpg" alt="Profile Avatar" class="rounded-circle img-thumbnail">
+                                                </div>
+                                                <h5 class="profile-title"><%= user.name %></h5>
                                             </div>
-                                            <h5 class="card-title"><%= user.name %></h5>
-                                          </div>
-                                          
-                                          <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                              <div class="user-info-item">
-                                                <label>Phone:</label>
-                                                <p class="mb-0"><%= user.phone %></p>
-                                              </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="user-info-item">
+                                                        <label>Phone Number</label>
+                                                        <p class="mb-0"><%= user.phone %></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="user-info-item">
+                                                        <label>Email Address</label>
+                                                        <p class="mb-0"><%= user.email %></p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6 mb-3">
-                                              <div class="user-info-item">
-                                                <label>Email:</label>
-                                                <p class="mb-0"><%= user.email %></p>
-                                              </div>
+                                            
+                                            <div class="text-center mt-4">
+                                                <a href="/change-email" class="btn btn-success me-2 mb-2">
+                                                    <i class="fas fa-envelope me-2"></i>Change Email
+                                                </a>
+                                                <a href="/change-password" class="btn btn-success mb-2">
+                                                    <i class="fas fa-lock me-2"></i>Change Password
+                                                </a>
                                             </div>
-                                          </div>
-                                          
-                                          <div class="text-center mt-3">
-                                            <a href="/change-email" class="btn btn-sm btn-success me-2 mb-2">Change Email</a>
-                                            <a href="/change-password" class="btn btn-sm btn-success mb-2">Change Password</a>
-                                          </div>
                                         </div>
-                                      </div>
-                                      
-                                      
-                                      </div>
-                                      
-
-                                   
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -536,10 +659,21 @@
                     sidebarMenu.classList.remove('show');
                 }
             });
+            
+            // Add smooth scrolling and enhanced interactions
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
         });
     </script>
 </body>
 </html>
-
-
-

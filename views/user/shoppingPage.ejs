@@ -609,7 +609,9 @@
                                         <p class="product-brand">Brand: <%= products[i].brand %></p>
                                         <div class="product-price">
                                             <span class="sale-price">₹<%=products[i].salePrice.toLocaleString('en-IN')%></span>
+                                            <%if(products[i].salePrice!=products[i].regularPrice){%>
                                             <span class="regular-price">₹<%=products[i].regularPrice.toLocaleString('en-IN')%></span>
+                                            <%}%>
                                         </div>
                                     </div>
                                     <div class="product-actions" >

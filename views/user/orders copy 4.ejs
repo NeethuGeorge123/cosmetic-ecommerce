@@ -1,0 +1,1704 @@
+<%- include("../../views/partials/user/header") %>
+<%- include("../../views/partials/user/header1") %>
+<!DOCTYPE html>
+<html lang="en"> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <!-- SweetAlert2 CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <!-- Google Fonts for modern typography -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <style>
+      :root {
+        --primary-color: #1e88e5; /* Vibrant blue */
+        --secondary-color: #43a047; /* Fresh green */
+        --accent-color: #f06292; /* Soft pink for highlights */
+        --text-color: #1a1a1a; /* Darker text for better contrast */
+        --light-bg: #ffffff; /* Clean white background */
+        --border-color: #e0e0e0; /* Subtle border */
+        --hover-color: #e3f2fd; /* Light blue hover */
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Softer shadow */
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text-color);
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+        line-height: 1.6;
+      }
+
+      .main {
+        min-height: 100vh;
+        padding: 40px 0;
+      }
+
+      /* Breadcrumb */
+      .breadcrumb-wrap {
+        background: var(--light-bg);
+        padding: 20px 0;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 40px !important;
+      }
+
+      .breadcrumb {
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        color: #555;
+      }
+
+      .breadcrumb a {
+        color: var(--primary-color);
+        text-decoration: none;
+        position: relative;
+        margin: 0 8px;
+        transition: color 0.3s ease;
+      }
+
+      .breadcrumb a:hover {
+        color: #1565c0;
+      }
+
+      .breadcrumb span {
+        color: #999;
+        padding: 0 12px;
+      }
+
+      .breadcrumb a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: var(--accent-color);
+        left: 0;
+        bottom: -4px;
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .breadcrumb a:hover::after {
+        transform: scaleX(1);
+      }
+
+      /* Dashboard Sidebar */
+      .dashboard-menu {
+        background: var(--light-bg);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+      }
+
+      .dashboard-menu:hover {
+        transform: translateY(-5px);
+      }
+
+      .dashboard-menu .nav-link {
+        color: var(--text-color);
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .dashboard-menu .nav-link i {
+        margin-right: 12px;
+        width: 24px;
+        font-size: 1.2rem;
+        color: var(--primary-color);
+      }
+
+      .dashboard-menu .nav-link:hover {
+        background: var(--hover-color);
+        color: var(--primary-color);
+        transform: translateX(5px);
+      }
+
+      .dashboard-menu .nav-link.active {
+        background: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+      }
+
+      .dashboard-menu .nav-link.active i {
+        color: #fff;
+      }
+
+      /* Content Area */
+      .dashboard-content .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+      }
+
+      .dashboard-content .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .dashboard-content .card-header {
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        color: #fff;
+        border-radius: 16px 16px 0 0;
+        padding: 20px;
+        font-weight: 600;
+        font-size: 1.25rem;
+      }
+
+      .dashboard-content .card-body {
+        padding: 30px;
+        background: var(--light-bg);
+      }
+
+      .card-green {
+        border-left: 6px solid var(--secondary-color);
+      }
+
+      /* Buttons */
+      .btn-success {
+        background: var(--secondary-color);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-success:hover {
+        background: #388e3c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: #1565c0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+      }
+
+      .btn-small {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        color: var(--primary-color);
+        background: var(--hover-color);
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-small:hover {
+        background: var(--primary-color);
+        color: #fff;
+        transform: translateY(-2px);
+      }
+
+      /* Tables */
+      .table th {
+        font-weight: 600;
+        padding: 16px;
+        color: var(--text-color);
+        background: #f9fafb;
+      }
+
+      .table td {
+        padding: 16px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      /* Mobile Menu Toggle */
+      .mobile-menu-toggle {
+        display: none;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .mobile-menu-toggle:hover {
+        background: #1565c0;
+        transform: translateY(-2px);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--light-bg);
+        padding: 30px 0;
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      footer p {
+        margin: 0;
+        color: #555;
+        font-size: 0.9rem;
+      }
+
+      /* Orders */
+      .orders {
+        padding: 1.5rem;
+        max-width: 1000px;
+        margin: auto;
+      }
+
+      .search-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        background: var(--light-bg);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+      }
+
+      .search-bar input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .search-bar input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 8px rgba(30, 136, 229, 0.2);
+      }
+
+      .btn-group button {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+
+      .order-card {
+        background: var(--light-bg);
+        border: none;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .order-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+
+      .order-header,
+      .order-status {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+
+      .order-items {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .item {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .actions .cancel {
+        background: #ef5350;
+      }
+
+      .actions .cancel:hover {
+        background: #d32f2f;
+        transform: translateY(-2px);
+      }
+
+      .badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #fff;
+      }
+
+      .badge.pending {
+        background: #ffb300;
+      }
+
+      .badge.cancelled {
+        background: #ef5350;
+      }
+
+      .badge.completed {
+        background: var(--secondary-color);
+      }
+
+      /* Enhanced Order Listing Styles */
+      .search-filter-section {
+        background: var(--light-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+      }
+
+      .order-item {
+        transition: background-color 0.3s ease;
+      }
+
+      .order-item:hover {
+        background: var(--hover-color);
+        border-radius: 8px;
+      }
+
+      .item-image img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .payment-badge {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        background: #e0f7fa;
+        color: var(--text-color);
+      }
+
+      .item-actions {
+        gap: 0.75rem;
+      }
+
+      .order-actions {
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-top: 1rem;
+      }
+
+      /* Badge Styles */
+      .badge.bg-warning {
+        background: #ffb300 !important;
+        color: #fff;
+      }
+
+      .badge.bg-danger {
+        background: #ef5350 !important;
+      }
+
+      .badge.bg-success {
+        background: var(--secondary-color) !important;
+      }
+
+      .badge.bg-info {
+        background: #26c6da !important;
+      }
+
+      .badge.bg-primary {
+        background: var(--primary-color) !important;
+      }
+
+      /* Pagination */
+      .pagination .page-item.active .page-link {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: #fff;
+      }
+
+      .pagination .page-link {
+        color: var(--primary-color);
+        border-radius: 8px;
+        margin: 0 4px;
+        transition: all 0.3s ease;
+      }
+
+      .pagination .page-link:hover {
+        background: var(--hover-color);
+        color: var(--primary-color);
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 991px) {
+        .breadcrumb-wrap {
+          margin-bottom: 30px !important;
+        }
+
+        .dashboard-menu {
+          margin-bottom: 20px;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .mobile-menu-toggle {
+          display: flex;
+        }
+
+        .dashboard-menu {
+          display: none;
+        }
+
+        .dashboard-menu.show {
+          display: block;
+        }
+
+        .card {
+          margin-bottom: 20px;
+        }
+
+        .order-header,
+        .order-status {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .item {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .actions {
+          flex-direction: column;
+        }
+
+        .btn-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .order-header .col-md-4:not(:last-child) {
+          margin-bottom: 1rem;
+        }
+
+        .payment-info .col-md-6:first-child {
+          margin-bottom: 1rem;
+        }
+
+        .order-actions .col-md-6:first-child {
+          margin-bottom: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main">
+      <div class="page-header breadcrumb-wrap">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="/" rel="nofollow">Home</a>
+            <span>/</span> Profile <span>/</span> Orders
+          </div>
+        </div>
+      </div>
+
+      <section class="pt-4 pb-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-10 m-auto">
+              <!-- Mobile Menu Toggle Button -->
+              <button class="mobile-menu-toggle" id="toggleMenu">
+                <span>Menu</span>
+                <i class="fas fa-bars"></i>
+              </button>
+
+              <div class="row">
+                <!-- Sidebar Menu -->
+                <div class="col-lg-4 col-md-5">
+                  <div class="dashboard-menu" id="sidebarMenu">
+                    <ul class="nav flex-column">
+                      <li class="nav-item">
+                        <a class="nav-link" href="/my-profile">
+                          <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/myAddress">
+                          <i class="fas fa-map-marker-alt"></i> My Address
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link active" href="/orders">
+                          <i class="fas fa-shopping-bag"></i> Orders
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/wallet">
+                          <i class="fas fa-wallet"></i> Wallet
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/referrals">
+                          <i class="fas fa-user-plus"></i> Referrals
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                          <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Content Area - Enhanced Order Listing -->
+                <div class="col-lg-8 col-md-7">
+                  <div class="dashboard-content">
+                    <div class="card card-green">
+                      <div class="card-header">
+                        <h5 class="mb-0">My Orders</h5>
+                      </div>
+                      <div class="card-body">
+                        <!-- Search and Filter Section -->
+                        <div class="search-filter-section mb-4">
+                          <div class="row g-3">
+                            <div class="col-md-5">
+                              <div class="input-group">
+                                <form action="/orderSearch" method="post">
+                                  <input
+                                    name="orderId"
+                                    type="text"
+                                    class="form-control"
+                                    id="orderSearch"
+                                    placeholder="Search by Order ID or product..."
+                                  />
+                                  <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                  </button>
+                                </form>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <a
+                                href="/orders"
+                                class="btn btn-outline-secondary w-100"
+                                id="clearFilters"
+                              >
+                                Clear
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Orders List -->
+                        <div class="orders-container">
+                          <% if (orders.length === 0) { %>
+                          <div class="text-center py-5">
+                            <i
+                              class="fas fa-shopping-bag fa-3x text-muted mb-3"
+                            ></i>
+                            <h5>No orders found</h5>
+                            <p class="text-muted">
+                              You haven't placed any orders yet.
+                            </p>
+                            <a href="/" class="btn btn-primary mt-2"
+                              >Start Shopping</a
+                            >
+                          </div>
+                          <% } else { %>
+                          <% orders.forEach(order => { %>
+                          <div class="order-card mb-4">
+                            <div class="order-header p-3 bg-light rounded">
+                              <div class="row align-items-center">
+                                <div class="col-md-4">
+                                  <h6 class="mb-1">
+                                    Order #<%= order.orderId %>
+                                  </h6>
+                                  <small class="text-muted"
+                                    ><i class="far fa-calendar-alt me-1"></i><%=
+                                    order.createdOn.toDateString() %></small
+                                  >
+                                </div>
+                                <div class="col-md-4 text-md-center">
+                                  <span
+                                    class="badge rounded-pill bg-<%= order.status === 'Delivered' ? 'success' : order.status === 'Cancelled' ? 'danger' : order.status === 'Processing' ? 'info' : order.status === 'Shipped' ? 'primary' : 'warning' %>"
+                                  >
+                                    <%= order.status %>
+                                  </span>
+                                  <% if (order.status === 'Delivered') { %>
+                                  <div class="mt-1 small text-success">
+                                    <i class="fas fa-check-circle me-1"></i
+                                    >Completed
+                                  </div>
+                                  <% } %>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                  <h6 class="mb-1">
+                                    ₹<%= order.finalAmount %>
+                                  </h6>
+                                  <% if (order.couponApplied) { %>
+                                  <span class="badge bg-info text-dark"
+                                    ><i class="fas fa-tag me-1"></i>Coupon
+                                    Applied</span
+                                  >
+                                  <% } %>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Payment Method -->
+                            <div
+                              class="payment-info px-3 py-2 bg-light rounded mb-3"
+                            >
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <strong
+                                    ><i class="fas fa-credit-card me-2"></i
+                                    >Payment Method:</strong
+                                  >
+                                  <span class="payment-badge">
+                                    <% if (order.paymentMethod === 'COD') { %>
+                                    <i class="fas fa-money-bill-wave me-1"></i>
+                                    Cash On Delivery <% } else if
+                                      (order.paymentMethod === 'WALLET') { %>
+                                    <i class="fas fa-wallet me-1"></i> Wallet <%
+                                    } else { %>
+                                    <i class="fas fa-credit-card me-1"></i>
+                                    Online Payment <% } %>
+                                  </span>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                  <strong
+                                    ><i class="fas fa-truck me-2"></i>Delivery
+                                    Expected:</strong
+                                  >
+                                  <% const deliveryDate = new
+                                  Date(order.createdOn);
+                                  deliveryDate.setDate(deliveryDate.getDate() +
+                                  5); %>
+                                  <span
+                                    ><%= deliveryDate.toDateString() %></span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Order Items -->
+                            <div class="order-items">
+                              <% order.orderedItems.forEach((item, index) => { %>
+                              <div
+                                class="order-item p-3 <%= index !== order.orderedItems.length - 1 ? 'border-bottom' : '' %>"
+                              >
+                                <div class="row align-items-center">
+                                  <div class="col-md-2 col-4">
+                                    <div class="item-image">
+                                      <img
+                                        src="/Uploads/re-image/<%= item.product.productImage[0] %>"
+                                        class="img-fluid rounded"
+                                        alt="<%= item.product.productName %>"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div class="col-md-5 col-8">
+                                    <h6 class="item-title mb-1">
+                                      <%= item.product.productName %>
+                                    </h6>
+                                    <div class="item-details d-flex flex-wrap">
+                                      <span class="me-3">
+                                        <i class="fas fa-box me-1"></i>Qty: <%= item.quantity %>
+                                      </span>
+                                      <span>
+                                        <i class="fas fa-rupee-sign me-1"></i>Price: ₹<%= item.price %>
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-5 mt-3 mt-md-0">
+                                    <div
+                                      class="item-actions d-flex flex-wrap justify-content-md-end"
+                                    >
+                                      <a
+                                        href="/productDetails/?id=<%= item.product._id %>"
+                                        class="btn btn-sm btn-outline-primary me-2 mb-2"
+                                      >
+                                        <i class="fas fa-eye me-1"></i>View Product
+                                      </a>
+                                      <% if (order.status === 'Delivered') { %>
+                                      <button
+                                        class="btn btn-sm btn-outline-warning me-2 mb-2"
+                                      >
+                                        <i class="fas fa-star me-1"></i>Rate & Review
+                                      </button>
+                                      <% } %>
+                                      <% if (['Pending', 'Processing'].includes(order.status)) { %>
+                                        <% if(item.cancellationStatus === "active"){%>
+                                      <button
+                                        class="btn btn-sm btn-outline-danger me-2 mb-2 modal-trigger-item"
+                                        data-order-id="<%= order.orderId %>"
+                                        data-item-id="<%= item.product._id %>"
+                                        onclick="event.stopPropagation()"
+                                      >
+                                        <i class="fas fa-times me-1"></i>Cancel Item
+                                      </button>
+                                      <% }%>
+                                      <% if(item.cancellationStatus === "cancelled"){%>
+                                        <span class="badge-danger">Item Cancelled</span>
+                                        <%}%>
+                                      <% } %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <% }) %>
+                            </div>
+
+                            <!-- Order Actions -->
+                            <div class="order-actions p-3 bg-light rounded mt-3">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <% if (order.status.toLowerCase() === 'delivered') { %>
+                                  <button
+                                    class="btn btn-sm btn-outline-success me-2 mb-2"
+                                  >
+                                    <i class="fas fa-download me-1"></i>Download
+                                    Invoice
+                                  </button>
+                                  <button
+                                    class="btn btn-sm btn-outline-warning me-2 mb-2 modal-trigger-return"
+                                    data-order-id="<%= order._id %>"
+                                  >
+                                    <i class="fas fa-undo me-1"></i>Return
+                                    Product
+                                  </button>
+                                  <% } %>
+                                  <a
+                                    href="/viewOrderDetails/?id=<%= order._id %>"
+                                    class="btn btn-sm btn-primary me-2 mb-2"
+                                  >
+                                    <i class="fas fa-info-circle me-1"></i>View
+                                    Details
+                                  </a>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                  <% if (['pending', 'processing'].includes(order.status.toLowerCase())) { %>
+                                  <button
+                                    class="btn btn-sm btn-outline-danger me-2 mb-2 modal-trigger"
+                                    data-order-id="<%= order.orderId %>"
+                                    onclick="event.stopPropagation()"
+                                  >
+                                    <i class="fas fa-times me-1"></i>Cancel Order
+                                  </button>
+                                  <% } %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% }) %>
+
+                          <!-- Pagination -->
+                          <div
+                            class="pagination-container d-flex justify-content-center mt-4 mb-4"
+                          >
+                            <nav aria-label="Page navigation">
+                              <ul class="pagination pagination-sm flex-wrap">
+                                <% if (currentPage > 1) { %>
+                                <li class="page-item">
+                                  <a
+                                    href="?page=<%= currentPage - 1 %>"
+                                    class="page-link"
+                                    >« Previous</a
+                                  >
+                                </li>
+                                <% } else { %>
+                                <li class="page-item active">
+                                  <span class="page-link">1</span>
+                                </li>
+                                <% } %>
+
+                                <% if (currentPage > 2) { %>
+                                <li class="page-item">
+                                  <a class="page-link" href="?page=1">1</a>
+                                </li>
+                                <% if (currentPage > 3) { %>
+                                <li class="page-item disabled">
+                                  <span class="page-link">...</span>
+                                </li>
+                                <% } %>
+                                <% } %>
+
+                                <% for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                                     if (i > 1 && i < totalPages) { %>
+                                <li
+                                  class="page-item <%= currentPage === i ? 'active' : '' %>"
+                                >
+                                  <a class="page-link" href="?page=<%= i %>"
+                                    ><%= i %></a
+                                  >
+                                </li>
+                                <% } } %>
+
+                                <% if (currentPage < totalPages - 1) { %>
+                                <% if (currentPage < totalPages - 2) { %>
+                                <li class="page-item disabled">
+                                  <span class="page-link">...</span>
+                                </li>
+                                <% } %>
+                                <li
+                                  class="page-item <%= currentPage === totalPages ? 'active' : '' %>"
+                                >
+                                  <a
+                                    class="page-link"
+                                    href="?page=<%= totalPages %>"
+                                    ><%= totalPages %></a
+                                  >
+                                </li>
+                                <% } else if (currentPage === totalPages && totalPages > 1) { %>
+                                <li class="page-item active">
+                                  <span class="page-link"><%= totalPages %></span>
+                                </li>
+                                <% } %>
+
+                                <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                  <a
+                                    href="?page=<%= currentPage + 1 %>"
+                                    class="page-link"
+                                    >Next »</a
+                                  >
+                                </li>
+                                <% } else { %>
+                                <li class="page-item disabled">
+                                  <span class="page-link">Next »</span>
+                                </li>
+                                <% } %>
+                              </ul>
+                            </nav>
+                          </div>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Single Reusable Modal for Cancel Order -->
+      <div
+        class="modal fade"
+        id="cancelModal"
+        tabindex="-1"
+        aria-labelledby="cancelModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p id="cancelModalMessage">
+                Are you sure you want to cancel this entire order?
+              </p>
+              <div id="orderWarning" class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>This action cannot
+                be undone.
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  id="confirmCancel"
+                >
+                  Proceed to Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single Reusable Modal for Return Order -->
+      <div
+        class="modal fade"
+        id="returnModal"
+        tabindex="-1"
+        aria-labelledby="returnModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="returnModalLabel">Return Order</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p id="returnModalMessage">
+                Are you sure you want to request a return for this order?
+              </p>
+              <div id="returnWarning" class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>This action will
+                initiate a return request, subject to approval.
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-warning"
+                  id="confirmReturn"
+                >
+                  Proceed to Return
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single Reusable Modal for Cancel Item -->
+      <div
+        class="modal fade"
+        id="cancelItemModal"
+        tabindex="-1"
+        aria-labelledby="cancelItemModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cancelItemModalLabel">Cancel Item</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p id="cancelItemModalMessage">
+                Are you sure you want to cancel this item from the order?
+              </p>
+              <div id="itemWarning" class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>This action cannot
+                be undone.
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  id="confirmCancelItem"
+                >
+                  Proceed to Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <p>
+          © <%= new Date().getFullYear() %> Your Company. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Debounce utility
+        const debounce = (func, wait) => {
+          let timeout;
+          return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+          };
+        };
+
+        // Cancel Modal elements
+        const cancelModal = document.getElementById("cancelModal");
+        const cancelModalInstance = cancelModal
+          ? bootstrap.Modal.getOrCreateInstance(cancelModal)
+          : null;
+        const cancelModalTitle = document.getElementById("cancelModalLabel");
+        const cancelModalMessage = document.getElementById("cancelModalMessage");
+        const cancelOrderWarning = document.getElementById("orderWarning");
+        const confirmCancelButton = document.getElementById("confirmCancel");
+
+        // Return Modal elements
+        const returnModal = document.getElementById("returnModal");
+        const returnModalInstance = returnModal
+          ? bootstrap.Modal.getOrCreateInstance(returnModal)
+          : null;
+        const returnModalTitle = document.getElementById("returnModalLabel");
+        const returnModalMessage = document.getElementById("returnModalMessage");
+        const returnWarning = document.getElementById("returnWarning");
+        const confirmReturnButton = document.getElementById("confirmReturn");
+
+        // Cancel Item Modal elements
+        const cancelItemModal = document.getElementById("cancelItemModal");
+        const cancelItemModalInstance = cancelItemModal
+          ? bootstrap.Modal.getOrCreateInstance(cancelItemModal)
+          : null;
+        const cancelItemModalTitle = document.getElementById(
+          "cancelItemModalLabel"
+        );
+        const cancelItemModalMessage = document.getElementById(
+          "cancelItemModalMessage"
+        );
+        const itemWarning = document.getElementById("itemWarning");
+        const confirmCancelItemButton = document.getElementById(
+          "confirmCancelItem"
+        );
+
+        // Handle cancel modal triggers
+        if (cancelModalInstance) {
+          document.querySelectorAll(".modal-trigger").forEach((button) => {
+            const handleClick = debounce((e) => {
+              e.stopPropagation();
+              const orderId = button.dataset.orderId;
+              console.log("Cancel orderId:", orderId);
+
+              if (cancelModalTitle)
+                cancelModalTitle.textContent = "Cancel Order";
+              if (cancelModalMessage)
+                cancelModalMessage.textContent =
+                  "Are you sure you want to cancel this entire order?";
+              if (cancelOrderWarning) cancelOrderWarning.style.display = "block";
+
+              if (confirmCancelButton)
+                confirmCancelButton.dataset.orderId = orderId;
+
+              cancelModalInstance.show();
+            }, 300);
+
+            button.addEventListener("click", handleClick);
+          });
+        }
+
+        // Handle return modal triggers
+        if (returnModalInstance) {
+          document
+            .querySelectorAll(".modal-trigger-return")
+            .forEach((button) => {
+              const handleClick = debounce((e) => {
+                e.stopPropagation();
+                const orderId = button.dataset.orderId;
+                console.log("Return orderId:", orderId);
+
+                if (returnModalTitle)
+                  returnModalTitle.textContent = "Return Order";
+                if (returnModalMessage)
+                  returnModalMessage.textContent =
+                    "Are you sure you want to request a return for this order?";
+                if (returnWarning) returnWarning.style.display = "block";
+
+                if (confirmReturnButton)
+                  confirmReturnButton.dataset.orderId = orderId;
+
+                returnModalInstance.show();
+              }, 300);
+
+              button.addEventListener("click", handleClick);
+            });
+        }
+
+        // Handle cancel item modal triggers
+        if (cancelItemModalInstance) {
+          document
+            .querySelectorAll(".modal-trigger-item")
+            .forEach((button) => {
+              const handleClick = debounce((e) => {
+                e.stopPropagation();
+                const orderId = button.dataset.orderId;
+                const itemId = button.dataset.itemId;
+                console.log("Cancel item - OrderId:", orderId, "ItemId:", itemId);
+
+                if (cancelItemModalTitle)
+                  cancelItemModalTitle.textContent = "Cancel Item";
+                if (cancelItemModalMessage)
+                  cancelItemModalMessage.textContent =
+                    "Are you sure you want to cancel this item from the order?";
+                if (itemWarning) itemWarning.style.display = "block";
+
+                if (confirmCancelItemButton) {
+                  confirmCancelItemButton.dataset.orderId = orderId;
+                  confirmCancelItemButton.dataset.itemId = itemId;
+                }
+
+                cancelItemModalInstance.show();
+              }, 300);
+
+              button.addEventListener("click", handleClick);
+            });
+        }
+
+        // Handle cancel modal close
+        if (cancelModal) {
+          cancelModal.addEventListener("hidden.bs.modal", function () {
+            if (cancelOrderWarning) cancelOrderWarning.style.display = "none";
+            document
+              .querySelectorAll(".modal-backdrop")
+              .forEach((backdrop) => backdrop.remove());
+          });
+        }
+
+        // Handle return modal close
+        if (returnModal) {
+          returnModal.addEventListener("hidden.bs.modal", function () {
+            if (returnWarning) returnWarning.style.display = "none";
+            document
+              .querySelectorAll(".modal-backdrop")
+              .forEach((backdrop) => backdrop.remove());
+          });
+        }
+
+        // Handle cancel item modal close
+        if (cancelItemModal) {
+          cancelItemModal.addEventListener("hidden.bs.modal", function () {
+            if (itemWarning) itemWarning.style.display = "none";
+            document
+              .querySelectorAll(".modal-backdrop")
+              .forEach((backdrop) => backdrop.remove());
+          });
+        }
+
+        // Handle "Proceed to Cancel" button click
+        if (confirmCancelButton) {
+          confirmCancelButton.addEventListener("click", async function () {
+            const orderId = this.dataset.orderId;
+            console.log("Cancel request for orderId:", orderId);
+            if (cancelModalInstance) cancelModalInstance.hide();
+
+            const { value: reason } = await Swal.fire({
+              title: "Select a Reason for Cancellation",
+              text: "Please choose a reason for cancelling this order.",
+              icon: "warning",
+              showCancelButton: true,
+              cancelButtonText: "Go Back",
+              confirmButtonText: "Confirm Cancellation",
+              confirmButtonColor: "#dc3545",
+              cancelButtonColor: "#6c757d",
+              html: `
+                          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Changed my mind">Changed my mind</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Found better price elsewhere">Found better price elsewhere</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Ordered by mistake">Ordered by mistake</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Delivery time too long">Delivery time too long</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Other">Other</button>
+                          </div>
+                      `,
+              didOpen: () => {
+                document.querySelectorAll(".reason-btn").forEach((btn) => {
+                  btn.addEventListener("click", function () {
+                    Swal.getConfirmButton().dataset.reason = this.dataset.reason;
+                    Swal.getConfirmButton().disabled = false;
+                    document
+                      .querySelectorAll(".reason-btn")
+                      .forEach((b) => b.classList.remove("btn-primary"));
+                    this.classList.remove("btn-outline-secondary");
+                    this.classList.add("btn-primary");
+                  });
+                });
+              },
+              preConfirm: () => {
+                const selectedReason = Swal.getConfirmButton().dataset.reason;
+                if (!selectedReason) {
+                  Swal.showValidationMessage("Please select a reason");
+                  return false;
+                }
+                return selectedReason;
+              },
+            });
+
+            if (!reason) {
+              console.log("Cancellation aborted");
+              return;
+            }
+
+            let otherReason = "";
+            if (reason === "Other") {
+              const { value: customReason } = await Swal.fire({
+                title: "Specify Your Reason",
+                input: "textarea",
+                inputLabel: "Please provide more details",
+                inputPlaceholder: "Enter your reason here...",
+                showCancelButton: true,
+                cancelButtonText: "Go Back",
+                confirmButtonText: "Confirm",
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                inputValidator: (value) => {
+                  if (!value.trim()) {
+                    return "Please provide a reason";
+                  }
+                },
+              });
+
+              if (!customReason) {
+                console.log("Custom reason aborted");
+                return;
+              }
+              otherReason = customReason;
+            }
+
+            try {
+              confirmCancelButton.disabled = true;
+              confirmCancelButton.textContent = "Processing...";
+
+              const response = await fetch(`/cancelOrder`, {
+                method: "PUT",
+                body: JSON.stringify({ orderId, reason, otherReason }),
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              });
+
+              const data = await response.json();
+              console.log("Cancel response:", data);
+
+              if (response.ok && data.success) {
+                await Swal.fire({
+                  icon: "success",
+                  title: "Order Cancelled",
+                  text: "Your order has been cancelled successfully.",
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#28a745",
+                });
+                window.location.reload();
+              } else {
+                throw new Error(data.error || "Submission failed");
+              }
+            } catch (error) {
+              console.error("Cancellation error:", error);
+              await Swal.fire({
+                icon: "error",
+                title: "Cancellation Failed",
+                text: error.message || "Failed to cancel the order. Please try again.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545",
+              });
+            } finally {
+              confirmCancelButton.disabled = false;
+              confirmCancelButton.textContent = "Proceed to Cancel";
+            }
+          });
+        }
+
+        // Handle "Proceed to Return" button click
+        if (confirmReturnButton) {
+          confirmReturnButton.addEventListener("click", async function () {
+            const orderId = this.dataset.orderId;
+            console.log("Return request for orderId:", orderId);
+            if (returnModalInstance) returnModalInstance.hide();
+
+            const { value: reason } = await Swal.fire({
+              title: "Select a Reason for Return",
+              text: "Please choose a reason for returning this order.",
+              icon: "warning",
+              showCancelButton: true,
+              cancelButtonText: "Go Back",
+              confirmButtonText: "Confirm Return",
+              confirmButtonColor: "#ffc107",
+              cancelButtonColor: "#6c757d",
+              html: `
+                          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Defective product">Defective product</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Wrong item delivered">Wrong item delivered</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Not as described">Not as described</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Changed my mind">Changed my mind</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Other">Other</button>
+                          </div>
+                      `,
+              didOpen: () => {
+                document.querySelectorAll(".reason-btn").forEach((btn) => {
+                  btn.addEventListener("click", function () {
+                    Swal.getConfirmButton().dataset.reason = this.dataset.reason;
+                    Swal.getConfirmButton().disabled = false;
+                    document
+                      .querySelectorAll(".reason-btn")
+                      .forEach((b) => b.classList.remove("btn-primary"));
+                    this.classList.remove("btn-outline-secondary");
+                    this.classList.add("btn-primary");
+                  });
+                });
+              },
+              preConfirm: () => {
+                const selectedReason = Swal.getConfirmButton().dataset.reason;
+                if (!selectedReason) {
+                  Swal.showValidationMessage("Please select a reason");
+                  return false;
+                }
+                return selectedReason;
+              },
+            });
+
+            if (!reason) {
+              console.log("Return aborted");
+              return;
+            }
+
+            let otherReason = "";
+            if (reason === "Other") {
+              const { value: customReason } = await Swal.fire({
+                title: "Specify Your Reason",
+                input: "textarea",
+                inputLabel: "Please provide more details",
+                inputPlaceholder: "Enter your reason here...",
+                showCancelButton: true,
+                cancelButtonText: "Go Back",
+                confirmButtonText: "Confirm",
+                confirmButtonColor: "#ffc107",
+                cancelButtonColor: "#6c757d",
+                inputValidator: (value) => {
+                  if (!value.trim()) {
+                    return "Please provide a reason";
+                  }
+                },
+              });
+
+              if (!customReason) {
+                console.log("Custom return reason aborted");
+                return;
+              }
+              otherReason = customReason;
+            }
+
+            try {
+              confirmReturnButton.disabled = true;
+              confirmReturnButton.textContent = "Processing...";
+
+              const response = await fetch(`/returnOrder`, {
+                method: "POST",
+                body: JSON.stringify({ orderId, reason, otherReason }),
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+              });
+
+              const data = await response.json();
+              console.log("Return response:", data);
+
+              if (response.ok && data.success) {
+                await Swal.fire({
+                  icon: "success",
+                  title: "Return Requested",
+                  text: "Your return request has been submitted successfully.",
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#28a745",
+                });
+                window.location.reload();
+              } else {
+                throw new Error(data.error || "Submission failed");
+              }
+            } catch (error) {
+              console.error("Return error:", error);
+              await Swal.fire({
+                icon: "error",
+                title: "Return Failed",
+                text:
+                  error.message ||
+                  "Failed to process the return request. Please try again.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545",
+              });
+            } finally {
+              confirmReturnButton.disabled = false;
+              confirmReturnButton.textContent = "Proceed to Return";
+            }
+          });
+        }
+
+        // Handle "Proceed to Cancel Item" button click
+        if (confirmCancelItemButton) {
+          confirmCancelItemButton.addEventListener("click", async function () {
+            const orderId = this.dataset.orderId;
+            const itemId = this.dataset.itemId;
+            console.log(
+              "Cancel item request for orderId:",
+              orderId,
+              "itemId:",
+              itemId
+            );
+            if (cancelItemModalInstance) cancelItemModalInstance.hide();
+
+            const { value: reason } = await Swal.fire({
+              title: "Select a Reason for Item Cancellation",
+              text: "Please choose a reason for cancelling this item.",
+              icon: "warning",
+              showCancelButton: true,
+              cancelButtonText: "Go Back",
+              confirmButtonText: "Confirm Cancellation",
+              confirmButtonColor: "#dc3545",
+              cancelButtonColor: "#6c757d",
+              html: `
+                          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Changed my mind">Changed my mind</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Found better price elsewhere">Found better price elsewhere</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Ordered by mistake">Ordered by mistake</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Delivery time too long">Delivery time too long</button>
+                              <button class="btn btn-outline-secondary reason-btn" data-reason="Other">Other</button>
+                          </div>
+                      `,
+              didOpen: () => {
+                document.querySelectorAll(".reason-btn").forEach((btn) => {
+                  btn.addEventListener("click", function () {
+                    Swal.getConfirmButton().dataset.reason = this.dataset.reason;
+                    Swal.getConfirmButton().disabled = false;
+                    document
+                      .querySelectorAll(".reason-btn")
+                      .forEach((b) => b.classList.remove("btn-primary"));
+                    this.classList.remove("btn-outline-secondary");
+                    this.classList.add("btn-primary");
+                  });
+                });
+              },
+              preConfirm: () => {
+                const selectedReason = Swal.getConfirmButton().dataset.reason;
+                if (!selectedReason) {
+                  Swal.showValidationMessage("Please select a reason");
+                  return false;
+                }
+                return selectedReason;
+              },
+            });
+
+            if (!reason) {
+              console.log("Item cancellation aborted");
+              return;
+            }
+
+            let otherReason = "";
+            if (reason === "Other") {
+              const { value: customReason } = await Swal.fire({
+                title: "Specify Your Reason",
+                input: "textarea",
+                inputLabel: "Please provide more details",
+                inputPlaceholder: "Enter your reason here...",
+                showCancelButton: true,
+                cancelButtonText: "Go Back",
+                confirmButtonText: "Confirm",
+                confirmButtonColor: "#dc3545",
+                cancelButtonColor: "#6c757d",
+                inputValidator: (value) => {
+                  if (!value.trim()) {
+                    return "Please provide a reason";
+                  }
+                },
+              });
+
+              if (!customReason) {
+                console.log("Custom item cancellation reason aborted");
+                return;
+              }
+              otherReason = customReason;
+            }
+
+            try {
+              confirmCancelItemButton.disabled = true;
+              confirmCancelItemButton.textContent = "Processing...";
+
+              const response = await fetch(`/orders/cancelItem`, {
+                method: "PUT",
+                body: JSON.stringify({ orderId, itemId, reason, otherReason }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+
+              const data = await response.json();
+              console.log("Cancel item response:", data);
+
+              if (response.ok && data.success) {
+                await Swal.fire({
+                  icon: "success",
+                  title: "Item Cancelled",
+                  text: "The item has been cancelled successfully.",
+                  confirmButtonText: "OK",
+                  confirmButtonColor: "#28a745",
+                });
+                window.location.reload();
+              } else {
+                throw new Error(data.message || "Failed to cancel item");
+              }
+            } catch (error) {
+              console.error("Item cancellation error:", error);
+              await Swal.fire({
+                icon: "error",
+                title: "Item Cancellation Failed",
+                text:
+                  error.message ||
+                  "Failed to cancel the item. Please try again.",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#dc3545",
+              });
+            } finally {
+              confirmCancelItemButton.disabled = false;
+              confirmCancelItemButton.textContent = "Proceed to Cancel";
+            }
+          });
+        }
+
+        // Search and filter functionality
+        const orderSearch = document.getElementById("orderSearch");
+        const statusFilter = document.getElementById("statusFilter");
+        const clearFilters = document.getElementById("clearFilters");
+        const orderCards = document.querySelectorAll(".order-card");
+
+        const filterOrders = debounce(() => {
+          const searchTerm = orderSearch.value.toLowerCase().trim();
+          const statusTerm = statusFilter.value.toLowerCase().trim();
+
+          orderCards.forEach((card) => {
+            const productNames = Array.from(card.querySelectorAll(".item-title"))
+              .map((title) => title.textContent.toLowerCase());
+            const statusBadge = card.querySelector(".badge")?.textContent.toLowerCase() || "";
+
+            const matchesSearch = searchTerm === "" || productNames.some((name) => name.includes(searchTerm));
+            const matchesStatus = statusTerm === "" || statusBadge === statusTerm;
+
+            card.style.display = matchesSearch && matchesStatus ? "block" : "none";
+            console.log(`Card - Product: ${productNames}, Status: ${statusBadge}, Display: ${card.style.display}`);
+          });
+        }, 300);
+
+        if (orderSearch) orderSearch.addEventListener("input", filterOrders);
+        if (statusFilter) statusFilter.addEventListener("change", filterOrders);
+
+        if (clearFilters) {
+          clearFilters.addEventListener("click", () => {
+            if (orderSearch) orderSearch.value = "";
+            if (statusFilter) statusFilter.value = "";
+            orderCards.forEach((card) => (card.style.display = "block"));
+            console.log("Filters cleared");
+          });
+        } 
+
+        // Mobile menu toggle
+        const toggleMenu = document.getElementById("toggleMenu");
+        const sidebarMenu = document.getElementById("sidebarMenu");
+
+        if (toggleMenu && sidebarMenu) {
+          toggleMenu.addEventListener("click", () => {
+            sidebarMenu.classList.toggle("show");
+            console.log("Menu toggled");
+          });
+
+          window.addEventListener("resize", () => {
+            if (window.innerWidth > 767) {
+              sidebarMenu.classList.remove("show");
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

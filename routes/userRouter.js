@@ -52,7 +52,8 @@ router.post("/update-email",userAuth,profileController.updateEmail)
 router.get("/change-password",userAuth,profileController.changePassword)
 router.post("/change-password",userAuth,profileController.changePasswordValid)
 router.post("/verify-changepassword-otp",userAuth,profileController.verifyChangePassOtp)
-//address management
+router.post("/resend-changepassword-otp",userAuth,profileController.resendChangePassOtp)
+//address management  
 
 router.get("/myAddress",userAuth,profileController.getMyAddress )
 
@@ -78,6 +79,7 @@ router.delete("/cart",userAuth,cartController.deleteFromCart)
 
 //checkout
 router.get("/checkout",userAuth,cartController.getCheckout)
+router.get("/cart/validateCheckout",userAuth,cartController.validateCheckout)
 router.post("/applyCoupon",userAuth,orderController.applyCoupon)
 router.delete("/removeCoupon",userAuth,orderController.removeCoupon)
 

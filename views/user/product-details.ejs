@@ -501,8 +501,11 @@
                                         </div>
                                         
                                         <div class="product-price-cover">
-                                            <span class="text-brand"><%=product.salePrice%></span>
+                                          
+                                          <span class="text-brand"><%=product.salePrice%></span>
+                                            <% if(totalOffer>0){%>
                                             <span class="old-price"><%=product.regularPrice%></span>
+                                            <%}%>
                                             <span class="save-price">
                                                 <%if(!totalOffer){%>
                                                     No Offers

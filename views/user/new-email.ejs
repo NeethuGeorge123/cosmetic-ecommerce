@@ -1,23 +1,21 @@
-<%- include("../../views/partials/user/header") %>
+<%- include("../../views/partials/user/header1") %>
 
-
-<section class="content-main mt-80 mb-80">
-   <div class="card mx-auto card-login col-4">
-       <div class="card-body">
-           <h4 class="card-title mb-4">Enter New Email</h4>
-           <form method="post" action="/update-email" onsubmit="return validateEmailForm()">
-               <div class="mb-3">
-                   <input class="form-control" name="newEmail" placeholder="New Email" type="text" id="email">
-                   <div class="error-message" id="email-error"></div>
+<section class="content-main" style="min-height: calc(100vh - 200px); display: flex; justify-content: center; align-items: center; padding: 20px; background-color: #fff5ee;">
+   <div class="card card-login" style="width: 450px; min-height: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 12px; display: flex; flex-direction: column; justify-content: center;">
+       <div class="card-body" style="padding: 40px; text-align: center;">
+           <h4 class="card-title mb-4" style="font-size: 1.5rem; font-weight: 600;">Enter New Email</h4>
+           <form method="post" action="/update-email" onsubmit="return validateEmailForm()" style="display: flex; flex-direction: column; align-items: center;">
+               <div class="mb-4" style="width: 100%;">
+                   <input class="form-control" name="newEmail" placeholder="New Email" type="text" id="email" style="padding: 12px; font-size: 1rem; border-radius: 6px; width: 100%; box-sizing: border-box;">
+                   <div class="error-message" id="email-error" style="color: #dc3545; font-size: 0.875rem; margin-top: 8px; min-height: 20px; text-align: left;"></div>
                </div>
-               <div class="mb-4">
-                   <button type="submit" class="btn btn-primary w-100">Submit</button>
+               <div class="mb-4" style="width: 100%;">
+                   <button type="submit" class="btn w-100" style="background-color: #ffdab9; color: #000; padding: 12px; font-size: 1rem; border-radius: 6px; transition: background-color 0.3s; width: 100%;">Submit</button>
                </div>
            </form>
        </div>
    </div>
 </section>
-
 
 <script>
    function validateEmailForm() {
@@ -25,7 +23,6 @@
        const emailError = document.getElementById('email-error');
        const emailValue = emailInput.value.trim();
        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
 
        if (emailValue === '') {
            emailError.textContent = 'Please enter your new email.';
@@ -43,6 +40,3 @@
    }
 </script>
 <%- include("../../views/partials/user/footer") %>
-
-
-

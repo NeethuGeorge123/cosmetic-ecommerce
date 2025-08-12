@@ -6,6 +6,7 @@ const PORT=process.env.PORT || 3000
 const passport=require("./config/passport")
 const path=require ("path")
 const nocache=require("nocache")
+const flash=require("connect-flash")
 //const env=require("dotenv").config()
 //const db=require("./config/db")
 const userRouter=require("./routes/userRouter"); 
@@ -29,7 +30,12 @@ app.use(session({
         maxAge:72*60*60*1000
     }
 }))
-
+app.use(flash())
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    next();
+  });
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req,res,next)=>{

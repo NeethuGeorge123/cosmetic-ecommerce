@@ -36,7 +36,7 @@ const addProducts = async (req, res) => {
 
           const originalImagePath = req.files[i].path;
 
-          const resizedImageName = "resized-" + req.files[i].filename;//newly added
+          const resizedImageName = "resized-" + req.files[i].filename;
 
           const resizedImagePath = path.join(
             "public",
@@ -96,6 +96,7 @@ const addProducts = async (req, res) => {
       });
 
       await newProduct.save();
+      req.flash('success_msg','Product added successfully ')
       return res.redirect("/admin/addProducts");
     } else {
       return res

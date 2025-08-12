@@ -1,4 +1,5 @@
 //const User = require("../../models/userSchema");
+const mongoose = require('mongoose'); 
 const User = require("../../models/userSignupSchema");
 const Category = require("../../models/categorySchema");
 const Banner = require("../../models/bannerSchema");
@@ -69,7 +70,6 @@ const loadHomepage = async (req, res) => {
   }
 };
 
-//const mongoose = require('mongoose'); 
 
 const shopNow = async (req, res) => {
   try {

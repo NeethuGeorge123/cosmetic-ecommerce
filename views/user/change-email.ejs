@@ -1,46 +1,237 @@
 <%- include("../../views/partials/user/header") %>
-<section class="content-main mt-80 mb-80">
-   <div class="card mx-auto card-login col-4">
-       <div class="card-body">
-           <h4 class="card-title mb-4">Enter Current Email</h4>
-           <form method="post" action="/change-email" onsubmit="return validateLoginForm()">
-               <div class="mb-3">
-                   <input class="form-control" name="email" placeholder="Email" type="text" id="email">
-                   <div class="error-message" id="email-error"></div>
-               </div>
-               <div class="mb-4">
-                   <button type="submit" class="btn btn-primary w-100">Verify</button>
-               </div>
-           </form>
-         
-         
-       </div>
-   </div>
-</section>
-<script>
-   function validateLoginForm() {
-       const emailInput = document.getElementById('email');
-       const emailError = document.getElementById('email-error');
-       const emailValue = emailInput.value.trim();
-       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    <%- include("../../views/partials/user/header1") %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Email</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f4f0 0%, #fdf8f5 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
 
+        .content-main {
+            padding: 80px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-       if (emailValue === '') {
-           emailError.textContent = 'Please enter your email.';
-           emailInput.classList.add('is-invalid');
-           return false;
-       } else if (!emailValue.match(emailPattern)) {
-           emailError.textContent = 'Please enter a valid email address';
-           emailInput.classList.add('is-invalid');
-           return false;
-       } else {
-           emailError.textContent = '';
-           emailInput.classList.remove('is-invalid');
-           return true;
-       }
-   }
-</script>
-<%- include("../../views/partials/user/footer") %>
+        .card-login {
+            max-width: 650px; /* Increased width from 600px to 650px */
+            width: 100%;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
 
+        .card-body {
+            padding: 80px 70px; /* Increased padding for larger height/width effect */
+        }
 
+        .card-title {
+            color: #2c3e50;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
 
+        .form-control {
+            height: 60px;
+            border: 2px solid #f5ebe5;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            padding: 0 20px;
+            background: #fdfcfa;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+        }
+
+        .form-control:focus {
+            border-color: #e8d5c4;
+            box-shadow: 0 0 0 0.2rem rgba(232, 213, 196, 0.25);
+            background: #ffffff;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #a8a8a8;
+            font-weight: 400;
+        }
+
+        .form-control.is-invalid {
+            border-color: #e74c3c;
+            background: #fdf6f6;
+        }
+
+        .btn-primary {
+            background: #FFDAB9; /* Light peach color */
+            border: none;
+            height: 55px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            color: #2c3e50;
+        }
+
+        .btn-primary:hover {
+            background:#FFCCB6; /* Medium peach color for hover */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+
+        .mb-3 {
+            margin-bottom: 2rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 2.5rem !important;
+        }
+
+        @media (max-width: 768px) {
+            .content-main {
+                padding: 40px 15px;
+            }
+
+            .card-body {
+                padding: 40px 30px;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            .form-control {
+                height: 55px;
+                font-size: 1rem;
+            }
+
+            .btn-primary {
+                height: 50px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Animation for form elements */
+        .form-control,
+        .btn-primary {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .card-title {
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="content-main">
+        <div class="card card-login">
+            <div class="card-body">
+                <h4 class="card-title">Enter Current Email</h4>
+                <form method="post" action="/change-email" onsubmit="return validateLoginForm()">
+                    <div class="mb-3">
+                        <input class="form-control" name="email" placeholder="Enter your email address" type="text" id="email">
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    <div class="mb-4">
+                        <button type="submit" class="btn btn-primary w-100">Verify Email</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function validateLoginForm() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('email-error');
+            const emailValue = emailInput.value.trim();
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+            // Clear previous error styling
+            emailInput.classList.remove('is-invalid');
+            emailError.textContent = '';
+
+            if (emailValue === '') {
+                emailError.textContent = 'Please enter your email address.';
+                emailInput.classList.add('is-invalid');
+                emailInput.focus();
+                return false;
+            } else if (!emailValue.match(emailPattern)) {
+                emailError.textContent = 'Please enter a valid email address.';
+                emailInput.classList.add('is-invalid');
+                emailInput.focus();
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        // Add real-time validation
+        document.getElementById('email').addEventListener('input', function() {
+            if (this.classList.contains('is-invalid')) {
+                validateLoginForm();
+            }
+        });
+
+        // Add focus management
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('email').focus();
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

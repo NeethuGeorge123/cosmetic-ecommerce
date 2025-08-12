@@ -298,6 +298,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/" class="no-style">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/shopnow" class="no-style">Shop</a></li>
                         <li class="breadcrumb-item active" aria-current="page">My Cart</li>
                     </ol>
                 </nav>
@@ -503,14 +504,14 @@
     let newQuantity = currentQuantity + count;
     maxStock = parseInt(maxStock);
 
-    if (newQuantity > maxStock) { 
+    if (newQuantity > maxStock) {
         Swal.fire({
             icon: "warning",
             title: "Stock limit reached",
-            text: `We only have ${maxStock} items in Stock.`,
+            text: `We only have ${maxStock} items in stock.`,
             showConfirmButton: true
         });
-        return; 
+        return;
     }
 
     if (newQuantity > 5) {
@@ -527,6 +528,16 @@
         newQuantity = 1;
     }
 
+    // Update quantity inputs immediately
+    quantityInput.val(newQuantity);
+    if (mobileQuantityInput.length) {
+        mobileQuantityInput.val(newQuantity);
+    }
+
+    // Enable or disable decrement buttons immediately
+    decrementButton.prop("disabled", newQuantity === 1);
+    mobileDecButton.prop("disabled", newQuantity === 1);
+
     $.ajax({
         url: "/cart",
         type: "PUT",
@@ -538,37 +549,25 @@
         }),
         success: function(response) {
             if (response.success) {
-                // Update quantity inputs
-                quantityInput.val(newQuantity);
-                if (mobileQuantityInput.length) {
-                    mobileQuantityInput.val(newQuantity);
-                }
-
-                // Update subtotals
                 let newSubtotal = salePrice * newQuantity;
-                $(`#subTotal${productElementId}`).text(newSubtotal);
-                if ($(`#mobileSubTotal${productElementId}`).length) {
-                    $(`#mobileSubTotal${productElementId}`).text(newSubtotal);
-                }
+                $(`#subTotal${productElementId}`).text(newSubtotal.toFixed(2));
+                $(`#mobileSubTotal${productElementId}`).text(newSubtotal.toFixed(2));
 
-                // Update grand total
-                $("#total").text(response.grandTotal);
-
-                // Explicitly manage button states
-                decrementButton.prop("disabled", newQuantity === 1);
-                if (mobileDecButton.length) {
-                    mobileDecButton.prop("disabled", newQuantity === 1);
-                }
-                incrementButton.prop("disabled", newQuantity === maxStock || newQuantity === 5);
-                if (mobileIncButton.length) {
-                    mobileIncButton.prop("disabled", newQuantity === maxStock || newQuantity === 5);
-                }
+                $("#total").text(response.grandTotal.toFixed(2));
+                $("totalabc").val(response.grandTotal.toFixed(2))
             } else {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     text: response.message,
                 });
+
+                quantityInput.val(currentQuantity);
+                if (mobileQuantityInput.length) {
+                    mobileQuantityInput.val(currentQuantity);
+                }
+                decrementButton.prop("disabled", currentQuantity === 1);
+                mobileDecButton.prop("disabled", currentQuantity === 1);
             }
         },
         error: function() {
@@ -577,9 +576,17 @@
                 title: "Oops...",
                 text: "Something went wrong! Try again.",
             });
+            quantityInput.val(currentQuantity);
+            if (mobileQuantityInput.length) {
+                mobileQuantityInput.val(currentQuantity);
+            }
+            decrementButton.prop("disabled", currentQuantity === 1);
+            mobileDecButton.prop("disabled", currentQuantity === 1);
         }
     });
 }
+
+
 
         async function confirmRemove(productId) {
     const result = await Swal.fire({
@@ -629,7 +636,8 @@
                 }
                 
 
-                $("#total").text(data.grandTotal || 0);
+                $("#total").text(data.grandTotal.toFixed(2) || 0);
+                $("#totalabc").val(data.grandTotal.toFixed(2) || 0)
                 
 
                 if ($('tbody tr').length <= 1) { 

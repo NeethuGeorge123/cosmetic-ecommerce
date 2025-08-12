@@ -12,7 +12,22 @@
 <body>
 
   <%- include('../partials/admin/header') %>
-
+  <% if (success_msg && success_msg.length > 0) { %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: '<%= success_msg %>',
+        showConfirmButton: false,
+        timer: 1500
+      });
+    </script>
+    <% } %>
+    
+    
+  <!-- <% if(success_msg) { %>
+    <div class="alert alert-success"><%= success_msg %></div>
+  <% } %> -->
   <form class="add-product-form" method="POST" action="/admin/addProducts" onsubmit="return validateForm()" enctype="multipart/form-data">
     <h2>Add New Product</h2>
 

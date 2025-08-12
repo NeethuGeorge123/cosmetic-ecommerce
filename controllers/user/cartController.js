@@ -225,6 +225,7 @@ const deleteFromCart = async (req, res) => {
   
         let subtotal = 0;
         let cartItems=cart.items;
+        
         cart.items.forEach(item => {
           
           subtotal += item.productId.salePrice * item.quantity;
@@ -245,6 +246,27 @@ const deleteFromCart = async (req, res) => {
       }
     };
     
+    const validateCheckout=async (req,res)=>{
+      try {
+        const userId=req.session.user
+       
+        const cart=await Cart.findOne({userId}).populate('items.productId')
+        if(!cart && !cart.items.length){
+          return res.status(400).json({status:false,message:"Your cart is empty"})
+        }
+        
+        for(let item of cart.items){
+          const product= item.productId
+          if(!product || product.isBlocked || product.quantity<item.quantity){
+            return res.status(400).json({status:false,message:"Stock not available"})
+          }
+        }
+        return res.status(200).json({status:true})
+        
+      } catch (error) {
+        console.error(error)
+      }
+    }
 
 
     const getCartCount = async (req, res) => {
@@ -279,5 +301,6 @@ module.exports={
     deleteFromCart,
     getCheckout,
     getCartCount,
+    validateCheckout,
   
 }

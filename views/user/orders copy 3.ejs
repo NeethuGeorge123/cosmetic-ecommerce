@@ -21,70 +21,78 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
     />
+    <!-- Google Fonts for modern typography -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <!-- Custom CSS -->
     <style>
       :root {
-        --primary-color: #3498db;
-        --secondary-color: #2ecc71;
-        --text-color: #333;
-        --light-bg: #f8f9fa;
-        --border-color: #e9ecef;
-        --hover-color: #f1f8ff;
+        --primary-color: #1e88e5; /* Vibrant blue */
+        --secondary-color: #43a047; /* Fresh green */
+        --accent-color: #f06292; /* Soft pink for highlights */
+        --text-color: #1a1a1a; /* Darker text for better contrast */
+        --light-bg: #ffffff; /* Clean white background */
+        --border-color: #e0e0e0; /* Subtle border */
+        --hover-color: #e3f2fd; /* Light blue hover */
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Softer shadow */
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Inter', sans-serif;
         color: var(--text-color);
-        background-color: #f5f5f5;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f0 100%);
+        line-height: 1.6;
       }
 
       .main {
         min-height: 100vh;
-        padding: 30px 0;
-        padding-bottom: 30px;
+        padding: 40px 0;
       }
 
       /* Breadcrumb */
       .breadcrumb-wrap {
-        background-color: var(--light-bg);
-        padding: 15px 0;
-        border-bottom: 1px solid var(--border-color);
-        margin-bottom: 30px !important;
+        background: var(--light-bg);
+        padding: 20px 0;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 40px !important;
       }
 
       .breadcrumb {
-        margin-bottom: 0;
-        font-size: 14px;
+        font-size: 0.9rem;
         display: flex;
         align-items: center;
-        font-family: "Arial", sans-serif;
-        color: #121311;
+        font-weight: 500;
+        color: #555;
       }
 
       .breadcrumb a {
         color: var(--primary-color);
         text-decoration: none;
         position: relative;
-        margin: 0 5px;
+        margin: 0 8px;
+        transition: color 0.3s ease;
       }
 
       .breadcrumb a:hover {
-        color: #0056b3;
+        color: #1565c0;
       }
 
       .breadcrumb span {
-        padding: 0 10px;
         color: #999;
+        padding: 0 12px;
       }
 
       .breadcrumb a::after {
-        content: "";
+        content: '';
         position: absolute;
         width: 100%;
         height: 2px;
-        background: #6e6e3a;
+        background: var(--accent-color);
         left: 0;
-        bottom: -2px;
+        bottom: -4px;
         transform: scaleX(0);
         transition: transform 0.3s ease;
       }
@@ -93,194 +101,235 @@
         transform: scaleX(1);
       }
 
-      /* Dashboard sidebar */
+      /* Dashboard Sidebar */
       .dashboard-menu {
-        background-color: #cce3e6;
-        border-radius: 10px;
-        padding: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
+        background: var(--light-bg);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+      }
+
+      .dashboard-menu:hover {
+        transform: translateY(-5px);
       }
 
       .dashboard-menu .nav-link {
-        color: #30683c;
-        padding: 15px 20px;
-        border-left: 4px solid transparent;
-        transition: all 0.3s ease;
-        font-weight: bold;
+        color: var(--text-color);
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-weight: 600;
         display: flex;
         align-items: center;
-        box-shadow: 0 4px 10px rgba(123, 131, 112, 0.3),
-          0 4px 20px rgba(0, 191, 255, 0.2);
+        transition: all 0.3s ease;
       }
 
       .dashboard-menu .nav-link i {
-        margin-right: 10px;
-        width: 20px;
-        text-align: center;
-        font-size: 18px;
+        margin-right: 12px;
+        width: 24px;
+        font-size: 1.2rem;
+        color: var(--primary-color);
       }
 
       .dashboard-menu .nav-link:hover {
-        background-color: var(--hover-color);
-        color: #00bfff;
-        box-shadow: 0 4px 15px rgba(173, 255, 47, 0.5),
-          0 6px 25px rgba(0, 191, 255, 0.4);
+        background: var(--hover-color);
+        color: var(--primary-color);
+        transform: translateX(5px);
       }
 
       .dashboard-menu .nav-link.active {
-        background-color: var(--hover-color);
-        color: var(--primary-color);
-        border-left: 4px solid var(--primary-color);
+        background: var(--primary-color);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
       }
 
-      /* Content area */
+      .dashboard-menu .nav-link.active i {
+        color: #fff;
+      }
+
+      /* Content Area */
       .dashboard-content .card {
         border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        margin-bottom: 20px;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
         overflow: hidden;
+        transition: transform 0.3s ease;
+      }
+
+      .dashboard-content .card:hover {
+        transform: translateY(-5px);
       }
 
       .dashboard-content .card-header {
-        background-color: #5d8a7b;
-        color: white;
-        border-radius: 10px 10px 0 0;
-        padding: 15px 20px;
+        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        color: #fff;
+        border-radius: 16px 16px 0 0;
+        padding: 20px;
+        font-weight: 600;
+        font-size: 1.25rem;
       }
 
       .dashboard-content .card-body {
-        padding: 20px;
+        padding: 30px;
+        background: var(--light-bg);
       }
 
       .card-green {
-        border-top: 4px solid var(--secondary-color) !important;
-        background-color: #add8e6;
+        border-left: 6px solid var(--secondary-color);
       }
 
       /* Buttons */
       .btn-success {
-        background-color: #577194;
-        border-color: #6bb87d;
-        padding: 8px 20px;
-        border-radius: 5px;
+        background: var(--secondary-color);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 500;
         transition: all 0.3s ease;
       }
 
       .btn-success:hover {
-        background-color: #506955;
-        border-color: #27ae60;
+        background: #388e3c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
       }
 
       .btn-primary {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        padding: 8px 20px;
-        border-radius: 5px;
+        background: var(--primary-color);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 500;
         transition: all 0.3s ease;
       }
 
       .btn-primary:hover {
-        background-color: #2980b9;
-        border-color: #2980b9;
+        background: #1565c0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
       }
 
       .btn-small {
-        padding: 5px 15px;
-        font-size: 14px;
-        border-radius: 5px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        border-radius: 6px;
         transition: all 0.3s ease;
         color: var(--primary-color);
-        background-color: var(--hover-color);
+        background: var(--hover-color);
         text-decoration: none;
         display: inline-block;
       }
 
       .btn-small:hover {
-        background-color: var(--primary-color);
-        color: white;
+        background: var(--primary-color);
+        color: #fff;
+        transform: translateY(-2px);
       }
 
       /* Tables */
-      .table {
-        margin-bottom: 0;
-      }
-
       .table th {
-        border-top: none;
         font-weight: 600;
-        padding: 15px 10px;
-        color: #666;
+        padding: 16px;
+        color: var(--text-color);
+        background: #f9fafb;
       }
 
       .table td {
-        padding: 15px 10px;
+        padding: 16px;
         vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
       }
 
       /* Mobile Menu Toggle */
       .mobile-menu-toggle {
         display: none;
-        background-color: var(--primary-color);
-        color: white;
+        background: var(--primary-color);
+        color: #fff;
         border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        width: 100%;
-        text-align: left;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .mobile-menu-toggle:hover {
+        background: #1565c0;
+        transform: translateY(-2px);
       }
 
       /* Footer */
       footer {
-        background-color: white;
-        padding: 20px 0;
+        background: var(--light-bg);
+        padding: 30px 0;
         text-align: center;
         border-top: 1px solid var(--border-color);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      footer p {
+        margin: 0;
+        color: #555;
+        font-size: 0.9rem;
       }
 
       /* Orders */
       .orders {
-        padding: 1rem;
-        max-width: 900px;
+        padding: 1.5rem;
+        max-width: 1000px;
         margin: auto;
       }
 
       .search-bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        background: var(--light-bg);
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
       }
 
       .search-bar input {
         flex: 1;
-        padding: 0.5rem;
-        min-width: 200px;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .search-bar input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 8px rgba(30, 136, 229, 0.2);
       }
 
       .btn-group button {
-        padding: 0.5rem 1rem;
-        margin-right: 0.5rem;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
       }
 
       .order-card {
-        background: #fff;
-        border: 1px solid #e9ecef;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s, box-shadow 0.2s;
+        background: var(--light-bg);
+        border: none;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
       .order-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
       }
 
       .order-header,
@@ -288,25 +337,31 @@
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 8px;
       }
 
       .order-items {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 1rem;
       }
 
       .item {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
         align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
       }
 
       .item img {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         object-fit: cover;
-        border-radius: 6px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
       }
 
       .actions {
@@ -316,147 +371,145 @@
       }
 
       .actions button {
-        padding: 0.5rem 1rem;
+        padding: 10px 20px;
         border: none;
-        background: #007bff;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
       }
 
       .actions .cancel {
-        background: #dc3545;
+        background: #ef5350;
+      }
+
+      .actions .cancel:hover {
+        background: #d32f2f;
+        transform: translateY(-2px);
       }
 
       .badge {
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #fff;
       }
 
       .badge.pending {
-        background-color: #ffc107;
+        background: #ffb300;
       }
 
       .badge.cancelled {
-        background-color: #dc3545;
+        background: #ef5350;
       }
 
       .badge.completed {
-        background-color: #28a745;
-      }
-
-      .payment {
-        font-weight: bold;
-        color: #555;
+        background: var(--secondary-color);
       }
 
       /* Enhanced Order Listing Styles */
       .search-filter-section {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-
-      .order-header {
-        border-bottom: 1px solid #e9ecef;
+        background: var(--light-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
       }
 
       .order-item {
-        transition: background-color 0.2s;
+        transition: background-color 0.3s ease;
       }
 
       .order-item:hover {
-        background-color: #f8f9fa;
+        background: var(--hover-color);
+        border-radius: 8px;
       }
 
       .item-image img {
         width: 100%;
-        height: 80px;
+        height: 100px;
         object-fit: cover;
-        border: 1px solid #dee2e6;
+        border-radius: 8px;
       }
 
       .payment-badge {
         font-size: 0.9rem;
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        background: #e0f7fa;
+        color: var(--text-color);
       }
 
       .item-actions {
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
 
       .order-actions {
-        border-top: 1px solid #e9ecef;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 8px;
+        margin-top: 1rem;
       }
 
       /* Badge Styles */
       .badge.bg-warning {
-        background-color: #ffc107 !important;
-        color: #212529;
+        background: #ffb300 !important;
+        color: #fff;
       }
 
       .badge.bg-danger {
-        background-color: #dc3545 !important;
+        background: #ef5350 !important;
       }
 
       .badge.bg-success {
-        background-color: #28a745 !important;
+        background: var(--secondary-color) !important;
       }
 
       .badge.bg-info {
-        background-color: #17a2b8 !important;
+        background: #26c6da !important;
       }
 
       .badge.bg-primary {
-        background-color: #007bff !important;
+        background: var(--primary-color) !important;
       }
 
-      /* Pagination custom styling */
+      /* Pagination */
       .pagination .page-item.active .page-link {
-        background-color: #28a745;
-        border-color: #28a745;
-        color: white;
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: #fff;
       }
 
       .pagination .page-link {
-        color: #5d8a7b;
-        border-color: #e9ecef;
-      }
-
-      .pagination .page-item.active .page-link {
-        background-color: #5d8a7b;
-        border-color: #5d8a7b;
+        color: var(--primary-color);
+        border-radius: 8px;
+        margin: 0 4px;
+        transition: all 0.3s ease;
       }
 
       .pagination .page-link:hover {
-        background-color: #eaf2ef;
+        background: var(--hover-color);
+        color: var(--primary-color);
       }
 
-      /* Responsive adjustments */
+      /* Responsive Adjustments */
       @media (max-width: 991px) {
         .breadcrumb-wrap {
-          margin-bottom: 20px !important;
+          margin-bottom: 30px !important;
         }
 
         .dashboard-menu {
-          margin-bottom: 30px;
+          margin-bottom: 20px;
         }
       }
 
       @media (max-width: 767px) {
         .mobile-menu-toggle {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
         }
 
         .dashboard-menu {
           display: none;
-          margin-bottom: 20px;
         }
 
         .dashboard-menu.show {
@@ -465,10 +518,6 @@
 
         .card {
           margin-bottom: 20px;
-        }
-
-        .table-responsive {
-          margin-bottom: 0;
         }
 
         .order-header,
@@ -489,19 +538,19 @@
         .btn-group {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.75rem;
         }
 
         .order-header .col-md-4:not(:last-child) {
-          margin-bottom: 0.5rem;
+          margin-bottom: 1rem;
         }
 
         .payment-info .col-md-6:first-child {
-          margin-bottom: 0.5rem;
+          margin-bottom: 1rem;
         }
 
         .order-actions .col-md-6:first-child {
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
         }
       }
     </style>
@@ -512,7 +561,7 @@
         <div class="container">
           <div class="breadcrumb">
             <a href="/" rel="nofollow">Home</a>
-            <span>/</span> Profile <span>/</span>
+            <span>/</span> Profile <span>/</span> Orders
           </div>
         </div>
       </div>
@@ -543,7 +592,7 @@
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="/orders">
+                        <a class="nav-link active" href="/orders">
                           <i class="fas fa-shopping-bag"></i> Orders
                         </a>
                       </li>
@@ -552,7 +601,6 @@
                           <i class="fas fa-wallet"></i> Wallet
                         </a>
                       </li>
-                      
                       <li class="nav-item">
                         <a class="nav-link" href="/referrals">
                           <i class="fas fa-user-plus"></i> Referrals
@@ -581,29 +629,27 @@
                             <div class="col-md-5">
                               <div class="input-group">
                                 <form action="/orderSearch" method="post">
-                                <input
-                                name="orderId"
-                                  type="text"
-                                  class="form-control"
-                                  id="orderSearch"
-                                  placeholder="Search by Order ID or product..."
-                                />
-
-                                <button class="btn btn-primary" type="submit">
-                                  <i class="fas fa-search"></i>
-                                </button>
-                              </form>
+                                  <input
+                                    name="orderId"
+                                    type="text"
+                                    class="form-control"
+                                    id="orderSearch"
+                                    placeholder="Search by Order ID or product..."
+                                  />
+                                  <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i>
+                                  </button>
+                                </form>
                               </div>
                             </div>
-                            
                             <div class="col-md-3">
                               <a
-                              href="/orders"
+                                href="/orders"
                                 class="btn btn-outline-secondary w-100"
                                 id="clearFilters"
                               >
-                                Clear 
-                            </a>
+                                Clear
+                              </a>
                             </div>
                           </div>
                         </div>
@@ -1542,11 +1588,11 @@
                 confirmButtonText: "Confirm",
                 confirmButtonColor: "#dc3545",
                 cancelButtonColor: "#6c757d",
-                inputValidator (value) {
+                inputValidator: (value) => {
                   if (!value.trim()) {
                     return "Please provide a reason";
                   }
-                }
+                },
               });
 
               if (!customReason) {
@@ -1603,38 +1649,38 @@
 
         // Search and filter functionality
         const orderSearch = document.getElementById("orderSearch");
-const statusFilter = document.getElementById("statusFilter");
-const clearFilters = document.getElementById("clearFilters");
-const orderCards = document.querySelectorAll(".order-card");
+        const statusFilter = document.getElementById("statusFilter");
+        const clearFilters = document.getElementById("clearFilters");
+        const orderCards = document.querySelectorAll(".order-card");
 
-const filterOrders = debounce(() => {
-  const searchTerm = orderSearch.value.toLowerCase().trim();
-  const statusTerm = statusFilter.value.toLowerCase().trim();
+        const filterOrders = debounce(() => {
+          const searchTerm = orderSearch.value.toLowerCase().trim();
+          const statusTerm = statusFilter.value.toLowerCase().trim();
 
-  orderCards.forEach((card) => {
-    const productNames = Array.from(card.querySelectorAll(".item-title"))
-      .map((title) => title.textContent.toLowerCase());
-    const statusBadge = card.querySelector(".badge")?.textContent.toLowerCase() || "";
+          orderCards.forEach((card) => {
+            const productNames = Array.from(card.querySelectorAll(".item-title"))
+              .map((title) => title.textContent.toLowerCase());
+            const statusBadge = card.querySelector(".badge")?.textContent.toLowerCase() || "";
 
-    const matchesSearch = searchTerm === "" || productNames.some((name) => name.includes(searchTerm));
-    const matchesStatus = statusTerm === "" || statusBadge === statusTerm;
+            const matchesSearch = searchTerm === "" || productNames.some((name) => name.includes(searchTerm));
+            const matchesStatus = statusTerm === "" || statusBadge === statusTerm;
 
-    card.style.display = matchesSearch && matchesStatus ? "block" : "none";
-    console.log(`Card - Product: ${productNames}, Status: ${statusBadge}, Display: ${card.style.display}`);
-  });
-}, 300);
+            card.style.display = matchesSearch && matchesStatus ? "block" : "none";
+            console.log(`Card - Product: ${productNames}, Status: ${statusBadge}, Display: ${card.style.display}`);
+          });
+        }, 300);
 
-if (orderSearch) orderSearch.addEventListener("input", filterOrders);
-if (statusFilter) statusFilter.addEventListener("change", filterOrders);
+        if (orderSearch) orderSearch.addEventListener("input", filterOrders);
+        if (statusFilter) statusFilter.addEventListener("change", filterOrders);
 
-if (clearFilters) {
-  clearFilters.addEventListener("click", () => {
-    if (orderSearch) orderSearch.value = "";
-    if (statusFilter) statusFilter.value = "";
-    orderCards.forEach((card) => (card.style.display = "block"));
-    console.log("Filters cleared");
-  });
-} 
+        if (clearFilters) {
+          clearFilters.addEventListener("click", () => {
+            if (orderSearch) orderSearch.value = "";
+            if (statusFilter) statusFilter.value = "";
+            orderCards.forEach((card) => (card.style.display = "block"));
+            console.log("Filters cleared");
+          });
+        } 
 
         // Mobile menu toggle
         const toggleMenu = document.getElementById("toggleMenu");
