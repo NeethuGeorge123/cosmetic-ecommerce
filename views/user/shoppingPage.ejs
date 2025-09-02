@@ -759,43 +759,42 @@
     }
 
     function addToCart(productId) {
-        $.ajax({
-            url: '/cart',
-            method: 'POST',
-            data: { productId: productId },
-            success: (response) => {
-                console.log('addToCart response:', response); // Debug: Log response
-                if (response.status) {
-                    Swal.fire({
-                        title: 'Added to Cart',
-                        text: 'The product has been added to your cart',
-                        icon: 'success',
-                        timer: 2000
-                    });
-                    if (response.count !== undefined) {
-                        $('#cart-count').text(response.count); // Update badge
-                    } else {
-                        console.warn('No count in response, falling back to updateCartCount');
-                        updateCartCount(); // Fallback
-                    }
-                } else {
-                    Swal.fire({
-                        title: 'Already in Cart',
-                        text: response.message,
-                        icon: 'info',
-                        timer: 2000
-                    });
-                }
-            },
-            error: (error) => {
-                console.error('addToCart error:', error); // Debug: Log error
+    $.ajax({
+        url: '/cart',
+        method: 'POST',
+        data: { productId: productId },
+        success: (response) => {
+            console.log('Full response:', response);
+            if (response.status) {
                 Swal.fire({
-                    title: 'Error',
-                    text: 'There was an error adding the product to your cart',
-                    icon: 'error',
+                    title: 'Added to Cart',
+                    text: 'The product has been added to your cart',
+                    icon: 'success',
+                    timer: 2000
+                });
+                // Use the count directly from the response instead of making another AJAX call
+                if (response.count !== undefined) {
+                    $('#cart-count').text(response.count);
+                }
+                // DON'T call updateCartCount() here - it makes another AJAX request
+            } else {
+                Swal.fire({
+                    title: 'Already in Cart',
+                    text: response.message,
+                    icon: 'info',
                     timer: 2000
                 });
             }
-        });
-    }
+        },
+        error: (error) => {
+            console.error('addToCart error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'There was an error adding the product to your cart',
+                icon: 'error',
+                timer: 2000
+            });
+        }
+    });
+}
 </script>

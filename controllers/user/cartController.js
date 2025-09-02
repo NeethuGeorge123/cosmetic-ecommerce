@@ -124,7 +124,7 @@ const updateCartQuantity = async (req, res) => {
     if (!cartItem) {
       return res.json({ success: false, message: 'Cart item not found' });
     }
-
+ 
     const item = cartItem.items.find(item => item.productId._id.toString() === productId);
     console.log("ITEMS",item)
 
@@ -251,7 +251,7 @@ const deleteFromCart = async (req, res) => {
         const userId=req.session.user
        
         const cart=await Cart.findOne({userId}).populate('items.productId')
-        if(!cart && !cart.items.length){
+        if(!cart || !cart.items.length){
           return res.status(400).json({status:false,message:"Your cart is empty"})
         }
         
@@ -259,7 +259,7 @@ const deleteFromCart = async (req, res) => {
           const product= item.productId
           if(!product || product.isBlocked || product.quantity<item.quantity){
             return res.status(400).json({status:false,message:"Stock not available"})
-          }
+           }
         }
         return res.status(200).json({status:true})
         

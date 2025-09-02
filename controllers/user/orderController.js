@@ -13,7 +13,17 @@ const crypto=require("crypto")
 const Wallet=require("../../models/walletSchema")
 const { v4: uuidv4 } = require("uuid");
 
+const generateOrderId = () => {
+  const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+
+  const dateString = `${yyyy}${mm}${dd}`;
+  return `ORD${dateString}-${randomNumber}`;
+};
   
 const placeOrder = async (req, res) => {
   try {
@@ -92,9 +102,9 @@ const placeOrder = async (req, res) => {
       }); 
     }
     //console.log("CATEGORYYY:",cart.items)
-    
+    const orderId=generateOrderId()
     const order = new Order({
-      orderId: uuidv4(),  
+      orderId,  
       userId,
       orderedItems: cart.items.map(item => ({
         product: {
@@ -166,15 +176,16 @@ const placeOrder = async (req, res) => {
     try {
     
         const userId = req.session.user;
+      
 
     const orderData = await User.findById(userId, { orderHistory: 1 }).populate(
       "orderHistory"
     );
 
     const data = orderData.orderHistory.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
     );
-
+    console.log("data[0]",data[0])
     const orderId = data[0].orderId;
 
     res.render("user/orderConfirmation", { orderId: orderId });
@@ -522,12 +533,13 @@ const createOrder = async (req, res, next) => {
       razorpayOrder = await razorpay.orders.create(options);
     }
 
-    // const orderId = generateOrderId();
+     const orderId = generateOrderId();
     const invoiceDate = new Date();
 
     const order = new Order({
       
       userId,
+      orderId,
       orderedItems,
       totalPrice,
       finalAmount,
@@ -689,10 +701,11 @@ const placeWalletOrder=async(req,res)=>{
     }
   
 
-
+const orderId=generateOrderId()
     const order = new Order({
 
       userId,
+      orderId,
 
       orderedItems: cartItems.map(item => ({
         
@@ -848,24 +861,77 @@ const paymentFailure=async(req,res)=>{
 
 
 
+// const loadRetryPayment = async (req, res, next) => {
+//   try {
+//     const userId = req.session.user;
+//     let  user=await User.findById(userId)
+//     const orderId = req.query.orderId;
+//     const orderData = await Order.findOne({ orderId: orderId });
+//     let wallet = await Wallet.findOne({ userId: user._id });
+//     if (!wallet) {
+//             wallet = new Wallet({ userId:user._id, balance: 0, transactions: [] });
+//           }
+          
+//     res.render("user/retryPayment", { user, order: orderData, wallet });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+ 
+
 const loadRetryPayment = async (req, res, next) => {
   try {
     const userId = req.session.user;
-    let  user=await User.findById(userId)
-    const orderId = req.query.orderId;
-    const orderData = await Order.findOne({ orderId: orderId });
+    const orderId = req.query.id; // Use 'id' to match the query parameter from orders.ejs
+
+    // Validate user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).render('error', {
+        message: 'User not found or not authenticated',
+        status: 401,
+      });
+    }
+
+    // Validate order ID
+    if (!orderId) {
+      return res.status(400).render('error', {
+        message: 'Order ID is required',
+        status: 400,
+      });
+    }
+
+    // Fetch order by _id (assuming orderId in query is MongoDB _id)
+    const orderData = await Order.findById(orderId)
+    if (!orderData) {
+      return res.status(404).render('error', {
+        message: 'Order not found',
+        status: 404,
+      });
+    }
+
+    // Check if order status is Pending
+    if (orderData.status.toLowerCase() !== 'pending') {
+      return res.status(400).render('error', {
+        message: 'Retry payment is only available for pending orders',
+        status: 400,
+      });
+    }
+
+    // Fetch or create wallet
     let wallet = await Wallet.findOne({ userId: user._id });
     if (!wallet) {
-            wallet = new Wallet({ userId:user._id, balance: 0, transactions: [] });
-          }
-          
-    res.render("user/retryPayment", { user, order: orderData, wallet });
+      wallet = new Wallet({ userId: user._id, balance: 0, transactions: [] });
+      await wallet.save(); // Save the new wallet
+    }
+
+    // Render retryPayment.ejs with valid data
+    res.render('user/retryPayment', { user, order: orderData, wallet });
   } catch (error) {
-    next(error);
+    console.error('Error in loadRetryPayment:', error);
+    next(error); // Pass error to Express error middleware
   }
 };
- 
-
 const retryPaymentCod = async (req, res, next) => {
   try {
     const orderId = req.query.orderId;

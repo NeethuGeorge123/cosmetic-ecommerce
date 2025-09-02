@@ -363,12 +363,10 @@
                     </a>
                     
                     <!-- Shopping Cart Button -->
-                    <!-- Shopping Cart Button -->
-<a href="/cart" class="cart-btn">
-    <i class="fas fa-shopping-cart"></i>
-    <span id="cart-count" class="cart-badge">0</span>
-  </a>
-  
+                    <a href="/cart" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
                     
                     <!-- User Dropdown -->
                     <div class="dropdown user-dropdown d-inline-block ml-2">
@@ -679,7 +677,6 @@
                         icon: 'success',
                         timer: 2000
                     });
-                    updateCartCount();
                 } else {
                     Swal.fire({
                         title: 'Already in Cart',
@@ -699,26 +696,5 @@
             }
         });
     }
-
-
-  async function updateCartCount() {
-    try {
-      const response = await fetch("/cart/count");
-      const data = await response.json();
-      if (data && data.status) {
-        document.getElementById("cart-count").textContent = data.count;
-      } else {
-        document.getElementById("cart-count").textContent = 0;
-      }
-    } catch (err) {
-      console.error("Error fetching cart count:", err);
-    }
-  }
-
-  
-  document.addEventListener("DOMContentLoaded", updateCartCount);
-
-
-    
 </script>
     <%- include("../../views/partials/user/footer") %>

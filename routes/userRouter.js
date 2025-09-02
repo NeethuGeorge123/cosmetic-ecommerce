@@ -72,7 +72,7 @@ router.get("/productDetails",userAuth,productController.productDetails)
 
 router.post("/cart",userAuth,cartController.addToCart)
 router.get("/cart",userAuth,cartController.getCart)
-// router.get("/cart/count", userAuth, cartController.getCartCount);
+router.get("/cart/count", userAuth, cartController.getCartCount);
 router.put("/cart",userAuth,cartController.updateCartQuantity)
 router.delete("/cart",userAuth,cartController.deleteFromCart)
 

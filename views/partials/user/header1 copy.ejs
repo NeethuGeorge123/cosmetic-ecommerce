@@ -139,33 +139,14 @@
             </a>
             <a href="/cart" class="btn position-relative" aria-label="Cart">
               <i class="fas fa-shopping-cart fs-5 text-primary"></i>
-              <!-- 🔥 add id="cart-count" -->
-              <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
             </a>
-            
           </div>
         </div>
       </div>
     </div>
   </div>
-  <script>
-    async function updateCartCount() {
-      try {
-        const response = await fetch("/cart/count", { method: "GET" });
-        const data = await response.json();
-        if (data && data.status) {
-          document.getElementById("cart-count").textContent = data.count;
-        } else {
-          document.getElementById("cart-count").textContent = 0;
-        }
-      } catch (err) {
-        console.error("Error fetching cart count:", err);
-      }
-    }
-  
-    // Call when page loads
-    updateCartCount();
-  </script>
+
   
 </body>
 </html>

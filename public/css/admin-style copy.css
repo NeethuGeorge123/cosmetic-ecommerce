@@ -1,0 +1,158 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #f4f4f4;
+}
+.textColor{
+    color: white;
+}
+.header {
+    background: #c4d2c2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.search-bar {
+    flex: 1;
+    text-align: center;
+}
+
+.search-bar input {
+    padding: 10px;
+    width: 50%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-account {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.admin-account img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 150px;
+    text-align: left;
+}
+
+.dropdown a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+
+.dropdown a:last-child {
+    border-bottom: none;
+}
+
+.dropdown a:hover {
+    background: #f4f4f4;
+}
+
+.dashboard-container {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 250px;
+    background: #c4d2c2;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    background: #6a7264;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+    background: #779162;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+/* Make all sidebar links white and bold */
+.sidebar ul li a {
+    color: white;
+    font-weight: bold;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  /* Optional: hover effect */
+  .sidebar ul li a:hover {
+    background-color: #444; /* or any hover background */
+    color: #00ffcc;         /* optional hover color */
+  }
+  
+  /* Active/selected link */
+  .sidebar ul li a.active {
+    background-color: white;
+    color: #2c3e50; /* Choose your preferred active color */
+    border-radius: 5px;
+  }
+  .page-item.active .page-link {
+    background-color: #28a745; /* Bootstrap green */
+    border-color: #28a745;
+    color: #fff;
+    font-weight: normal;
+  }
+  
+  

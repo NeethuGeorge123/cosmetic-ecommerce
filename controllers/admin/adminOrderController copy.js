@@ -478,11 +478,7 @@ const loadSalesReport = async (req, res, next) => {
       startDate.setHours(0, 0, 0, 0);
       endDate = new Date(req.query.to);
       endDate.setHours(23, 59, 59, 999);
-      const today=new Date()
-      today.setHours(23,59,59,999)
-      if(endDate>today){
-        return res.json({success:false,message:"End date canot greater than today"})
-      }
+      
     }
 
     const orders = await Order.aggregate([

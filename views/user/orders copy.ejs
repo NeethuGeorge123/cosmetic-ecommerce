@@ -669,14 +669,6 @@
             color: #856404;
             border-radius: 8px;
         }
-        .btn-outline-info {
-    border-color: #26c6da;
-    color: #26c6da;
-}
-.btn-outline-info:hover {
-    background: #26c6da;
-    color: var(--white);
-}
     </style>
 </head>
 <body>
@@ -851,10 +843,10 @@
                                                                     >Payment Method:</strong
                                                                 >
                                                                 <span class="payment-badge">
-                                                                    <% if (order.paymentMethod === 'cod') { %>
+                                                                    <% if (order.paymentMethod === 'COD') { %>
                                                                     <i class="fas fa-money-bill-wave me-1"></i>
                                                                     Cash On Delivery <% } else if
-                                                                        (order.paymentMethod === 'wallet') { %>
+                                                                        (order.paymentMethod === 'WALLET') { %>
                                                                     <i class="fas fa-wallet me-1"></i> Wallet <%
                                                                     } else { %>
                                                                     <i class="fas fa-credit-card me-1"></i>
@@ -971,18 +963,6 @@
                                                                     <i class="fas fa-info-circle me-1"></i>View
                                                                     Details
                                                                 </a>
-                                                                
-
-                                                                <!-- Retry Payment button for Pending status -->
-<% if (order.status.toLowerCase() === 'pending') { %>
-    <a
-        href="/retryPayment?id=<%= order._id %>"
-        class="btn btn-sm btn-outline-info me-2 mb-2"
-    >
-        <i class="fas fa-redo me-1"></i>Retry Payment
-    </a>
-    <% } %>
-
                                                             </div>
                                                             <div class="col-md-6 text-md-end">
                                                                 <% if (['pending', 'processing'].includes(order.status.toLowerCase())) { %>

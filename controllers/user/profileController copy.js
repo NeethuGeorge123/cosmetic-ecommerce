@@ -351,24 +351,22 @@ const postAddAddress= async(req,res)=>{
     try {
         const userId=req.session.user;
         const userData= await User.findOne({_id:userId})
-        const {addressType,name,city,landMark,state,pincode,phone,altPhone,countryCode,altCountryCode }=req.body ;
-         const fullPhone=countryCode+phone;
-         const fullAltPhone=altCountryCode+altPhone;
+        const {addressType,name,city,landMark,state,pincode,phone,altPhone }=req.body ;
         const userAddress= await Address.findOne({userId:userData._id});
         if(!userAddress){
             const newAddress = new Address({
                 userId:userData._id,
-                address:[{addressType,name,city,landMark,state,pincode,phone:fullPhone,altPhone:fullAltPhone}]
+                address:[{addressType,name,city,landMark,state,pincode,phone,altPhone}]
             });
             await newAddress.save();
         }else{
-            userAddress.address.push({addressType,name,city,landMark,state,pincode,phone:fullPhone,altPhone:fullAltPhone})
+            userAddress.address.push({addressType,name,city,landMark,state,pincode,phone,altPhone})
             await userAddress.save();
         }
 
         res.redirect("/my-profile")
     } catch (error) {
-       console.error("Error adding address",error)
+       res.error("Error adding address",error)
        res.redirect("/pageNotFound")
     }
 }

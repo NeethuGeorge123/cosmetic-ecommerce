@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Leaf</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <style>
+        .wishlist-container {
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+          margin: 50px;
+        }
+    
+        .wishlist-container .fa-heart {
+          font-size: 28px;
+          color: #888;
+          transition: color 0.3s;
+        }
+    
+        .wishlist-container:hover .fa-heart {
+          color: red;
+        }
+    
+        .wishlist-text {
+          position: absolute;
+          top: -30px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #333;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 5px;
+          font-size: 12px;
+          white-space: nowrap;
+          opacity: 0;
+          transition: opacity 0.3s;
+          pointer-events: none;
+        }
+    
+        .wishlist-container:hover .wishlist-text {
+          opacity: 1;
+        }
+      </style>
+   
+</head>

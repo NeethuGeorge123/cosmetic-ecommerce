@@ -78,10 +78,6 @@ const addToWishlist = async (req, res) => {
 
 
 
-
-
-
-
 const removeProduct = async (req, res) => {
     try {
         const productId = req.query.productId;

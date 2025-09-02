@@ -222,7 +222,6 @@
             }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -238,7 +237,7 @@
             const phoneError = document.getElementById("phone-error");
             const passwordError = document.getElementById("password-error");
             const confirmPasswordError = document.getElementById("confirm-password-error");
- 
+
             const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             const phonePattern = /^[0-9]{10}$/;
             const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -308,24 +307,11 @@
                 if (confirmPassword.value !== password.value) errors.push("Passwords do not match.");
 
                 if (errors.length > 0) {
-    Swal.fire({
-        icon: "error",
-        title: "Validation Failed",
-        html: errors.join("<br>"),
-        confirmButtonColor: "#ff5c7a"
-    });
-} else {
-    Swal.fire({
-        icon: "success",
-        title: "OTP Sent",
-        text: "We’ve sent a One-Time Password (OTP) to your email. Please verify to complete signup.",
-        confirmButtonColor: "#ff5c7a"
-    }).then(() => {
-        // ✅ Submit form after showing SweetAlert
-        signupForm.submit();
-    });
-}
-
+                    alert(errors.join("\n"));
+                } else {
+                    alert("Signup Successful!");
+                    this.submit();
+                }
             });
         });
     </script>
