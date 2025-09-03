@@ -237,7 +237,7 @@
             </td>
             <td><%= item.quantity %></td>
             <td>₹<%= (item.product.salePrice).toFixed(2) %></td>
-            <td>₹<%= (item.price)*(item.quantity).toFixed(2) %></td>
+            <td>₹<%= (item.product.salePrice)*(item.quantity).toFixed(2) %></td>
           </tr>
           <% }); %>
         </tbody>
