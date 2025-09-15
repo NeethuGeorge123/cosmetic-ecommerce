@@ -233,7 +233,8 @@ const updateEmail = async(req,res)=>{
         const newEmail=req.body.newEmail;
         const userId=req.session.user;
         await User.findByIdAndUpdate(userId,{email:newEmail})
-        res.render("user/myProfile")
+        const user=await User.findById(userId)
+        res.render("user/myProfile",{user})
     } catch (error) {
         res.redirect("/pageNotFound")
     }
@@ -265,7 +266,7 @@ const changePasswordValid= async (req,res)=>{
                 console.log("OTP",otp);
             }else{
                 res.json({
-                    success:false,
+                    success:false,  
                     message:"Failed to send OTP.Please try again"
                 })
             }

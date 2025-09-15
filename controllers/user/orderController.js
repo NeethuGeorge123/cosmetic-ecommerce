@@ -882,9 +882,9 @@ const paymentFailure=async(req,res)=>{
 const loadRetryPayment = async (req, res, next) => {
   try {
     const userId = req.session.user;
-    const orderId = req.query.id; // Use 'id' to match the query parameter from orders.ejs
+    const orderId = req.query.orderId; 
 
-    // Validate user
+    
     const user = await User.findById(userId);
     if (!user) {
       return res.status(401).render('error', {
@@ -893,7 +893,7 @@ const loadRetryPayment = async (req, res, next) => {
       });
     }
 
-    // Validate order ID
+   
     if (!orderId) {
       return res.status(400).render('error', {
         message: 'Order ID is required',
@@ -901,8 +901,8 @@ const loadRetryPayment = async (req, res, next) => {
       });
     }
 
-    // Fetch order by _id (assuming orderId in query is MongoDB _id)
-    const orderData = await Order.findById(orderId)
+    
+    const orderData = await Order.findOne({orderId:orderId})
     if (!orderData) {
       return res.status(404).render('error', {
         message: 'Order not found',
@@ -910,7 +910,7 @@ const loadRetryPayment = async (req, res, next) => {
       });
     }
 
-    // Check if order status is Pending
+    
     if (orderData.status.toLowerCase() !== 'pending') {
       return res.status(400).render('error', {
         message: 'Retry payment is only available for pending orders',
@@ -918,18 +918,18 @@ const loadRetryPayment = async (req, res, next) => {
       });
     }
 
-    // Fetch or create wallet
+    
     let wallet = await Wallet.findOne({ userId: user._id });
     if (!wallet) {
       wallet = new Wallet({ userId: user._id, balance: 0, transactions: [] });
-      await wallet.save(); // Save the new wallet
+      await wallet.save(); 
     }
 
-    // Render retryPayment.ejs with valid data
+    
     res.render('user/retryPayment', { user, order: orderData, wallet });
   } catch (error) {
     console.error('Error in loadRetryPayment:', error);
-    next(error); // Pass error to Express error middleware
+    next(error); 
   }
 };
 const retryPaymentCod = async (req, res, next) => {

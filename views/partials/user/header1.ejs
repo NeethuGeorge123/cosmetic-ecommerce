@@ -135,8 +135,11 @@
           <div class="d-flex align-items-center">
             <a href="/wishlist" class="btn position-relative me-3" aria-label="Wishlist">
               <i class="fas fa-heart fs-5 text-danger"></i>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+              <span id="wishlist-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+               0
+              </span>
             </a>
+            
             <a href="/cart" class="btn position-relative" aria-label="Cart">
               <i class="fas fa-shopping-cart fs-5 text-primary"></i>
               <!-- 🔥 add id="cart-count" -->
@@ -165,6 +168,19 @@
   
     // Call when page loads
     updateCartCount();
+
+    async function updateWishlistCount(){
+      try {
+        const res=await fetch("/wishlist/count")
+        const data=await res.json()
+        document.getElementById("wishlist-badge").innerText=data.count
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    updateWishlistCount();
+    
   </script>
   
 </body>

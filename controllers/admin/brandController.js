@@ -40,6 +40,7 @@ const addBrand = async (req, res) => {
       const newBrand=new Brand({
           brandName:brand,
           brandImage:image,
+          
       })
       await newBrand.save();
       res.redirect("/admin/brands")

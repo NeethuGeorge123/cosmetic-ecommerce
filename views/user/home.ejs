@@ -359,7 +359,7 @@
                     <!-- Wishlist Button -->
                     <a href="/wishlist" class="cart-btn">
                         <i class="fas fa-heart"></i>
-                        <span class="cart-badge">0</span>
+                        <span id="wishlist-badge" class="cart-badge">0</span>
                     </a>
                     
                     <!-- Shopping Cart Button -->
@@ -552,7 +552,7 @@
                             <i class="fas fa-heart text-danger mr-1"></i>
                         </button>
                         <button class="cart-btn" onclick="addToCart('<%= products[i]._id %>')">
-                            <i class="fas fa-shopping-cart text-primary mr-1"></i>
+                            <i class="fas fa-shopping-cart text-danger mr-1"></i>
                         </button>
                     </div>
                 </div>
@@ -718,7 +718,17 @@
   
   document.addEventListener("DOMContentLoaded", updateCartCount);
 
+  async function updateWishlistCount(){
+      try {
+        const res=await fetch("/wishlist/count")
+        const data=await res.json()
+        document.getElementById("wishlist-badge").innerText=data.count
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
+    updateWishlistCount();
     
 </script>
     <%- include("../../views/partials/user/footer") %>

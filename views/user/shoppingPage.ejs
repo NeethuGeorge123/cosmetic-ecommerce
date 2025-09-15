@@ -286,7 +286,7 @@
         
         .wishlist-btn:hover {
             background-color: #ffe6e6;
-            color: #dc3545 !important;
+            color: #e05462 !important;
         }
         
         .cart-btn:hover {
@@ -300,18 +300,18 @@
         }
         
         .pagination .btn {
-            margin: 0 5px;
-            padding: 8px 16px;
+            margin: 0 8px;
+            padding: 12px 20px;
             border-radius: 30px;
-            background-color: white;
-            color: var(--dark);
-            border: 1px solid rgba(0,0,0,0.1);
+            background-color:#e07b6e;
+            color: white;
+            border: none;
             transition: all 0.3s;
         }
         
         .pagination .btn:hover, .pagination .btn.active {
-            background-color: var(--primary);
-            color: white;
+            background-color: #f0f0f0;
+            color:#6c757d;
             border-color: var(--primary);
         }
         
@@ -432,8 +432,8 @@
                 <div class="col-lg-3 col-md-3 d-flex justify-content-end">
                     <div class="d-flex align-items-center">
                         <a href="/wishlist"  class="btn position-relative me-3">
-                            <i class="fas fa-heart fs-5 text-danger"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                            <i class="fas fa-heart fs-5 text-primary"></i>
+                            <span id="wishlist-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
                         </a>
                         <a href="/cart" class="btn position-relative">
                             <i class="fas fa-shopping-cart fs-5 text-primary"></i>
@@ -615,11 +615,11 @@
                                         </div>
                                     </div>
                                     <div class="product-actions" >
-                                        <button  onclick="addToWishlist('<%=products[i]._id%>')" class="wishlist-btn" style="border :none;">
+                                        <button  onclick="addToWishlist('<%=products[i]._id%>')" class="wishlist-btn text-primary" style="border :none;">
                                             <i class="fa fa-heart text-danger me-1"></i> 
                                         </button>
                                         <button  class="cart-btn" onclick="addToCart('<%=products[i]._id%>')"  style="border :none;">
-                                            <i class="fas fa-shopping-cart text-primary me-1"></i> 
+                                            <i class="fas fa-shopping-cart text-danger me-1"></i> 
                                         </button>
                                     </div>
                                 </div>
@@ -630,29 +630,36 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="pagination">
-                    <% if (totalPages > 1) { %>
-                      <% if (currentPage > 1) { %>
-                        <a class="btn" href="/shopnow?page=<%= currentPage - 1 %>">
-                          <i class="fa fa-angle-left me-1"></i> Prev
-                        </a>
-                      <% } %>
-                  
-                      <% for (let i = 1; i <= totalPages; i++) { %>
-                        <a class="btn <%= currentPage === i ? 'active' : '' %>" href="/shopnow?page=<%= i %>">
-                          <%= i %>
-                        </a>
-                      <% } %>
-                  
-                      <% if (currentPage < totalPages) { %>
-                        <a class="btn" href="/shopnow?page=<%= currentPage + 1 %>">
-                          Next <i class="fa fa-angle-right ms-1"></i>
-                        </a>
-                      <% } %>
-                    <% } %>
-                  </div>
-                   
+                
+        
+<!-- Pagination -->
+<div class="pagination">
+    <% if (totalPages > 1) { %>
+        <div class="d-flex align-items-center">
+            <% if (currentPage > 1) { %>
+                <a class="btn me-2" href="/shopnow?page=<%= currentPage - 1 %>">
+                    <i class="fa fa-angle-left me-1"></i>
+                </a>
+            <% } else { %>
+                <a class="btn me-2 disabled" href="javascript:void(0)">
+                    <i class="fa fa-angle-left me-1"></i>
+                </a>
+            <% } %>
+
+            <span class="btn active"><%= currentPage %></span>
+
+            <% if (currentPage < totalPages) { %>
+                <a class="btn ms-2" href="/shopnow?page=<%= currentPage + 1 %>">
+                    <i class="fa fa-angle-right ms-1"></i>
+                </a>
+            <% } else { %>
+                <a class="btn ms-2 disabled" href="javascript:void(0)">
+                    <i class="fa fa-angle-right ms-1"></i>
+                </a>
+            <% } %>
+        </div>
+    <% } %>
+</div>
             </div>
         </div>
     </div>
@@ -797,4 +804,16 @@
         }
     });
 }
+
+async function updateWishlistCount(){
+      try {
+        const res=await fetch("/wishlist/count")
+        const data=await res.json()
+        document.getElementById("wishlist-badge").innerText=data.count
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    updateWishlistCount();
 </script>

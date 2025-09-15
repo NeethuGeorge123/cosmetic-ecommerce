@@ -19,12 +19,13 @@ const loadCoupon = async (req, res) => {
         .limit(limit);
   
       const totalPages = Math.ceil(totalCoupons / limit);
-  
+      
+
       res.render("admin/coupon", {
         coupons,
         currentPage: page,
         totalPages,
-        layout: "layouts/admin", 
+        layout: "layouts/admin",
       });
     } catch (error) {
       console.error("Error loading coupons:", error);
@@ -56,6 +57,7 @@ const loadCoupon = async (req, res) => {
       }
   
       const offerPriceNum = parseFloat(offerPrice);
+      
       const discountPercentageNum = parseFloat(discountPercentage);
       const maxDiscountAmountNum = parseFloat(maxDiscountAmount);
       const minimumPriceNum = parseFloat(minimumPrice);
@@ -88,7 +90,8 @@ const loadCoupon = async (req, res) => {
       if (existingCoupon) {
         return res.status(400).json({ success: false, message: "Coupon name already exists" });
       }
-  
+      
+      
     
       const coupon = new Coupon({
         name: couponName,
@@ -102,6 +105,7 @@ const loadCoupon = async (req, res) => {
          //userId: [],
       });
 
+
       await Coupon.updateOne(
         { _id: coupon._id },
         { $addToSet: { userId: userId } }
@@ -114,7 +118,7 @@ const loadCoupon = async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
     }
   };
-  
+   
   
   const editCoupon = async (req, res) => {
     try {
@@ -222,5 +226,7 @@ const loadCoupon = async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
     }
   };
+
+   
   
   module.exports = { loadCoupon, addCoupon, editCoupon, deleteCoupon };

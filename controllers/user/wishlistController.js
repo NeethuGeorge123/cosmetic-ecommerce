@@ -24,7 +24,7 @@ const loadWishlist = async (req, res) => {
 
             
             const filteredProductIds = wishlistProductIds.filter(
-                pid => !cartProductIds.includes(pid)
+                pid => !cartProductIds.includes(pid) 
             );
 
             wishlistProducts = await Product.find({ _id: { $in: filteredProductIds } }).populate('category');
@@ -74,6 +74,7 @@ const addToWishlist = async (req, res) => {
     wishlist.products.push({ productId });
     await wishlist.save();
     return res.status(200).json({ status: true, message: 'Product added to wishlist' });
+    
 };
 
 
@@ -104,9 +105,61 @@ const removeProduct = async (req, res) => {
     }
 };
  
+// const getBadgeCount=async (req,res)=>{
+//     try {
+//         if(!req.session.user){
+//             return res.json({count:0})
+//         }
+//         const wishlist=await Wishlist.findOne({userId:req.session.user})
+//         const count = wishlist
+//         ? wishlist.products.filter(p => p.productId).length
+//         : 0;
+//         res.json({count})
+//     } catch (error) {
+//         console.error("Wishlist count fetch error",error)
+//         res.json({count:0})
+        
+//     }
+// }
+const getBadgeCount = async (req, res) => {
+    try {
+      if (!req.session.user) {
+        return res.json({ count: 0 });
+      }
+  
+      const userId = req.session.user;
+  
+      const wishlist = await Wishlist.findOne({ userId });
+      const cart = await Cart.findOne({ userId });
+  
+      if (!wishlist) {
+        return res.json({ count: 0 });
+      }
+  
+      const wishlistProductIds = wishlist.products
+        .map(item => item.productId?.toString())
+        .filter(Boolean); // remove null/empty
+  
+      const cartProductIds = cart
+        ? cart.items.map(item => item.productId?.toString())
+        : [];
+  
+      // ✅ exclude products that are in cart
+      const filteredProductIds = wishlistProductIds.filter(
+        pid => !cartProductIds.includes(pid)
+      );
+  
+      res.json({ count: filteredProductIds.length });
+    } catch (error) {
+      console.error("Wishlist count fetch error", error);
+      res.json({ count: 0 });
+    }
+  };
+  
 
 
 module.exports={loadWishlist,
     addToWishlist,
-    removeProduct
-}
+    removeProduct,
+    getBadgeCount
+}     

@@ -110,6 +110,7 @@ router.post("/retryPayment/verifyPayment",userAuth,orderController.retryVerifyPa
 router.get("/wishlist",userAuth,wishlistController.loadWishlist)
 router.post("/addToWishlist",userAuth,wishlistController.addToWishlist)
 router.delete("/wishlist",userAuth,wishlistController.removeProduct)
+router.get("/wishlist/count",wishlistController.getBadgeCount)
 
 //wallet
 
