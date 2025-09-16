@@ -1,12 +1,13 @@
 const Product=require("../../models/productSchema");
 const Category=require("../../models/categorySchema");
 const User=require("../../models/userSignupSchema");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 
 
 
-const productDetails= async(req,res)=>{
-    try {
+const productDetails= asyncHandler(async(req,res)=>{
+    
         const userId=req.session.user;
         const userData= await User.findById(userId);
         const productId= req.query.id;
@@ -24,11 +25,8 @@ const productDetails= async(req,res)=>{
             totalOffer:totalOffer,
             category:findCategory,
         });
-    } catch (error) {
-        console.error("Error for fetching product details",error);
-        res.redirect("/pageNotFound")
-    }
-}
+   
+})
 
 
 

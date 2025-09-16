@@ -1,4 +1,4 @@
-//const User = require("../../models/userSchema");
+
 const mongoose = require('mongoose'); 
 const User = require("../../models/userSignupSchema");
 const Category = require("../../models/categorySchema");
@@ -10,18 +10,16 @@ const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const sendVerificationEmail = require("../../util/sendVerificationEmail");
 const Product = require("../../models/productSchema");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
-const pageNotFound = async (req, res) => {
-  try {
+const pageNotFound = asyncHandler(async (req, res) => {
+
     res.render("user/page-404");
-  } catch (error) {
-    //res.redirect("/pageNotfound")
-    res.status(500).send("Error loading the 404 page");
-  }
-};
+  
+});
 
-const loadHomepage = async (req, res) => {
-  try {
+const loadHomepage = asyncHandler(async (req, res) => {
+  
     const brands = await Brand.find({ isBlocked: false });
     const today = new Date().toISOString();
     const findBanner = await Banner.find({
@@ -64,15 +62,12 @@ const loadHomepage = async (req, res) => {
       });
       // return res.render("user/home.ejs",{user:null});
     }
-  } catch (error) {
-    console.log("Home page not found");
-    res.status(500).send("Server error");
-  }
-};
+  
+});
 
 
-const shopNow = async (req, res) => {
-  try {
+const shopNow = asyncHandler(async (req, res) => {
+  
     const searchQuery = req.query.search || '';
     const category = req.query.category;
     const brand = req.query.brand;
@@ -149,28 +144,22 @@ const shopNow = async (req, res) => {
       filters:req.query
     });
 
-  } catch (error) {
-    console.error("Error in shopNow controller:", error.message);
-    res.status(500).send("Server Error");
-  }
-};
+  
+});
 
-const loadSignup = async (req, res) => {
-  try {
+const loadSignup = asyncHandler(async (req, res) => {
+  
     
     return res.render("user/signup.ejs");
-  } catch (error) {
-    console.error("Home page not found", error);
-    res.status(500).send("Server error");
-  }
-};
+  
+});
 
 function generateOtp() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-const signup = async (req, res, next) => {
-  try {
+const signup = asyncHandler(async (req, res, next) => {
+  
      
 
     const { name, email, password, cpassword, phone,referral } = req.body;
@@ -218,11 +207,8 @@ const signup = async (req, res, next) => {
 
     res.render("user/verify-otp.ejs");
     console.log("OTP Sent", otp);
-  } catch (error) {
-    console.error("Error during user signup:", error);
-    res.redirect("user/pageNotFound");
-  }
-};
+  
+});
 
 function generateReferralCode(input) {
   if (!input || typeof input !== "string") return null;
@@ -237,22 +223,19 @@ function generateReferralCode(input) {
 }
 
 
-const loadLogin = async (req, res) => {
-  try {
+const loadLogin = asyncHandler(async (req, res) => {
+  
     if(req.session.user){
      return res.redirect("/")
     }
     return res.render("user/login.ejs", { message: null });
-  } catch (error) {
-    console.error("Home page not found", error);
-    res.status(500).send("Server error");
-  }
-};
+ 
+});
 
 
 
-const userLogin = async (req, res) => {
-  try {
+const userLogin = asyncHandler(async (req, res) => {
+  
     const { email, password } = req.body;
     
     const findUser = await User.findOne({ isAdmin: 0, email: email });
@@ -273,22 +256,19 @@ const userLogin = async (req, res) => {
 
     req.session.user = findUser._id;
     res.redirect("/");
-  } catch (error) {
-    console.log("login error", error);
-    res.render("login", { message: "login failed " });
-  }
-};
+  
+});
 
-const securePassword = async (password) => {
-  try {
+const securePassword =asyncHandler(async (password) => {
+  
     const passwordHash = await bcrypt.hash(password, 10);
 
     return passwordHash;
-  } catch (error) {}
-};
+  
+});
 
-const verifyOtp = async (req, res) => {
-  try {
+const verifyOtp = asyncHandler(async (req, res) => {
+  
     const { otp } = req.body;
     //console.log("Entered OTP:", otp);
     
@@ -399,18 +379,12 @@ const verifyOtp = async (req, res) => {
       success: true,
       redirectUrl: "/",
     });
-  } catch (error) {
-    console.error("Error verifying OTP", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-};
-
-const resendOtp = async (req, res) => {
   
-  try {
+});
+
+const resendOtp = asyncHandler(async (req, res) => {
+  
+  
     const { email } = req.session.userData;
     if (!email) {
       return res
@@ -433,14 +407,8 @@ const resendOtp = async (req, res) => {
         .status(500)
         .json({ success: false, message: "Failed to send OTP.Please try again " });
     }
-  } catch (error) {
-    console.error("Error resending OTP", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal ServerError.Please try again",
-    });
-  }
-};
+  
+});
 
 const logout = async (req, res) => {
   try {
@@ -457,8 +425,8 @@ const logout = async (req, res) => {
   }
 };
 
-const filterProduct = async (req, res) => {
-  try {
+const filterProduct = asyncHandler(async (req, res) => {
+  
      
     const user = req.session.user;
     const category = req.query.category;
@@ -513,14 +481,11 @@ const filterProduct = async (req, res) => {
       currentPage,
       totalPages: totalPages,
     });
-  } catch (error) {
-    console.error("Filter Product Error:", error);
-    res.redirect("/pageNotFound");
-  }
-};
+  
+});
 
-const filterByPrice = async (req, res) => {
-  try {
+const filterByPrice = asyncHandler(async (req, res) => {
+  
     
 
     const user = req.session.user;
@@ -553,14 +518,11 @@ const filterByPrice = async (req, res) => {
       totalPages,
       currentPage,
     });
-  } catch (error) {
-    console.error(error);
-    res.redirect("/pageNotFound");
-  }
-};
+  
+});
 
-const searchProducts = async (req, res) => {
-  try {
+const searchProducts = asyncHandler(async (req, res) => {
+  
     const user = req.session.user;
     const userData = await User.findOne({ _id: user });
     let search = req.body.search;
@@ -603,11 +565,8 @@ const searchProducts = async (req, res) => {
       currentPage,
       count: searchResult.length,
     });
-  } catch (error) {
-    console.log("Error: ", error);
-    res.redirect("/pageNotFound");
-  }
-};
+  
+});
 
 module.exports = {
   loadHomepage,

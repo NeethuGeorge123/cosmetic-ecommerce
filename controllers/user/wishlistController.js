@@ -2,11 +2,12 @@ const User=require("../../models/userSignupSchema")
 const Product=require("../../models/productSchema")
 const Wishlist=require("../../models/wishlistSchema")
 const Cart=require("../../models/cartSchema")
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 
 
-const loadWishlist = async (req, res) => {
-    try {
+const loadWishlist = asyncHandler(async (req, res) => {
+    
         const userId = req.session.user;
 
         const wishlistDoc = await Wishlist.findOne({ userId });
@@ -34,16 +35,13 @@ const loadWishlist = async (req, res) => {
             wishlist: wishlistProducts
         });
 
-    } catch (error) {
-        console.error("Error loading wishlist:", error);
-        res.redirect("/pageNotFound");
-    }
-};
+    
+});
 
 
 
 
-const addToWishlist = async (req, res) => {
+const addToWishlist = asyncHandler(async (req, res) => {
     const userId = req.session.user;
     const productId = req.body.productId;
     const cart=await Cart.findOne({userId})
@@ -75,12 +73,12 @@ const addToWishlist = async (req, res) => {
     await wishlist.save();
     return res.status(200).json({ status: true, message: 'Product added to wishlist' });
     
-};
+});
 
 
 
-const removeProduct = async (req, res) => {
-    try {
+const removeProduct = asyncHandler(async (req, res) => {
+    
         const productId = req.query.productId;
         const userId = req.session.user;
         
@@ -99,30 +97,12 @@ const removeProduct = async (req, res) => {
         await wishlist.save();
         return res.status(200).json({success:true,message:"Product removed successfully"})
 
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ status: false, message: 'Server error' });
-    }
-};
+    
+});
  
-// const getBadgeCount=async (req,res)=>{
-//     try {
-//         if(!req.session.user){
-//             return res.json({count:0})
-//         }
-//         const wishlist=await Wishlist.findOne({userId:req.session.user})
-//         const count = wishlist
-//         ? wishlist.products.filter(p => p.productId).length
-//         : 0;
-//         res.json({count})
-//     } catch (error) {
-//         console.error("Wishlist count fetch error",error)
-//         res.json({count:0})
-        
-//     }
-// }
-const getBadgeCount = async (req, res) => {
-    try {
+
+const getBadgeCount = asyncHandler(async (req, res) => {
+    
       if (!req.session.user) {
         return res.json({ count: 0 });
       }
@@ -138,23 +118,20 @@ const getBadgeCount = async (req, res) => {
   
       const wishlistProductIds = wishlist.products
         .map(item => item.productId?.toString())
-        .filter(Boolean); // remove null/empty
+        .filter(Boolean); 
   
       const cartProductIds = cart
         ? cart.items.map(item => item.productId?.toString())
         : [];
   
-      // ✅ exclude products that are in cart
+      
       const filteredProductIds = wishlistProductIds.filter(
         pid => !cartProductIds.includes(pid)
       );
   
       res.json({ count: filteredProductIds.length });
-    } catch (error) {
-      console.error("Wishlist count fetch error", error);
-      res.json({ count: 0 });
-    }
-  };
+    
+  });
   
 
 

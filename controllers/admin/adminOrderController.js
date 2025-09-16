@@ -94,24 +94,14 @@ const cancelOrder = async (req, res) => {
       // const order=await Order.findById(orderId)
 
      const order=await Order.findOne({orderId})
-  //    if (!order) {
-  //     return res.status(400).json({ success: false, message: "Order not found" });
-  // }
-      
-      // const updatedOrder = await Order.findOneAndUpdate(
-      //     { orderId: orderId },
-      //     { $set: { status: 'Cancel' } },
-      //     { new: true }
-      // );
+ 
 
       order.status="cancelled";
       order.cancellationReason="Cancelled by admin";
       order.cancelledAt= new Date()
     await order.save()
 
-      // if (!updatedOrder) {
-      //     return res.status(404).json({ success: false, message: "Order not found" });
-      // }
+      
 
       let wallet=null
       if(order.paymentMethod!=="cod" && order.finalAmount>0){
@@ -246,12 +236,7 @@ const updateReturnStatus = async (req, res) => {
     } else if (status === 'returned') {
       const order = await Order.findById(orderId).populate("userId");
 
-      // const order = await Order.findByIdAndUpdate(orderId, { $set: { status: status } }, { new: true });
-      // if (order) {
-      //   return res.status(200).json({ success: true, message: "Return success" });
-      // } else {
-      //   return res.status(404).json({ success: false, message: "Order Not Found" });
-      // }
+      
 
       if (!order) {
         return res.status(404).json({ success: false, message: "Order Not Found" });

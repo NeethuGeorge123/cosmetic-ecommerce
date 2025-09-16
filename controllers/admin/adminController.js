@@ -2,6 +2,7 @@ const User = require("../../models/userSignupSchema");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Order = require("../../models/orderSchema");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const pageerror = async (req, res) => {
     res.render("admin/admin-error");
@@ -14,8 +15,8 @@ const loadLogin = (req, res) => {
     res.render("admin/admin-login.ejs", { message: null });
 };
 
-const login = async (req, res) => {
-    try {
+const login = asyncHandler(async (req, res) => {
+    
         const { email, password } = req.body;
         const admin = await User.findOne({ email, isAdmin: true });
         console.log("Admin found:", admin ? true : false);
@@ -32,14 +33,11 @@ const login = async (req, res) => {
 
         req.session.admin = true;
         return res.redirect("/admin/dashboard");
-    } catch (error) {
-        console.log("Login Error:", error);
-        return res.redirect("/pageerror");
-    }
-};
+    
+});
 
-const getAdminDashboard = async (req, res) => {
-    try {
+const getAdminDashboard = asyncHandler(async (req, res) => {
+    
         console.log("inside dashboard");
         const currentDate = new Date();
         const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -51,14 +49,11 @@ const getAdminDashboard = async (req, res) => {
             title: 'Admin Dashboard',
             ...initialData
         });
-    } catch (error) {
-        console.error('Error loading dashboard:', error);
-        res.status(500).json({ success: false, message: 'Error loading dashboard' });
-    }
-};
+    
+});
 
-const getDashboardAnalytics = async (req, res) => {
-    try {
+const getDashboardAnalytics = asyncHandler(async (req, res) => {
+    
         const { filter, startDate, endDate } = req.query;
         let start, end;
         const currentDate = new Date();
@@ -92,14 +87,11 @@ const getDashboardAnalytics = async (req, res) => {
 
         const data = await getDashboardData(filter, start, end);
         res.json(data);
-    } catch (error) {
-        console.error('Error fetching analytics:', error);
-        res.status(500).json({ error: 'Error fetching analytics data' });
-    }
-};
+   
+});
 
-const getDashboardData = async (filter, startDate, endDate) => {
-    try {
+const getDashboardData = asyncHandler(async (filter, startDate, endDate) => {
+    
         
         const matchCondition = {
             createdOn: { $gte: startDate, $lte: endDate },
@@ -411,11 +403,8 @@ const getDashboardData = async (filter, startDate, endDate) => {
             startDate: startDate.toISOString().split('T')[0],
             endDate: endDate.toISOString().split('T')[0]
         };
-    } catch (error) {
-        console.error('Error in getDashboardData:', error);
-        throw error;
-    }
-};
+    
+});
 
 const getSalesOverview = async (filter, startDate, endDate) => {
     let groupBy, dateFormat;
@@ -458,8 +447,8 @@ const getSalesOverview = async (filter, startDate, endDate) => {
     return { salesData, dateFormat };
 };
 
-const generateLedgerBook = async (req, res) => {
-    try {
+const generateLedgerBook = asyncHandler(async (req, res) => {
+    
         const { startDate, endDate } = req.query;
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -502,11 +491,8 @@ const generateLedgerBook = async (req, res) => {
             startDate: startDate,
             endDate: endDate
         });
-    } catch (error) {
-        console.error('Error generating ledger:', error);
-        res.status(500).render('admin/error', { message: 'Error generating ledger book' });
-    }
-};
+    
+});
 
 const logout = async (req, res) => {
     try {

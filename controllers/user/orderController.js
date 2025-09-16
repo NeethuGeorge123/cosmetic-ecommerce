@@ -7,6 +7,7 @@ const Address=require("../../models/addressSchema")
 const Order=require("../../models/orderSchema")
 const Coupon=require("../../models/couponSchema")
 const razorpay=require("../../config/razorpay")
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 const refundToWallet = require("../../util/refundToWallet");
 const crypto=require("crypto")
@@ -25,8 +26,8 @@ const generateOrderId = () => {
   return `ORD${dateString}-${randomNumber}`;
 };
   
-const placeOrder = async (req, res) => {
-  try {
+const placeOrder =asyncHandler(async (req, res) => {
+ 
     const { addressId, paymentMethod, couponCode } = req.body;
     const userId = req.session.user;
 
@@ -165,15 +166,12 @@ const placeOrder = async (req, res) => {
     );
 
     return res.status(200).json({ success: true, message: 'Order placed successfully', orderId: order.orderId }); 
-  } catch (error) {
-    console.error('Error in placeOrder:', error);
-    return res.status(500).json({ success: false, message: 'Order placement failed' });   
-  }
-};
+ 
+});
 
 
-  const orderConfirmation = async (req,res)=>{
-    try {
+  const orderConfirmation =asyncHandler(async (req,res)=>{
+    
     
         const userId = req.session.user;
       
@@ -189,14 +187,12 @@ const placeOrder = async (req, res) => {
     const orderId = data[0].orderId;
 
     res.render("user/orderConfirmation", { orderId: orderId });
-    } catch (error) {
-        console.error(error)
-    }
-  }
+    
+  })
 
 
-const getOrders = async (req, res) => {
-  try {
+const getOrders = asyncHandler(async (req, res) => {
+  
     const userId = req.session.user;
     const page = parseInt(req.query.page) || 1;
     const ITEMS_PER_PAGE = 4;
@@ -215,16 +211,13 @@ const getOrders = async (req, res) => {
       currentPage: page,
       totalPages,
     });
-  } catch (error) {
-    console.log("Error loading orders:", error);
-    res.status(500).send("Server error");
-  }
-};
+  
+});
 
 
 
-const getOrderDetails = async (req, res) => {
-  try {
+const getOrderDetails = asyncHandler(async (req, res) => {
+  
     const orderId = req.query.id;
     
     const order = await Order.findOne( {_id:orderId} )
@@ -239,16 +232,13 @@ const getOrderDetails = async (req, res) => {
     res.render('user/order-view-details', {
       order
     });
-  } catch (err) {
-    console.error('Error fetching order details:', err);
-    
-  }
-};
+  
+});
 
 
 
-const getInvoice = async (req, res) => {
-  try {
+const getInvoice = asyncHandler(async (req, res) => {
+  
     const { orderId } = req.query;
 
     if (!orderId) {
@@ -273,11 +263,8 @@ const getInvoice = async (req, res) => {
 
     res.render('user/invoice', { order, user });
 
-  } catch (error) {
-    console.error('Error rendering invoice:', error);
-    res.status(500).send('Server Error');
-  }
-};
+ 
+});
 
 
 
@@ -285,8 +272,8 @@ const getInvoice = async (req, res) => {
 
 
 
-const cancelOrder = async (req, res) => {
-  try {
+const cancelOrder = asyncHandler(async (req, res) => {
+  
     const { orderId, reason, otherReason } = req.body;
     const userId = req.session.user;
 
@@ -325,17 +312,14 @@ const cancelOrder = async (req, res) => {
       message: 'Order cancelled successfully',
       wallet
     });
-  } catch (error) {
-    console.error('Error cancelling order:', error);
-    return res.status(500).json({ success: false, error: 'Server error' });
-  }
-};
+  
+});
 
 
 
-const returnOrder = async (req, res) => {
+const returnOrder = asyncHandler(async (req, res) => {
   console.log("Inside returnOrder");
-  try {
+  
     const { orderId, reason, otherReason } = req.body;
     const userId = req.session.user;
 
@@ -383,15 +367,12 @@ const returnOrder = async (req, res) => {
     await order.save();
     
     return res.status(200).json({ success: true, message: 'Return request submitted successfully' });
-  } catch (error) {
-    console.error('Error processing return:', error);
-    return res.status(500).json({ success: false, error: 'Server error' });
-  }
-};
+  
+});
 
 
-const applyCoupon = async (req, res) => {
-  try {
+const applyCoupon = asyncHandler(async (req, res) => {
+ 
     
       const { couponCode, subtotal } = req.body;
       const userId = req.session.user;
@@ -432,15 +413,12 @@ const applyCoupon = async (req, res) => {
       await Cart.findOneAndUpdate({userId:userId},{$set:{discount:discount}},{new:true});
 
       res.json({ success: true, coupon });
-  } catch (error) {
-      console.error('Error applying coupon:', error);
-      res.status(500).json({ success: false, message: "Server error" });
-  }
-};
+  
+});
 
 
-const removeCoupon = async (req, res) => {
-  try {
+const removeCoupon = asyncHandler(async (req, res) => {
+  
       
      
       const userId = req.session.user;
@@ -464,15 +442,12 @@ const removeCoupon = async (req, res) => {
 
      
       res.json({ success: true,message:"Coupon removed successfully" });
-  } catch (error) {
-      console.error('Error removing coupon:', error);
-      res.status(500).json({ success: false });
-  }
-};
+ 
+});
 
 
-const createOrder = async (req, res, next) => {
-  try {
+const createOrder = asyncHandler(async (req, res, next) => {
+ 
     const userId = req.session.user;
     const { addressId, paymentMethod, couponCode } = req.body;
 
@@ -583,21 +558,14 @@ const createOrder = async (req, res, next) => {
       currency: "INR"
     });
 
-  } catch (error) {
-    console.error("Order Creation Error:", error.message);
-
-    return res.status(400).json({
-      success: false,
-      message: error.message || "Failed to create order"
-    });
-  }
-};
+  
+});
 
 
   
 
-const verifyPayment = async (req, res, next) => {
-  try {
+const verifyPayment = asyncHandler(async (req, res, next) => {
+ 
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
 
     
@@ -655,15 +623,12 @@ const verifyPayment = async (req, res, next) => {
       message: "Payment Successful and order processed.",
     });
 
-  } catch (error) {
-    console.error("Payment verification error:", error);
-    res.status(500).json({ success: false, message: "Server error during payment verification." });
-  }
-};
+  
+});
 
 
-const placeWalletOrder=async(req,res)=>{
-  try {
+const placeWalletOrder=asyncHandler(async(req,res)=>{
+  
     const { addressId, paymentMethod, couponCode } = req.body;
     const userId = req.session.user;
    
@@ -752,18 +717,15 @@ const orderId=generateOrderId()
    return res.status(200).json({success:true,message:"Order placed successfully"})
 
 
-  } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: 'Order placement failed' });
-  }
-}
+  
+})
 
 
 
 
 
-const cancelOrderItem = async (req, res) => {
-  try {
+const cancelOrderItem = asyncHandler(async (req, res) => {
+  
     const { orderId, itemId, reason, otherReason } = req.body;
 
     if (!orderId || !itemId || !reason) {
@@ -835,15 +797,12 @@ const cancelOrderItem = async (req, res) => {
       },
       wallet
     });
-  } catch (error) {
-    console.error("Cancel item error:", error);
-    return res.status(500).json({ success: false, message: "Failed to cancel item", error: error.message });
-  }
-};
+  
+});
 
 
-const paymentFailure=async(req,res)=>{
-  try {
+const paymentFailure=asyncHandler(async(req,res)=>{
+  
     const orderId = req.query.orderId;
    // console.log("Request Query:", req.query);
 
@@ -853,34 +812,16 @@ const paymentFailure=async(req,res)=>{
 
    // console.log("ORDERDATA",orderData)
     res.render("user/paymentFailure", { order: orderData });
-  } catch (error) {
-    console.log(error);
-  }
-}
+  
+})
 
 
 
 
-// const loadRetryPayment = async (req, res, next) => {
-//   try {
-//     const userId = req.session.user;
-//     let  user=await User.findById(userId)
-//     const orderId = req.query.orderId;
-//     const orderData = await Order.findOne({ orderId: orderId });
-//     let wallet = await Wallet.findOne({ userId: user._id });
-//     if (!wallet) {
-//             wallet = new Wallet({ userId:user._id, balance: 0, transactions: [] });
-//           }
-          
-//     res.render("user/retryPayment", { user, order: orderData, wallet });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
- 
+  
 
-const loadRetryPayment = async (req, res, next) => {
-  try {
+const loadRetryPayment = asyncHandler(async (req, res, next) => {
+
     const userId = req.session.user;
     const orderId = req.query.orderId; 
 
@@ -927,13 +868,10 @@ const loadRetryPayment = async (req, res, next) => {
 
     
     res.render('user/retryPayment', { user, order: orderData, wallet });
-  } catch (error) {
-    console.error('Error in loadRetryPayment:', error);
-    next(error); 
-  }
-};
-const retryPaymentCod = async (req, res, next) => {
-  try {
+  
+});
+const retryPaymentCod = asyncHandler(async (req, res, next) => {
+ 
     const orderId = req.query.orderId;
     const orderData = await Order.findOne({ orderId: orderId });
     console.log("ORDERDATA",orderData)
@@ -1000,14 +938,12 @@ const retryPaymentCod = async (req, res, next) => {
         .status(500)
         .json({ success: false, message: "Payment Failed"});
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+ 
+});
 
 
-const retryPaymentWallet = async (req, res) => {
-  try {
+const retryPaymentWallet = asyncHandler(async (req, res) => {
+  
     const userId = req.session.user;
     const orderId = req.query.orderId;
     const orderData = await Order.findOne({ orderId });
@@ -1089,14 +1025,12 @@ const retryPaymentWallet = async (req, res) => {
         message: "PAYMENT_FAILED",
       });
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  
+});
 
 
-const retryPaymentOnline = async (req, res, next) => {
-  try {
+const retryPaymentOnline = asyncHandler(async (req, res, next) => {
+  
     const userId = req.session.user;
     const { orderId } = req.body;
     
@@ -1146,15 +1080,13 @@ const retryPaymentOnline = async (req, res, next) => {
         orderId: orderData.orderId,
       },
     });
-  } catch (error) {
-    next(error);
-  }
-};
+  
+});
 
 
 
-const retryVerifyPayment = async (req, res) => {
-  try {
+const retryVerifyPayment = asyncHandler(async (req, res) => {
+  
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -1218,14 +1150,11 @@ const retryVerifyPayment = async (req, res) => {
       success: true,
       message: "Payment verified and order updated successfully",
     });
-  } catch (error) {
-    console.error("Payment verification error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
+  
+});
 
-const searchOrder=async(req,res)=>{
-  try {
+const searchOrder=asyncHandler(async(req,res)=>{
+  
     const userId=req.session.user
     const userData=await User.findById(userId)
     const search=req.body.orderId
@@ -1245,10 +1174,8 @@ const searchOrder=async(req,res)=>{
         totalPages:0,
       });
     }
-  } catch (error) {
-    console.error(error)
-  }
-}
+  
+})
 
 
 

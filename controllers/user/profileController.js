@@ -7,6 +7,7 @@ const session=require("express-session");
 const { generate } = require("otp-generator");
 const sendVerificationEmail = require("../../util/sendVerificationEmail");
 const { format } = require("sharp");
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 function generateOtp(){
     const digits="1234567890";
@@ -20,29 +21,29 @@ function generateOtp(){
   
 
 const securePassword=async (password)=>{
-try {
-    const passwordHash=await bcrypt.hash(password,10)
+    try {
+        const passwordHash=await bcrypt.hash(password,10)
     return passwordHash;
-} catch (error) {
-    
-}
-}
-
-
-
-const getForgotPassPage=async (req,res)=>{
-    try {
-        res.render("user/forgot-password")
     } catch (error) {
-        res.redirect("/pageNotFound")
+        
     }
+    
+
 }
 
 
 
+const getForgotPassPage=asyncHandler(async (req,res)=>{
+    
+        res.render("user/forgot-password")
+    
+})
 
-const forgotEmailValid=async(req,res)=>{
-    try {
+
+
+
+const forgotEmailValid=asyncHandler(async(req,res)=>{
+    
         
         const {email}=req.body;
         const findUser=await User.findOne({email:email});
@@ -66,36 +67,30 @@ const forgotEmailValid=async(req,res)=>{
             })
         }
 
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
-const verifyForgotPassOtp=async(req,res)=>{
-    try {
+const verifyForgotPassOtp=asyncHandler(async(req,res)=>{
+    
        const enteredOtp=req.body.otp;
        if(enteredOtp===req.session.userOtp){
         res.json({success:true,redirectUrl:"/reset-password"});
        } else{
         res.json({success:false,message:"OTP not matching"})
        }
-    } catch (error) {
-        res.status(500).json({success:false,message:"An error occured.Please try again"})
-    }
-}
+    
+})
 
 
-const getResetPassPage=async(req,res)=>{
-    try {
+const getResetPassPage=asyncHandler(async(req,res)=>{
+    
         res.render("user/reset-password")
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
-const resendOtp= async(req,res)=>{
-    try {
+const resendOtp= asyncHandler(async(req,res)=>{
+    
         const otp=generateOtp();
         req.session.userOtp=otp;
         const email=req.session.email;
@@ -105,14 +100,11 @@ const resendOtp= async(req,res)=>{
             console.log("Resend OTP:",otp)
             res.status(200).json({success:true,message:"Resend OTp Successful"});
         }
-    } catch (error) {
-        console.error("Error in resend otp",error);
-        res.status(500).json({success:false,message:"Internal server error"})
-    }
-}
+    
+})
 
-const postNewPassword = async(req,res)=>{
-    try {
+const postNewPassword = asyncHandler(async(req,res)=>{
+    
         
         const {newPass1,newPass2}=req.body;
         const email=req.session.email;
@@ -126,14 +118,12 @@ const postNewPassword = async(req,res)=>{
         }else{
             res.render("user/reset-password",{message:'password do not match'})
         }
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+   
+})
 
 
-const userProfile = async(req,res)=>{
-    try {
+const userProfile = asyncHandler(async(req,res)=>{
+    
         
         const userId = req.session.user;
         const userData= await User.findById(userId);
@@ -143,16 +133,13 @@ const userProfile = async(req,res)=>{
             userAddress:addressData
         })
 
-    } catch (error) {
-        console.error("Error for retrieve profile data",error);
-        res.redirect("/pageNotFound");
-    }
-}
+    
+})
  
 
 
-const getMyProfile= async(req,res)=>{
-    try {
+const getMyProfile= asyncHandler(async(req,res)=>{
+    
         const userId = req.session.user;
 
 
@@ -162,24 +149,19 @@ const getMyProfile= async(req,res)=>{
             user:userData,
             userAddress:addressData
         })
-    } catch (error) {
-        console.error("Error for retrieve profile data",error);
-        res.redirect("/pageNotFound");
-    }
-}
+    
+})
 
 
-const changeEmail=async(req,res)=>{
-    try {
+const changeEmail=asyncHandler(async(req,res)=>{
+    
         res.render("user/change-email")
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
-const changeEmailValid= async(req,res)=>{
-    try {
+const changeEmailValid= asyncHandler(async(req,res)=>{
+    
         const {email}= req.body;
         const userExists = await User.findOne({email});
         if(userExists){
@@ -201,14 +183,12 @@ const changeEmailValid= async(req,res)=>{
 
             })
         }
-    } catch (error) {
-        res.redirect("/pageNotFound");
-    }
-}
+    
+})
 
 
-const verifyEmailOtp = async (req,res)=>{
-    try {
+const verifyEmailOtp = asyncHandler(async (req,res)=>{
+    
         const enteredOtp=req.body.otp;
         if(enteredOtp===req.session.userOtp){
             req.session.userData = req.body.userData;
@@ -222,37 +202,31 @@ const verifyEmailOtp = async (req,res)=>{
                 userData:req.session.userData,
             })
         }
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
-const updateEmail = async(req,res)=>{
-    try {
+const updateEmail = asyncHandler(async(req,res)=>{
+    
         const newEmail=req.body.newEmail;
         const userId=req.session.user;
         await User.findByIdAndUpdate(userId,{email:newEmail})
         const user=await User.findById(userId)
         res.render("user/myProfile",{user})
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
-const changePassword = async(req,res)=>{
-    try {
+const changePassword = asyncHandler(async(req,res)=>{
+    
         res.render("user/change-password")
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
 
-const changePasswordValid= async (req,res)=>{
-    try {
+const changePasswordValid= asyncHandler(async (req,res)=>{
+    
         const {email}=req.body;
         const userExists = await User.findOne({email})
         if(userExists){
@@ -275,14 +249,11 @@ const changePasswordValid= async (req,res)=>{
                 message:"User does not exists"
             })
         }
-    } catch (error) {
-        console.log("Error in send password validation",error);
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
-const verifyChangePassOtp= async (req,res)=>{
-    try {
+const verifyChangePassOtp= asyncHandler(async (req,res)=>{
+    
         const enteredOtp=req.body.otp;
         if(enteredOtp===req.session.userOtp){
             res.json({success:true,redirectUrl:"/reset-password"})
@@ -290,12 +261,10 @@ const verifyChangePassOtp= async (req,res)=>{
             res.json({success:false,message:"OTP Not Matching"})
         }
         
-    } catch (error) {
-        res.status(500).json({success:false,message:"An error occured.Please try again later"})
-    }
-}
-const resendChangePassOtp=async (req,res)=>{
-    try {
+    
+})
+const resendChangePassOtp=asyncHandler(async (req,res)=>{
+    
         if(!req.session.email){
             return res.json({success:false,message:"Session expired"})
         }
@@ -314,14 +283,12 @@ const resendChangePassOtp=async (req,res)=>{
         }else{
             res.json({success:false,message:"Failed to resent OTP"})
         }
-    } catch (error) {
-       res.status(500).json({success:false,message:"Error occured"}) 
-    }
-}
+    
+})
 
 
-const getMyAddress = async(req,res)=>{
-    try {
+const getMyAddress = asyncHandler(async(req,res)=>{
+    
         
         const user=req.session.user;
         const userAddress= await Address.findOne({userId:user});
@@ -329,27 +296,22 @@ const getMyAddress = async(req,res)=>{
             user:user,
             userAddress:userAddress,
         })
-    } catch (error) {
-
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
-const addAddress=async(req,res)=>{
-    try {
+const addAddress=asyncHandler(async(req,res)=>{
+    
         const user=req.session.user;
         
         res.render("user/add-address",{
             user:user
         })
-    } catch (error) {
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
-const postAddAddress= async(req,res)=>{
-    try {
+const postAddAddress= asyncHandler(async(req,res)=>{
+    
         const userId=req.session.user;
         const userData= await User.findOne({_id:userId})
         const {addressType,name,city,landMark,state,pincode,phone,altPhone,countryCode,altCountryCode }=req.body ;
@@ -368,14 +330,11 @@ const postAddAddress= async(req,res)=>{
         }
 
         res.redirect("/my-profile")
-    } catch (error) {
-       console.error("Error adding address",error)
-       res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
-const  editAddress= async (req,res)=>{
-    try {
+const  editAddress= asyncHandler(async (req,res)=>{
+    
         const addressId=req.query.id;
         const user=req.session.user;
         const currAddress=await Address.findOne({
@@ -396,16 +355,11 @@ const  editAddress= async (req,res)=>{
 
         res.render("user/edit-address",{address:addressData,user:user})
 
-    } catch (error) {
-        console.error("Error in edit address",error);
-        res.redirect("/pageNotFound");
+    
+})
 
+const postEditAddress= asyncHandler(async(req,res)=>{
 
-    }
-}
-
-const postEditAddress= async(req,res)=>{
-    try {
         const data=req.body;
         const addressId=req.query.id;
         const user=req.session.user;
@@ -431,14 +385,11 @@ const postEditAddress= async(req,res)=>{
         )
 
         res.redirect("/userProfile")
-    } catch (error) {
-        console.error("Error in edit address ",error)
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
-const deleteAddress= async(req,res)=>{
-    try {
+const deleteAddress= asyncHandler(async(req,res)=>{
+    
         const addressId = req.query.id;
         const findAddress = await Address.findOne({"address._id":addressId})
         if(!findAddress){
@@ -460,11 +411,8 @@ const deleteAddress= async(req,res)=>{
     res.redirect("/userProfile")
 
 
-    } catch (error) {
-        console.error("Error in delete addresss",error)
-        res.redirect("/pageNotFound")
-    }
-}
+    
+})
 
 
 module.exports={getForgotPassPage,

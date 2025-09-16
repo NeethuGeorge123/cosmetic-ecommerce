@@ -5,7 +5,7 @@ const Cart=require("../../models/cartSchema")
 const Address=require("../../models/addressSchema")
 const Coupon=require("../../models/couponSchema")
 const Wallet =require("../../models/walletSchema")
-
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 
 
@@ -73,9 +73,9 @@ const addToCart = async (req, res) => {
 
 
 
-const getCart= async(req,res)=>{
+const getCart= asyncHandler(async(req,res)=>{
     
-try {
+
     const user = req.session.user;
     const cart= await Cart.findOne({userId:user}).populate({
         path: "items.productId",
@@ -104,16 +104,14 @@ try {
         user:user,
 
     })
-} catch (error) {
-    res.redirect("")
-}
-}
+
+})
 
 
 
 
-const updateCartQuantity = async (req, res) => {
-  try {
+const updateCartQuantity = asyncHandler(async (req, res) => {
+ 
     const userId = req.session.user;
     const { productId,count } = req.body;
 
@@ -157,17 +155,14 @@ const updateCartQuantity = async (req, res) => {
     res.json({ success: true ,
       grandTotal:grandTotal
     });
-  } catch (err) {
-    console.error('updateCartQuantity error:', err);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-};
+  
+});
 
 
 
 
-const deleteFromCart = async (req, res) => {
-    try {
+const deleteFromCart = asyncHandler(async (req, res) => {
+    
       const userId = req.session.user;
       const productId = req.query.productId;
   
@@ -200,16 +195,13 @@ const deleteFromCart = async (req, res) => {
         grandTotal
       });
   
-    } catch (error) {
-      console.error("deleteFromCart error:", error);
-      res.status(500).json({ success: false, error: "Server error" });
-    }
-  };
+    
+  });
 
 
    
-    const getCheckout= async (req, res) => {
-      try {
+    const getCheckout= asyncHandler(async (req, res) => {
+      
         
         const userId = req.session.user;
         const user= await User.findById(userId)
@@ -240,14 +232,11 @@ const deleteFromCart = async (req, res) => {
           wallet:wallet || {balance:0},
           coupons:coupon
         });
-      } catch (error) {
-        console.log(error);
-        res.redirect('/error');
-      }
-    };
+     
+    });
     
-    const validateCheckout=async (req,res)=>{
-      try {
+    const validateCheckout=asyncHandler(async (req,res)=>{
+      
         const userId=req.session.user
        
         const cart=await Cart.findOne({userId}).populate('items.productId')
@@ -263,14 +252,12 @@ const deleteFromCart = async (req, res) => {
         }
         return res.status(200).json({status:true})
         
-      } catch (error) {
-        console.error(error)
-      }
-    }
+      
+    })
 
 
-    const getCartCount = async (req, res) => {
-      try {
+    const getCartCount =asyncHandler(async (req, res) => {
+     
           const userId = req.session.user;
           if (!userId) {
               return res.status(200).json({ status: false, count: 0 });
@@ -286,11 +273,8 @@ const deleteFromCart = async (req, res) => {
            const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
   
           return res.status(200).json({ status: true, count });
-      } catch (error) {
-          console.error('getCartCount error:', error);
-          res.status(500).json({ status: false, count: 0 });
-      }
-  };
+     
+  });
   
   
 

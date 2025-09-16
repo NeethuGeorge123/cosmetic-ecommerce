@@ -3,11 +3,12 @@ const Address=require("../../models/addressSchema");
 const Wallet=require("../../models/walletSchema")
 const razorpay=require("../../config/razorpay")
 const crypto=require("crypto")
+const asyncHandler = require("../../middlewares/asyncHandler");
 
 
 
-const loadWallet=async(req,res)=>{
-    try {
+const loadWallet=asyncHandler(async(req,res)=>{
+    
         const userId=req.session.user
         const user=await User.findById(userId)
         const page=parseInt(req.query.page )|| 1
@@ -40,14 +41,12 @@ const totalTransactions = wallet.transactions.length;
             currentPage: page,
             totalPages: totalPages
         });
-    } catch (error) {
-        console.log(error)
-    }
-}
+    
+})
 
 
-const createOrder = async (req, res) => {
-    try {
+const createOrder = asyncHandler(async (req, res) => {
+    
       const { amount } = req.body;
   
   
@@ -63,15 +62,12 @@ const createOrder = async (req, res) => {
   
       const order = await razorpay.orders.create(options);
       res.status(200).json(order);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success:false,error: "Server error" });
-    }
-  };
+    
+  });
   
   
-   const verifyPayment = async (req, res) => {
-      try {
+   const verifyPayment = asyncHandler(async (req, res) => {
+      
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
         const userId = req.session.user; 
           
@@ -98,15 +94,12 @@ const createOrder = async (req, res) => {
         await wallet.save();
     
         res.status(200).json({success:true, message: "Payment successful", wallet });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ success:false,error: "Server error" });
-      }
-    };
+      
+    });
 
     
-    const withdrawMoney = async (req,res) => {
-        try {
+    const withdrawMoney = asyncHandler(async (req,res) => {
+        
             const userId = req.session.user;
             const {amount} = req.body;
     
@@ -129,11 +122,9 @@ const createOrder = async (req, res) => {
           await wallet.save();
           res.status(200).json({success:true, message: "Amount will be credited to your account"});
             
-        } catch (error) {
-            console.log(error)
-        }
         
-    }
+        
+    })
 
 
 
