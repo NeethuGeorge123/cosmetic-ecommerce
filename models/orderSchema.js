@@ -114,6 +114,9 @@ const orderSchema=new Schema({
       rejectionReason:{
         type:String,
       },
+      rejectedOn: {
+        type: Date,
+      },
     address:{
         addressType:{
             type:String,

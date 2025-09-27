@@ -258,7 +258,7 @@
                 <th>Name</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Offer</th>
+                <th>Discount</th>
                 <th>Minimum Price</th>
                 <th>Status</th>
                 <th>Edit/Delete</th>
@@ -342,7 +342,7 @@
                 </div>
               </div>
               <div class="coupon-card-item">
-                <div class="coupon-card-label">Offer</div>
+                <div class="coupon-card-label">Discount</div>
                 <div class="coupon-card-value">
                   <% if (coupon.discountPercentage > 0) { %>
                     <%= coupon.discountPercentage %>%
@@ -352,7 +352,7 @@
                 </div>
               </div>
               <div class="coupon-card-item">
-                <div class="coupon-card-label">Minimum Price</div>
+                <div class="coupon-card-label">Minimum Amount</div>
                 <div class="coupon-card-value"><%= coupon.minimumPrice %></div>
               </div>
             </div>
@@ -399,13 +399,13 @@
                   <label for="discountType<%= coupon._id %>" class="form-label">Discount Type</label>
                   <select id="discountType<%= coupon._id %>" name="discountType" class="form-control">
                     <option value="" disabled>Select Discount Type</option>
-                    <option value="offerPrice" <%= coupon.discountPercentage > 0 ? '' : 'selected' %>>Offer Price</option>
-                    <option value="offerPercentage" <%= coupon.discountPercentage > 0 ? 'selected' : '' %>>Offer Percentage</option>
+                    <option value="offerPrice" <%= coupon.discountPercentage > 0 ? '' : 'selected' %>>Discount Amount</option>
+                    <option value="offerPercentage" <%= coupon.discountPercentage > 0 ? 'selected' : '' %>>Discount Percentage</option>
                   </select>
                   <div id="discountTypeError<%= coupon._id %>" class="editError-message"></div>
                 </div>
                 <div id="offerPriceSection<%= coupon._id %>" class="mb-3" style="display: <%= coupon.discountPercentage > 0 ? 'none' : 'block' %>;">
-                  <label for="offerPrice<%= coupon._id %>" class="form-label">Offer Price</label>
+                  <label for="offerPrice<%= coupon._id %>" class="form-label">Discount Amount</label>
                   <input type="number" class="form-control" id="offerPrice<%= coupon._id %>" name="offerPrice" value="<%= coupon.offerPrice %>" min="0" step="1" />
                   <div id="offerPriceError<%= coupon._id %>" class="editError-message"></div>
                 </div>
@@ -422,7 +422,7 @@
                   </div>
                 </div>
                 <div class="mb-3">
-                  <label for="minimumPrice<%= coupon._id %>" class="form-label">Minimum Price</label>
+                  <label for="minimumPrice<%= coupon._id %>" class="form-label">Minimum Amount</label>
                   <input type="number" class="form-control" id="minimumPrice<%= coupon._id %>" name="minimumPrice" value="<%= coupon.minimumPrice %>" min="0" step="1" />
                   <div id="minimumPriceError<%= coupon._id %>" class="editError-message"></div>
                 </div>
@@ -498,13 +498,13 @@
             <label for="discountType" class="form-label">Discount Type</label>
             <select id="discountType" name="discountType" class="form-control">
               <option value="" disabled selected>Select Discount Type</option>
-              <option value="offerPrice">Offer Price</option>
-              <option value="offerPercentage">Offer Percentage</option>
+              <option value="offerPrice">Discount Amount</option>
+              <option value="offerPercentage">Discount Percentage</option>
             </select>
             <div id="error-discount-type" class="error-message"></div>
           </div>
           <div id="offerPriceSection" class="mb-4" style="display: none;">
-            <label for="offer-price" class="form-label">Offer Price</label>
+            <label for="offer-price" class="form-label">Discount Amount</label>
             <input type="number" name="offerPrice" id="offer-price" placeholder="Type here" class="form-control" min="0" step="1" />
             <div id="error-offer-price" class="error-message"></div>
           </div>
@@ -521,7 +521,7 @@
             </div>
           </div>
           <div class="mb-4">
-            <label for="minimum-price" class="form-label">Minimum Price</label>
+            <label for="minimum-price" class="form-label">Minimum Amount</label>
             <input type="number" name="minimumPrice" id="minimum-price" placeholder="Type here" class="form-control" min="0" step="1" />
             <div id="error-minimum-price" class="error-message"></div>
           </div>

@@ -369,10 +369,18 @@
             },
             success:(response)=>{
                 if(response.status===true){
-                    location:reload()
+                    
                     Swal.fire('Offer added','The offer has been removed','success')
+                    .then(()=>{
+                        location.reload()
+                    })
+                   
                 }else{
-                    alert("failed")
+                    Swal.fire({
+                    icon: 'warning',
+                    title: 'Offer not applied',
+                    text: response.message || 'Another offer is already applied to this product.'
+                });
                 }
             }
         })

@@ -13,9 +13,6 @@ const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 
 
-
-
-
 const getOrders = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
@@ -185,35 +182,74 @@ const verifyReturn = async (req, res) => {
 
 
 
-const handleReturn=async (req,res)=>{
-  try {
+// const handleReturn=async (req,res)=>{
+//   try {
     
-const {action,orderId} = req.body;
-if(action==='approved'){
-  const order=await Order.findByIdAndUpdate(orderId,{$set:{requestStatus:action}},{new:true})
-  if(order){
-    return res.status(200).json({success:true,message:"Return Approved Successfully"})
-  }
-  else{
-    return res.status(404).json({success:false,message:"Order Not Found"})
-  }
+// const {action,orderId} = req.body;
+// if(action==='approved'){
+//   const order=await Order.findByIdAndUpdate(orderId,{$set:{requestStatus:action}},{new:true})
+//   if(order){
+//     return res.status(200).json({success:true,message:"Return Approved Successfully"})
+//   }
+//   else{
+//     return res.status(404).json({success:false,message:"Order Not Found"})
+//   }
 
-}else if(action==='rejected'){
-  const {category,message}=req.body;
-  const order=await Order.findByIdAndUpdate(orderId,{$set:{requestStatus:action,rejectionCategory:category,rejectionReason:message,
-  },},{new:true});
-  if(order){
-    return res.status(200).json({success:true,message:"Return Request Rejected"})
-  }else{
-    return res.status(404).json({success:false,message:"Order Not Found"})
+// }else if(action==='rejected'){
+//   const {category,message}=req.body;
+//   const order=await Order.findByIdAndUpdate(orderId,{$set:{requestStatus:action,rejectionCategory:category,rejectionReason:message,
+//   },},{new:true});
+//   if(order){
+//     return res.status(200).json({success:true,message:"Return Request Rejected"})
+//   }else{
+//     return res.status(404).json({success:false,message:"Order Not Found"})
+//   }
+
+// }
+// } catch (error) {
+//   res.status(500).send("Internal server error");  
+// }
+
+// }
+// controllers/adminOrders.js (or wherever handleReturn lives)
+const handleReturn = async (req, res) => {
+  try {
+    const { action, orderId, category, message } = req.body;
+    if (!orderId) return res.status(400).json({ success: false, message: 'orderId required' });
+
+    if (action === 'approved') {
+      // approve -> mark requestStatus approved and keep status as return requested (or as you prefer)
+      const order = await Order.findByIdAndUpdate(
+        orderId,
+        { $set: { requestStatus: 'approved', status: 'return requested' } },
+        { new: true }
+      );
+      if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+      return res.status(200).json({ success: true, message: 'Return Approved Successfully' });
+    }
+
+    if (action === 'rejected') {
+      // reject -> store category + reason, set requestStatus rejected and restore order status to delivered
+      const updateObj = {
+        requestStatus: 'rejected',
+        status: 'delivered',            // set normal status back to delivered
+        rejectionCategory: category || '',
+        rejectionReason: message || '',
+        rejectedOn: new Date()
+      };
+
+      const order = await Order.findByIdAndUpdate(orderId, { $set: updateObj }, { new: true });
+
+      if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+      return res.status(200).json({ success: true, message: 'Return Request Rejected' });
+    }
+
+    return res.status(400).json({ success: false, message: 'Invalid action' });
+  } catch (error) {
+    console.error('handleReturn error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
-
-}
-} catch (error) {
-  res.status(500).send("Internal server error");  
-}
-
-}
+};
 
 
 const updateReturnStatus = async (req, res) => {

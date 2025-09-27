@@ -357,6 +357,10 @@ function validateForm() {
     let imageDatas = false;
     console.log("validate form");
     clearErrorMessages();
+    const existingImages = document.querySelectorAll("input#imageDatas"); 
+const existingCount = existingImages.length;
+let newImageCount = 0;
+
     const name = document.getElementsByName('productName')[0].value;
     const description = document.getElementsByName('descriptionData')[0].value;
     const brand = document.getElementsByName('brand')[0].value;
@@ -425,6 +429,21 @@ if ((!imageDatas || imageDatas.length === 0) && images.files.length === 0) {
     }
 }
 
+for (let i = 1; i <= 4; i++) {
+    const input = document.getElementById('input' + i);
+    if (input && input.files.length > 0) {
+        newImageCount++;
+    }
+}
+
+// Total images after edit
+const totalImages = existingCount + newImageCount;
+
+// Validate minimum 2 images
+if (totalImages < 2) {
+    displayErrorMessage("images-error", "Please keep at least 2 product images.");
+    isValid = false;
+}
     return isValid;
 }
 

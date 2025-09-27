@@ -947,72 +947,57 @@
                                                     </div>
 
                                                     <!-- Order Actions -->
-                                                   <!-- Order Actions - Fixed Return Button Logic -->
-<div class="order-actions p-3 bg-light rounded mt-3">
-    <div class="row">
-        <div class="col-md-6">
-            <% if (order.status.toLowerCase() === 'delivered') { %>
-            <button class="btn btn-sm btn-outline-success me-2 mb-2">
-                <i class="fas fa-download me-1"></i>Download Invoice
-            </button>
-            
-            <!-- Return Product Logic -->
-            <% if (order.requestStatus === 'rejected') { %>
-                <!-- Show rejected status with reason -->
-                <span class="badge bg-danger me-2 mb-2" title="<%= order.returnReason || 'Return request was rejected' %>">
-                    <i class="fas fa-times-circle me-1"></i>Return Rejected
-                </span>
-            <% } else if (order.requestStatus === 'pending') { %>
-                <!-- Show pending status if return request is under review -->
-                <span class="badge bg-warning me-2 mb-2">
-                    <i class="fas fa-clock me-1"></i>Return Pending
-                </span>
-            <% } else if (order.requestStatus === 'approved' || order.status.toLowerCase() === 'returned') { %>
-                <!-- Show approved/returned status -->
-                <span class="badge bg-success me-2 mb-2">
-                    <i class="fas fa-check-circle me-1"></i>Return Approved
-                </span>
-            <% } else { %>
-                <!-- Show return button only if no return request has been made -->
-                <button
-                    class="btn btn-sm btn-outline-warning me-2 mb-2 modal-trigger-return"
-                    data-order-id="<%= order._id %>"
-                >
-                    <i class="fas fa-undo me-1"></i>Return Product
-                </button>
-            <% } %>
-            <% } %>
+                                                    <div class="order-actions p-3 bg-light rounded mt-3">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <% if (order.status.toLowerCase() === 'delivered') { %>
+                                                                <button
+                                                                    class="btn btn-sm btn-outline-success me-2 mb-2"
+                                                                >
+                                                                    <i class="fas fa-download me-1"></i>Download
+                                                                    Invoice
+                                                                </button>
+                                                                <button
+                                                                    class="btn btn-sm btn-outline-warning me-2 mb-2 modal-trigger-return"
+                                                                    data-order-id="<%= order._id %>"
+                                                                >
+                                                                    <i class="fas fa-undo me-1"></i>Return
+                                                                    Product
+                                                                </button>
+                                                                <% } %>
+                                                                <a
+                                                                    href="/viewOrderDetails/?id=<%= order._id %>"
+                                                                    class="btn btn-sm btn-primary me-2 mb-2"
+                                                                >
+                                                                    <i class="fas fa-info-circle me-1"></i>View
+                                                                    Details
+                                                                </a>
+                                                                
 
-            <a
-                href="/viewOrderDetails/?id=<%= order._id %>"
-                class="btn btn-sm btn-primary me-2 mb-2"
-            >
-                <i class="fas fa-info-circle me-1"></i>View Details
-            </a>
+                                                                <!-- Retry Payment button for Pending status -->
+<% if (order.status.toLowerCase() === 'pending') { %>
+    <a
+        href="/retryPayment?id=<%= order.orderId%>"
+        class="btn btn-sm btn-outline-info me-2 mb-2"
+    >
+        <i class="fas fa-redo me-1"></i>Retry Payment
+    </a>
+    <% } %>
 
-            <!-- Retry Payment button for Pending status -->
-            <% if (order.status.toLowerCase() === 'pending') { %>
-            <a
-                href="/retryPayment?id=<%= order.orderId%>"
-                class="btn btn-sm btn-outline-info me-2 mb-2"
-            >
-                <i class="fas fa-redo me-1"></i>Retry Payment
-            </a>
-            <% } %>
-        </div>
-        <div class="col-md-6 text-md-end">
-            <% if (['processing'].includes(order.status.toLowerCase())) { %>
-            <button
-                class="btn btn-sm btn-outline-danger me-2 mb-2 modal-trigger"
-                data-order-id="<%= order.orderId %>"
-                onclick="event.stopPropagation()"
-            >
-                <i class="fas fa-times me-1"></i>Cancel Order
-            </button>
-            <% } %>
-        </div>
-    </div>
-</div>
+                                                            </div>
+                                                            <div class="col-md-6 text-md-end">
+                                                                <% if (['processing'].includes(order.status.toLowerCase())) { %>
+                                                                <button
+                                                                    class="btn btn-sm btn-outline-danger me-2 mb-2 modal-trigger"
+                                                                    data-order-id="<%= order.orderId %>"
+                                                                    onclick="event.stopPropagation()"
+                                                                >
+                                                                    <i class="fas fa-times me-1"></i>Cancel Order
+                                                                </button>
+                                                                <% } %>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <% }) %>
 

@@ -40,6 +40,7 @@
     <div class="form-group">
       <label for="brand">Brand</label>
       <select id="brand" name="brand" required>
+        <option value="" disabled selected>Select a brand</option>
         <% for(let i=0; i<brand.length; i++) { %>
           <option value="<%=brand[i].brandName%>"><%=brand[i].brandName%></option>
         <% } %>
@@ -53,7 +54,7 @@
       <div id="description-error" class="error-message"></div>
     </div>
 
-    <div class="form-row">
+    <div class="form-row"> 
       <div class="form-group">
         <label for="regularPrice">Regular Price</label>
         <input type="text" id="regularPrice" name="regularPrice" required />
@@ -82,6 +83,7 @@
     <div class="form-group">
       <label for="category">Category</label>
       <select id="category" name="category" required>
+        <option value="" disabled selected>Select a category</option>
         <% for(let i=0;i<cat.length;i++){ %>
           <option value="<%=cat[i].name%>"><%=cat[i].name%></option>
         <% } %>
@@ -225,9 +227,11 @@
       }
 
       let hasImage = false;
+      let imageCount=0
       for (let i = 1; i <= 4; i++) {
         const input = document.getElementById(`input${i}`);
         if (input.files.length > 0) {
+          imageCount++
           hasImage = true;
           const file = input.files[0];
           const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
@@ -240,8 +244,8 @@
           }
         }
       }
-      if (!hasImage) {
-        displayErrorMessage('images-error', 'Upload at least one image.');
+      if (imageCount<2) {
+        displayErrorMessage('images-error', 'Upload at least two image.');
         isValid = false;
       }
 

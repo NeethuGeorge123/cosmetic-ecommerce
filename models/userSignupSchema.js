@@ -113,4 +113,4 @@ const userSignupSchema=new mongoose.Schema({
     }]
 })
 const User=mongoose.model("User",userSignupSchema)
-module.exports=User;
+module.exports=User;    

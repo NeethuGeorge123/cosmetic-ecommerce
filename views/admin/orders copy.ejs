@@ -238,38 +238,26 @@
                                      </a>
                                      
                                      <!-- Return Request Controls -->
-                                     <% if ((order.status || '').toLowerCase() === 'return requested' && order.requestStatus === 'pending') { %>
-                                        <!-- Approve / Reject buttons -->
-                                        <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
-                                            <button onclick="handleReturn('approved', '<%= order._id %>')" class="btn btn-success btn-sm">
-                                                <i class="fas fa-check-circle me-1"></i> Approve Return
-                                            </button>
-                                            <button onclick="handleReturn('rejected', '<%= order._id %>')" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-times-circle me-1"></i> Reject
-                                            </button>
-                                        </div>
-                                    
-                                    <% } else if (order.requestStatus === 'approved' && (order.status || '').toLowerCase() !== 'returned') { %>
-                                        <!-- Update Return Status -->
-                                        <button onclick="updateReturnStatus('<%= order._id %>')" class="btn btn-info btn-sm" style="width:100%; margin-top:10px;">
-                                            <i class="fas fa-truck-loading me-1"></i> Update Return Status
-                                        </button>
-                                    
-                                    <% } else if (order.requestStatus === 'rejected') { %>
-                                        <!-- Show rejection text and reason -->
-                                        <div style="margin-top:10px; text-align:center;">
-                                            <span class="badge bg-danger">Return Status: Rejected</span>
-                                            <% if (order.rejectionCategory || order.rejectionReason) { %>
-                                                <div class="mt-1 small text-muted">
-                                                    <strong>Reason:</strong>
-                                                    <%= order.rejectionCategory ? order.rejectionCategory : '' %>
-                                                    <% if (order.rejectionCategory && order.rejectionReason) { %> - <% } %>
-                                                    <%= order.rejectionReason ? order.rejectionReason : '' %>
-                                                </div>
-                                            <% } %>
-                                        </div>
-                                    
-                                    <% } else if (!['cancelled','delivered','returned','return requested','returning'].includes((order.status || '').toLowerCase())) { %>
+                                     <% if (order.status === 'return requested' && order.requestStatus === 'pending') { %>
+                                         <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
+                                             <button onclick="handleReturn('approved', '<%= order._id %>')" 
+                                                     class="btn btn-success btn-sm" style="display: flex; align-items: center; justify-content: center;">
+                                                 <i class="fas fa-check-circle" style="margin-right: 8px; color: white;"></i>
+                                                 <span style="color: white;">Approve Return</span>
+                                             </button>
+                                             <button onclick="handleReturn('rejected', '<%= order._id %>')" 
+                                                     class="btn btn-danger btn-sm" style="display: flex; align-items: center; justify-content: center;">
+                                                 <i class="fas fa-times-circle" style="margin-right: 8px; color: white;"></i>
+                                                 <span style="color: white;">Reject</span>
+                                             </button>
+                                         </div>
+                                     <% } else if (order.requestStatus === 'approved' && order.status != 'returned') { %>
+                                         <button onclick="updateReturnStatus('<%= order._id %>')" 
+                                                 class="btn btn-info btn-sm" style="display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px;">
+                                             <i class="fas fa-truck-loading" style="margin-right: 8px; color: white;"></i>
+                                             <span style="color: white;">Update Return Status</span>
+                                         </button>
+                                     <% } else if (!['cancelled', 'delivered', 'returned', 'return requested', 'returning'].includes(order.status)) { %>
                                          <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
                                             <%if(order.status){%>
                                              <button onclick="updateStatus('<%= order.orderId %>')" 
