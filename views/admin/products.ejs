@@ -302,6 +302,7 @@
                             <a href="#" class="btn btn-info" onclick="addOffer('<%=data[i]._id%>')">Add Offer</a>
                             <%}else{%>
                             <a href="#" class="btn btn-info mt-2" onclick="removeOffer('<%=data[i]._id%>')">Remove</a>
+                            <a href="#" class="btn btn-info mt-2" onclick="updateOffer('<%=data[i]._id%>')">Update</a>
                             <%}%>
                         </td>
                         <td><%=data[i].quantity || '0'%></td>
@@ -341,6 +342,10 @@
         </div>
     </main>
 </div>
+
+
+<!-- Add/Update Offer Modal -->
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -427,5 +432,44 @@
         } catch (error) {
             console.error(error);
         }
+    }
+
+    async function updateOffer(productId){
+        
+        const {value:amount}=await Swal.fire({
+
+            title:"Offer in percentage",
+            input:'number',
+            inputLabel:'percentage',
+            inputPlaceholder:'%'
+
+        })
+
+        $.ajax({
+
+            url:"/admin/updateProductOffer",
+            method:'post',
+            data:{
+                percentage:amount,
+                productId:productId
+            },
+            success:(response)=>{
+                if(response.status===true){
+                    
+                    Swal.fire('Offer Updated','The offer has been removed','success')
+                    .then(()=>{
+                        location.reload()
+                    }) 
+                   
+                }else{
+                    Swal.fire({
+                    icon: 'warning',
+                    title: 'Offer not applied',
+                    text: response.message || 'Another offer is already applied to this product.'
+                });
+                }
+            }
+        })
+
     }
 </script>

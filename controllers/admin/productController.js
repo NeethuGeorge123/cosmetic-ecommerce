@@ -177,6 +177,33 @@ const addProductOffer = async (req, res) => {
   }
 };
 
+const updateProductOffer = async (req, res) => {
+  try {
+    const { productId, percentage } = req.body;
+    const findProduct = await Product.findOne({ _id: productId });
+    const findCategory = await Category.findOne({ _id: findProduct.category });
+    if (findCategory.categoryOffer > percentage) {
+      return res.json({
+        status: false,
+        message: "This products category already has a category offer ",
+      });
+    }
+
+   
+
+    findProduct.salePrice = Math.floor(findProduct.regularPrice * ((100 - percentage) / 100));
+    findProduct.productOffer = parseInt(percentage);
+    await findProduct.save();
+    findCategory.categoryOffer = 0;
+    await findCategory.save();
+    return res.json({ status: true });
+  } catch (error) {
+    //res.redirect("/pageerror");
+    console.log(error)
+    res.status(500).json({ status: false, message: "Invalid server error" });
+  }
+};
+
 const removeProductOffer = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -462,5 +489,6 @@ module.exports = {
   updateInventoryy,
   deleteImage,
   deleteTempImage,
+  updateProductOffer
 
 };

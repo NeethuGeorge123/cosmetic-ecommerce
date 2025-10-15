@@ -83,6 +83,7 @@ router.get("/addProducts",adminAuth,productController.getProductAddPage)
 router.post("/addProducts",adminAuth,uploads.array("images",3),productController.addProducts)
 router.get("/products",adminAuth,productController.getAllProducts);
 router.post("/addProductOffer",adminAuth,productController.addProductOffer)
+router.post('/updateProductOffer', adminAuth,productController.updateProductOffer);
 router.post("/removeProductOffer",adminAuth,productController.removeProductOffer)
 router.get("/blockProduct",adminAuth,productController.blockProduct);
 router.get("/unblockProduct",adminAuth,productController.unblockProduct);
@@ -97,7 +98,7 @@ router.post('/deleteImage', adminAuth,productController.deleteImage);
 // Route for deleting temporary (newly uploaded) images
 router.post('/deleteTempImage',adminAuth, productController.deleteTempImage);
 
-
+  
 //Banner Management
 router.get("/banner",adminAuth,bannerController.getBannerPage)
 router.get("/addBanner",adminAuth,bannerController.getAddBannerPage)

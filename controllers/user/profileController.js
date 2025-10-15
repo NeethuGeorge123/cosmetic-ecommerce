@@ -8,6 +8,8 @@ const { generate } = require("otp-generator");
 const sendVerificationEmail = require("../../util/sendVerificationEmail");
 const { format } = require("sharp");
 const asyncHandler = require("../../middlewares/asyncHandler");
+const Messages=require("../../util/messages/profileMessages")
+
 
 function generateOtp(){
     const digits="1234567890";
@@ -63,7 +65,7 @@ const forgotEmailValid=asyncHandler(async(req,res)=>{
             }
         }else{
             res.render("user/forgot-password",{
-                message:"User with this email does not exist"
+                message:Messages.USER_NOT_FOUND_EMAIL
             })
         }
 
@@ -76,7 +78,7 @@ const verifyForgotPassOtp=asyncHandler(async(req,res)=>{
        if(enteredOtp===req.session.userOtp){
         res.json({success:true,redirectUrl:"/reset-password"});
        } else{
-        res.json({success:false,message:"OTP not matching"})
+        res.json({success:false,message:Messages.OTP_FAILED })
        }
     
 })
@@ -116,7 +118,7 @@ const postNewPassword = asyncHandler(async(req,res)=>{
             )
             res.redirect("/login")
         }else{
-            res.render("user/reset-password",{message:'password do not match'})
+            res.render("user/reset-password",{message:Messages.PASSWORDS_NOT_MATCH})
         }
    
 })
@@ -179,7 +181,7 @@ const changeEmailValid= asyncHandler(async(req,res)=>{
             }
         }else{
             res.render("user/change-email",{
-                message:"User with this email not exists"
+                message: Messages.EMAIL_NOT_EXISTS
 
             })
         }
@@ -198,7 +200,7 @@ const verifyEmailOtp = asyncHandler(async (req,res)=>{
 
         }else{
             res.render("user/change-email-otp",{
-                message:"OTP not matching",
+                message:Messages.OTP_NOT_MATCHING,
                 userData:req.session.userData,
             })
         }
@@ -393,7 +395,7 @@ const deleteAddress= asyncHandler(async(req,res)=>{
         const addressId = req.query.id;
         const findAddress = await Address.findOne({"address._id":addressId})
         if(!findAddress){
-            return res.status(404).send("Address not found")
+            return res.status(404).send(Messages.ADDRESS_NOT_FOUND);
         }
 
         await Address.updateOne({

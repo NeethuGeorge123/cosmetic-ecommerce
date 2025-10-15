@@ -265,7 +265,9 @@
 
         <div class="total-row">
           <div class="total-label">Delivery Charge:</div>
-          <%if(order.totalPrice<500){%>
+          <% if(order.status === 'cancelled') { %>
+            <span>₹ 0</span>
+          <% } else if(order.totalPrice<500){%>
           <div class="total-value">₹50.00</div>
           <%}else{%>
           <div class="total-value">Free Shipping</div>
@@ -273,7 +275,11 @@
         </div>
         <div class="total-row grand-total">
           <div class="total-label">Grand Total:</div>
+          <% if(order.status === 'cancelled') { %>
+            <span>₹ 0</span>
+            <%} else{%>
           <div class="total-value">₹<%= order.finalAmount.toFixed(2) %></div>
+          <%}%>
         </div>
       </div>
 

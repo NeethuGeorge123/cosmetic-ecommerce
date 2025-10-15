@@ -602,7 +602,10 @@
                                         </div>
                                         <div class="summary-row">
                                           <span>Delivery Charge:</span>
-                                          <%if(order.totalPrice<500){%>
+                                          <% if(order.status === 'cancelled') { %>
+                                            <span>₹ 0</span>
+                                            
+                                          <%} else if(order.totalPrice<500){%>
                                           <span>₹ 50 </span>
                                           <% }else{%>
                                             <span>₹ 0 </span>

@@ -170,7 +170,7 @@
           cropperContainer.style.display = 'none';
         };
       };
-
+ 
       reader.readAsDataURL(input.files[0]);
     }
 
@@ -228,17 +228,20 @@
 
       let hasImage = false;
       let imageCount=0
+      const validExtensions = ['png', 'jpg', 'jpeg', 'webp']; 
       for (let i = 1; i <= 4; i++) {
         const input = document.getElementById(`input${i}`);
         if (input.files.length > 0) {
           imageCount++
           hasImage = true;
           const file = input.files[0];
-          const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-          if (!validTypes.includes(file.type)) {
-            displayErrorMessage('images-error', `Image ${i} format is invalid.`);
-            isValid = false;
-          } else if (file.size > 5 * 1024 * 1024) {
+          const ext = file.name.split('.').pop().toLowerCase();
+
+    // Validate extension
+    if (!validExtensions.includes(ext)) {
+      displayErrorMessage('images-error', `Image ${i} has invalid extension (${ext}).`);
+      isValid = false;
+    }  else if (file.size > 5 * 1024 * 1024) {
             displayErrorMessage('images-error', `Image ${i} exceeds 5MB.`);
             isValid = false;
           }

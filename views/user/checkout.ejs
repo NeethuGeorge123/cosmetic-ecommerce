@@ -864,6 +864,19 @@
     document.getElementById("addNewAddressBtn")?.addEventListener("click", function () {
       document.getElementById("newAddressForm").style.display = "block";
     });
+
+    // Add this at the end of your script section
+window.addEventListener('DOMContentLoaded', function() {
+  // Clear any old coupon data on page load
+  document.getElementById('couponCode').value = '';
+  document.getElementById('couponDiscount').textContent = '0.00';
+  document.getElementById('appliedCoupon').style.display = 'none';
+  document.querySelector('.coupon-section').style.display = 'block';
+  appliedCoupon = null;
+  updateOrderSummary();
+  
+  console.log('Checkout page loaded - coupon cleared for fresh validation');
+});
   </script>
 
   <%- include("../../views/partials/user/footer") %>

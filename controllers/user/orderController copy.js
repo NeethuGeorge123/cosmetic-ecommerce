@@ -358,22 +358,7 @@ const placeOrder = asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false, message: messages.CART_EMPTY });
   }
 
-  for (const item of cart.items) {
-    const product = item.productId;
-    if (!product) {
-      return res.status(400).json({
-        success: false,
-        message: `Some product details are missing. Please refresh your cart.`,
-      });
-    }
   
-    if (product.quantity < item.quantity) {
-      return res.status(400).json({
-        success: false,
-        message: `Sorry, only ${product.quantity} units available for "${product.productName}". Please update your cart.`,
-      });
-    }
-  }
   
   let subtotal = 0;
   cart.items.forEach(item => {
@@ -1410,35 +1395,10 @@ const placeWalletOrder=asyncHandler(async(req,res)=>{
       path:"items.productId"
     });
 
-    if (!cart || cart.items.length === 0) {
-      return res.status(400).json({ success: false, message: "Your cart is empty." });
-    }
-
-    //let discount=cart.discount;
+    let discount=cart.discount;
   const cartItems=cart.items;
     let subtotal = 0;
     cartItems.forEach(item => subtotal += item.productId.salePrice * item.quantity);
-    
-    let discount=0
-    if(couponCode){
-      const coupon =await Coupon.findOne({name:couponCode,isList:true})
-      if(!coupon){
-        return res.status(400).json({success:false,message:"Invalid coupon"})
-      }
-
-      const now=new Date()
-      if(coupon.expireOn<now){
-        await Cart.findByIdAndUpdate({userId},{$set:{discount:0}})
-        return res.status(400).json({success:false,message:"Coupon has expired"})
-      }
-      
-    }
-     
-    if(subtotal < coupon.minimumPrice){
-      return res.status(400).json({success:false,message:"Minimum amount not meet"})
-    }
-    
-
     const shippingCharge = subtotal < 500 ? 50 : 0;
     const total = subtotal - (discount || 0) + shippingCharge;
 
