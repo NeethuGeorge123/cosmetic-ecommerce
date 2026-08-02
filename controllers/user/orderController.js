@@ -280,7 +280,7 @@ const getOrders = asyncHandler(async (req, res) => {
       .sort({ createdOn: -1 });
 
     const totalPages = Math.ceil(totalOrders / ITEMS_PER_PAGE);
-//console.log("ORDER IN FRONT end",orders)
+
     res.render("user/orders", {
       orders,
       currentPage: page,
@@ -614,19 +614,16 @@ const createOrder = asyncHandler(async (req, res, next) => {
     
     if (coupon.discountPercentage) {
       discount = (subtotal * coupon.discountPercentage) / 100;
-      console.log("   Type: Percentage");
-      console.log("   Rate:", coupon.discountPercentage + "%");
-      console.log("   Calculated:", discount);
+     
       
       if (coupon.maxDiscountAmount && discount > coupon.maxDiscountAmount) {
-        console.log("   Max Cap:", coupon.maxDiscountAmount);
+       
         discount = coupon.maxDiscountAmount;
-        console.log("   Final (capped):", discount);
+        
       }
     } else if (coupon.offerPrice) {
       discount = coupon.offerPrice;
-      console.log("   Type: Fixed");
-      console.log("   Amount:", discount);
+      
     }
 
     couponApplied = true;
@@ -748,16 +745,13 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
   
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, amount } = req.body;
 
-  console.log("razorpay_order_id:", razorpay_order_id);
-  console.log("razorpay_payment_id:", razorpay_payment_id);
-  console.log("razorpay_signature:", razorpay_signature);
+  
   
   const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
-  console.log("Order found:", order ? "YES" : "NO");
-  console.log("Order ID:", order?.orderId);
+ 
       
   if (!order) {
-    console.log("ERROR: Order not found");
+    
     return res.status(404).json({ 
       success: false, 
       message: messages.ORDER_NOT_FOUND
@@ -765,7 +759,7 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
   }
   
   if (order.paymentStatus === "Success") {
-    console.log("Payment already successful");
+    
     return res.status(200).json({ 
       success: true, 
       message: messages.PAYMENT_SUCCESS,
@@ -774,7 +768,7 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
   }
 
   if (!razorpay_signature) {
-    console.log("ERROR: Signature missing");
+    
     await Order.updateOne(
       { razorpayOrderId: razorpay_order_id },
       { $set: { status: "Pending", paymentStatus: "Failed" } }
@@ -785,18 +779,16 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
     });
   }
 
-  console.log("Generating signature...");
+  
   const generatedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
     .update(razorpay_order_id + "|" + razorpay_payment_id)
     .digest("hex");
 
-  console.log("Generated signature:", generatedSignature);
-  console.log("Received signature:", razorpay_signature);
-  console.log("Signatures match:", generatedSignature === razorpay_signature);
+  
 
   if (generatedSignature !== razorpay_signature) {
-    console.log("ERROR: Signature mismatch");
+    
     await Order.updateOne(
       { razorpayOrderId: razorpay_order_id },
       { $set: { status: "Pending", paymentStatus: "Failed" } }
@@ -807,13 +799,13 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
     });
   }
 
-  console.log("Updating order status...");
+  
   await Order.updateOne(
     { razorpayOrderId: razorpay_order_id },
     { $set: { status: "Processing", paymentStatus: "Success" } }
   );
 
-  console.log("Updating product quantities...");
+  
   const orderedItems = order.orderedItems || [];
   for (let i = 0; i < orderedItems.length; i++) {
     const productId = orderedItems[i].product?._id;
@@ -826,8 +818,7 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
     }
   }
 
-  console.log("Payment verification SUCCESS");
-  console.log("Returning orderId:", order.orderId);
+  
   
   res.status(200).json({
     success: true,
@@ -835,7 +826,7 @@ const verifyPayment = asyncHandler(async (req, res, next) => {
     orderId: order.orderId
   });
 
-  console.log("=== VERIFY PAYMENT END ===");
+  
 });
 const placeWalletOrder=asyncHandler(async(req,res)=>{
   
@@ -1040,7 +1031,7 @@ const cancelOrderItem = asyncHandler(async (req, res) => {
   order.discount = +(order.discount - itemDiscount).toFixed(2);
   order.finalAmount = Math.max(0, +(order.finalAmount - itemNetPaid).toFixed(2));
 
-  console.log("TOTAL priceee",order.totalPrice)
+  
   
   const allItemsCancelled = order.orderedItems.every(
     (itm) => itm.cancellationStatus === "cancelled"
@@ -1051,7 +1042,7 @@ const cancelOrderItem = asyncHandler(async (req, res) => {
     order.cancelledAt = new Date();
   }
 
-  console.log("ITEM net paiddd",itemNetPaid)
+  
   let wallet = null;
   if (order.paymentMethod !== "cod" && itemNetPaid > 0) {
     wallet = await refundToWallet(
@@ -1112,7 +1103,7 @@ const loadRetryPayment = asyncHandler(async (req, res, next) => {
 
     const userId = req.session.user;
     const orderId = req.query.id; 
-    console.log("FROM RETRY",req.query.id)
+    
 
     
     const user = await User.findById(userId);
@@ -1134,7 +1125,7 @@ const loadRetryPayment = asyncHandler(async (req, res, next) => {
    // const orderData = await Order.findOne({ razorpayOrderId: orderId });
     
     const orderData = await Order.findOne({orderId:orderId})
-    console.log("ORDERDATA",orderData)
+    
     if (!orderData) {
       return res.status(404).render('error', {
         message: 'Order not found',
@@ -1167,7 +1158,7 @@ const retryPaymentCod = asyncHandler(async (req, res, next) => {
  
     const orderId = req.query.orderId;
     const orderData = await Order.findOne({ orderId: orderId });
-    console.log("ORDERDATA",orderData)
+    
 
     if (!orderData) {
       return res

@@ -28,7 +28,7 @@ const loadCoupon = async (req, res) => {
         layout: "layouts/admin",
       });
     } catch (error) {
-      console.error("Error loading coupons:", error);
+      
       res.status(500).render("error", { message: "Server error while loading coupons" });
     }
   };

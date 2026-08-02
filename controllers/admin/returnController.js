@@ -52,7 +52,7 @@ const handleItemReturn = async (req, res) => {
       
       await order.save();
       
-      console.log("✅ Return approved, status:", item.product.returnItemStatus);
+      
 
       return res.status(200).json({ 
         success: true, 
@@ -69,11 +69,11 @@ const handleItemReturn = async (req, res) => {
       }
 
       item.product.returnItemStatus = 'rejected';
-      item.rejectionCategory = category;             // ✅ also save these, so your EJS can display them
+      item.rejectionCategory = category;            
       item.rejectionReason = message;
       await order.save();
       
-      console.log("✅ Return rejected");
+      
 
       return res.status(200).json({ 
         success: true, 
@@ -82,7 +82,7 @@ const handleItemReturn = async (req, res) => {
     }
 
   } catch (error) {
-    console.error('❌ handleItemReturn error:', error);
+    
     return res.status(500).json({ 
       success: false, 
       message: 'Server error',
@@ -144,7 +144,7 @@ const handleItemReturn = async (req, res) => {
       if (status === 'returning') {
         
         item.product.returnItemStatus = 'returning';
-        console.log("Status kept as 'returning'");
+        
         
       } else if (status === 'returned') {
         
@@ -152,7 +152,7 @@ const handleItemReturn = async (req, res) => {
         
         
         const itemTotal = item.price * item.quantity;
-        console.log("Item total (before discount):", itemTotal);
+       
   
         
         let couponDiscount = 0;
@@ -214,10 +214,10 @@ const handleItemReturn = async (req, res) => {
   
         await wallet.save();
   
-        console.log(`✅ Refunded ₹${refundAmount.toFixed(2)} to wallet (ID: ${wallet._id})`);
+        
         
         await user.save();
-        console.log(`✅ Wallet updated for user`);
+       
   
         
         const product = await Product.findById(item.product._id);
@@ -227,17 +227,17 @@ const handleItemReturn = async (req, res) => {
           product.quantity += item.quantity;
           console.log("Product stock after:", product.quantity);
           await product.save();
-          console.log(`✅ Restored ${item.quantity} units to stock`);
+          
         } else {
-          console.log("⚠️ Product not found:", item.product._id);
+          
         }
   
         
-        console.log("Order finalAmount before:", order.finalAmount);
+        
        
 
        order.finalAmount = Math.round(Math.max(0, order.finalAmount - refundAmount) * 100) / 100;
-        console.log("Order finalAmount after:", order.finalAmount);
+        
       }
   
       
@@ -249,12 +249,12 @@ const handleItemReturn = async (req, res) => {
   
       if (allItemsReturned) {
         order.status = 'returned';
-        console.log('✅ All items returned - Order status set to "returned"');
+        
       }
   
       
       await order.save();
-      console.log("✅ Order saved successfully");
+      
   
       return res.status(200).json({ 
         success: true, 

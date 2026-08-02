@@ -36,7 +36,7 @@ const customerInfo = async (req, res) => {
             data: userData,
             currentPage: page,
             totalPages: Math.ceil(count / limit),
-            search: search   // ✅ pass this through so the EJS input keeps its value
+            search: search   
         });
 
     } catch (error) {

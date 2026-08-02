@@ -39,7 +39,7 @@ const categoryInfo = async (req, res) => {
             currentPage: page,
             totalPages: totalPages,
             totalCategories: totalCategories,
-            search: search   // ✅ pass back so input keeps its value
+            search: search  
         });
     } catch (error) {
         console.error(error);
@@ -102,7 +102,7 @@ const addCategoryOffer = async (req, res) => {
       }
   
     
-      console.log('Fetching category:', categoryId);
+      
       const category = await Category.findById(categoryId);
       if (!category) {
         
@@ -110,37 +110,33 @@ const addCategoryOffer = async (req, res) => {
       }
   
       
-      console.log('Fetching products for category:', categoryId);
+      
       const products = await Product.find({ category: category._id });
-      console.log('Products found:', products.length);
+      
   
     
       const hasProductOffer = products.some((product) => product.productOffer > offerPercentage);
       if (hasProductOffer) {
-        console.log('Conflicting product offers found:', { categoryId, offerPercentage });
+        
         return res.status(400).json({ status: false, message: 'Products within this category have higher individual offers' });
       }
   
     
-      console.log('Updating category offer:', { categoryId, categoryOffer: offerPercentage });
+      
       await Category.updateOne({ _id: categoryId }, { $set: { categoryOffer: offerPercentage } });
   
       
-      console.log('Updating products for category:', categoryId);
+      
       for (const product of products) {
         const oldSalePrice = product.salePrice;
         product.productOffer = 0;
         product.salePrice = product.regularPrice * (1 - offerPercentage / 100);
         await product.save();
         const discountAmount = product.regularPrice - product.salePrice;
-        console.log('Product updated:', {
-          productId: product._id,
-          salePrice: product.salePrice,
-          discountAmount: discountAmount
-        });
+       
       }
   
-      console.log('Category offer applied successfully:', { categoryId, offerPercentage });
+      
       res.json({ status: true, message: 'Category offer applied successfully' });
     } catch (error) {
       console.error('Add Category Offer Error:', {
@@ -252,7 +248,7 @@ const editCategory=async(req,res)=>{
 
 
     } catch (error) {
-        console.error("Error in editCategory:", error);
+        
         res.status(500).json({error:"Internal server error"})
     }
 }

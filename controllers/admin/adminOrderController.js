@@ -202,86 +202,6 @@ const verifyReturn = async (req, res) => {
 
 
 
-// const handleReturn = async (req, res) => {
-//   try {
-//     const { action, orderId, category, message } = req.body;
-//     if (!orderId) return res.status(400).json({ success: false, message: 'orderId required' });
-
-//     if (action === 'approved') {
-//       const order = await Order.findById(orderId).populate('userId');
-//       if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-
-//       let refundAmount = 0;
-
-//       // Process every non-cancelled, not-already-returned item
-//       for (const item of order.orderedItems) {
-//         if (item.cancellationStatus === 'cancelled') continue;
-//         if (item.product.returnItemStatus === 'returned') continue;
-
-//         item.product.returnItemStatus = 'returned';
-
-//         const itemTotal = item.price * item.quantity;
-
-//         // Proportional coupon discount adjustment
-//         let couponDiscount = 0;
-//         if (order.discount && order.discount > 0) {
-//           const orderSubtotal = order.orderedItems.reduce(
-//             (sum, itm) => sum + (itm.price * itm.quantity), 0
-//           );
-//           const discountPercentage = (order.discount / orderSubtotal) * 100;
-//           couponDiscount = (itemTotal * discountPercentage) / 100;
-//         }
-
-//         const itemRefund = Math.round((itemTotal - couponDiscount) * 100) / 100;
-//         refundAmount += itemRefund;
-
-//         // Restore stock
-//         await Product.findByIdAndUpdate(item.product._id, { $inc: { quantity: item.quantity } });
-//       }
-
-//       // Refund to wallet (skip for COD)
-//       if (refundAmount > 0 ) {
-//         await refundToWallet(
-//           order.userId,
-//           refundAmount,
-//           order._id,
-//           `Refund for returned order #${order.orderId}`
-//         );
-//         order.finalAmount = Math.round(Math.max(0, order.finalAmount - refundAmount) * 100) / 100;
-//       }
-
-//       order.requestStatus = 'approved';
-//       order.status = 'returned';
-
-//       await order.save();
-
-//       return res.status(200).json({
-//         success: true,
-//         message: 'Return approved and processed successfully',
-//         refundAmount
-//       });
-//     }
-
-//     if (action === 'rejected') {
-//       const updateObj = {
-//         requestStatus: 'rejected',
-//         status: 'delivered',
-//         rejectionCategory: category || '',
-//         rejectionReason: message || '',
-//         rejectedOn: new Date()
-//       };
-
-//       const order = await Order.findByIdAndUpdate(orderId, { $set: updateObj }, { new: true });
-//       if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-//       return res.status(200).json({ success: true, message: 'Return Request Rejected' });
-//     }
-
-//     return res.status(400).json({ success: false, message: 'Invalid action' });
-//   } catch (error) {
-//     console.error('handleReturn error:', error);
-//     return res.status(500).json({ success: false, message: 'Internal server error' });
-//   }
-// };
 
 const handleReturn = async (req, res) => {
   try {
@@ -292,30 +212,25 @@ const handleReturn = async (req, res) => {
       const order = await Order.findById(orderId).populate('userId');
       if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
 
-      console.log("🔍 Order payment method:", order.paymentMethod);
-      console.log("🔍 Items before processing:", order.orderedItems.map(i => ({
-        name: i.product.productName,
-        cancellationStatus: i.cancellationStatus,
-        returnItemStatus: i.product.returnItemStatus
-      })));
+      
 
       let refundAmount = 0;
 
       // Process every non-cancelled, not-already-returned item
       for (const item of order.orderedItems) {
         if (item.cancellationStatus === 'cancelled') {
-          console.log("⏭️ Skipping (cancelled):", item.product.productName);
+         
           continue;
         }
         if (item.product.returnItemStatus === 'returned') {
-          console.log("⏭️ Skipping (already returned):", item.product.productName);
+         
           continue;
         }
 
         item.product.returnItemStatus = 'returned';
 
         const itemTotal = item.price * item.quantity;
-        console.log("💰 Item total:", item.product.productName, itemTotal);
+        
 
         // Proportional coupon discount adjustment
         let couponDiscount = 0;
@@ -329,7 +244,7 @@ const handleReturn = async (req, res) => {
 
         const itemRefund = Math.round((itemTotal - couponDiscount) * 100) / 100;
         refundAmount += itemRefund;
-        console.log("💵 Item refund calculated:", itemRefund, "Running total:", refundAmount);
+        
 
         // Restore stock
         await Product.findByIdAndUpdate(item.product._id, { $inc: { quantity: item.quantity } });
@@ -339,24 +254,24 @@ const handleReturn = async (req, res) => {
 
       // Refund to wallet
       if (refundAmount > 0) {
-        console.log("💳 Calling refundToWallet with userId:", order.userId, "amount:", refundAmount);
+       
         const walletResult = await refundToWallet(
           order.userId,
           refundAmount,
           order._id,
           `Refund for returned order #${order.orderId}`
         );
-        console.log("✅ refundToWallet result:", walletResult);
+        
         order.finalAmount = Math.round(Math.max(0, order.finalAmount - refundAmount) * 100) / 100;
       } else {
-        console.log("⚠️ refundAmount was 0 — no refund attempted");
+        
       }
 
       order.requestStatus = 'approved';
       order.status = 'returned';
 
       await order.save();
-      console.log("💾 Order saved. Final order.finalAmount:", order.finalAmount);
+      
 
       return res.status(200).json({
         success: true,
@@ -395,7 +310,7 @@ const returnItemStatus = async (req, res) => {
 
     
     const { orderId, actionType, reason, productId } = req.body;
-    console.log("Return Request Data:", { orderId, productId, actionType, reason });
+   
 
     
     const order = await Order.findOne({ orderId });
@@ -443,7 +358,7 @@ const returnItemStatus = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Return Item Error:", error);
+    
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
@@ -550,7 +465,7 @@ const updateReturnStatus = async (req, res) => {
       
       await user.save();
       
-      console.log(`✅ Refunded ₹${refundAmount} to user. New wallet balance: ₹${user.wallet}`);
+      
     }
 
     return res.status(200).json({ 

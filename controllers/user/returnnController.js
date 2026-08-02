@@ -19,7 +19,7 @@ const returnItem = asyncHandler(async (req, res) => {
     return res.status(401).json({ success: false, message: "Please login again" });
   }
 
-  console.log("Item return request:", { orderId, itemId, userId, reason });
+  
 
   const order = await Order.findOne({ orderId, userId });
 
@@ -54,8 +54,8 @@ const returnItem = asyncHandler(async (req, res) => {
 
   await order.save();
   
-  console.log("✅ Item return status updated to:", item.product.returnItemStatus);
-  console.log("Return reason:", reason);
+  
+  
 
   res.json({ 
     success: true, 

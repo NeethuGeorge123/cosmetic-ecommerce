@@ -675,7 +675,7 @@
                         </div>
                     </div>
 
-                    <!-- Quick Actions -->
+                    
                     <div class="action-section">
                         <!-- View Details Button -->
                         <a href="/admin/adminOrders/<%= order._id %>" class="btn btn-primary btn-modern mb-2">
@@ -811,13 +811,7 @@
         rs === 'rejected' ? 'Rejected' : rs %>
 </span>
 
-<!-- 🔍 DEBUG: Add this temporarily -->
-<div class="alert alert-info mt-1" style="font-size: 0.7rem;">
-    <strong>DEBUG:</strong> 
-    returnItemStatus = "<%= item.product.returnItemStatus %>"<br>
-    Is 'return_requested'? <%= item.product.returnItemStatus === 'return_requested' ? 'YES' : 'NO' %><br>
-    cancellationStatus = "<%= item.cancellationStatus %>"
-</div>
+
                                     </div>
                                 </div>
                                 
@@ -834,14 +828,10 @@
                                 <% } %>
                                 
                                 <!-- Return action buttons (only show if item is not cancelled) -->
-                                <!-- Return action buttons (only show if item is not cancelled) -->
+                                
 <% if (item.cancellationStatus !== 'cancelled') { %>
 
-    <div class="alert alert-warning mt-1" style="font-size: 0.7rem;">
-        Button check: cancellationStatus = "<%= item.cancellationStatus %>"<br>
-        returnItemStatus = "<%= item.product.returnItemStatus %>"<br>
-        Should show buttons? <%= item.product.returnItemStatus === 'return_requested' ? 'YES' : 'NO' %>
-    </div>
+    
 
     <% if(item.product.returnItemStatus === 'return_requested') { %>
         <div class="d-flex justify-content-center gap-2 mt-2">
@@ -858,7 +848,7 @@
         </div>
     <% } else if(item.product.returnItemStatus === 'approved' || item.product.returnItemStatus === 'returning') { %>
 
-        <!-- 🔍 DEBUG -->
+        
         <div class="text-danger small">No buttons because status is: "<%= item.product.returnItemStatus %>"</div>
         <button onclick="updateItemReturnStatus('<%= order.orderId %>', '<%= item._id %>')" 
                 class="btn btn-info btn-sm mt-2">

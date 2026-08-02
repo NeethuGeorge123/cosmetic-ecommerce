@@ -26,7 +26,7 @@ const addProducts = async (req, res) => {
     const productExists = await Product.findOne({
       productName: products.productName,
     });
-    console.log("products EXISTS",productExists)
+    
     if (!productExists) {
       const images = [];
       
@@ -171,7 +171,7 @@ const addProductOffer = async (req, res) => {
     return res.json({ status: true });
   } catch (error) {
     //res.redirect("/pageerror");
-    console.log(error)
+    
     res.status(500).json({ status: false, message: "Invalid server error" });
   }
 };
