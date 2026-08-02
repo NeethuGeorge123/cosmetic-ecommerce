@@ -6,7 +6,7 @@ const asyncHandler = require("../../middlewares/asyncHandler");
 
 
 
-const loadWishlist = asyncHandler(async (req, res) => {
+const loadWishlist = asyncHandler(async (req, res) => { 
     
         const userId = req.session.user;
 

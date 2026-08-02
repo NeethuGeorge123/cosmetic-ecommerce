@@ -1,392 +1,897 @@
 <%- include("../partials/admin/header") %>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
     :root {
-       --primary-color: #1e90ff;
-       --secondary-color: #2d3436;
-       --success-color: #00b894;
-       --danger-color: #d63031;
-       --info-color: #0984e3;
-       --light-gray: #dfe6e9;
-       --background-color: #f5f6fa;
+       --primary-color: #059669;
+       --primary-dark: #047857;
+       --primary-light: #10b981;
+       --secondary-color: #1f2937;
+       --success-color: #10b981;
+       --danger-color: #ef4444;
+       --info-color: #3b82f6;
+       --warning-color: #f59e0b;
+       --light-gray: #e5e7eb;
+       --background-color: #f9fafb;
        --white: #ffffff;
-       --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+       --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+       --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
        --transition: all 0.3s ease;
+       --card-border: #e5e7eb;
      }
      
-     .order-table th, .order-table td {
-         vertical-align: middle;
+     body {
+         background-color: var(--background-color);
      }
      
      .status-badge {
          padding: 6px 12px;
          border-radius: 15px;
-         font-weight: 500;
+         font-weight: 700 !important;
+         font-size: 0.95rem;
+         letter-spacing: 0.4px;
      }
      
-     .order-actions .btn {
-         margin: 0 2px;
+     .text-true-black {
+         color: #000000 !important;
      }
      
-     /* Enhanced responsive styles */
-     .table-responsive {
-         overflow-x: auto;
-         -webkit-overflow-scrolling: touch;
-     }
-     
-     /* Card view for mobile screens */
-     .order-cards {
-         display: none;
-     }
-     
-     .order-card {
-         background-color: var(--white);
-         border-radius: 10px;
+     /* Modern Order Card */
+     .modern-order-card {
+         background: var(--white);
+         border-radius: 12px;
          box-shadow: var(--shadow);
-         margin-bottom: 15px;
-         padding: 15px;
-        
+         margin-bottom: 20px;
+         overflow: hidden;
+         transition: var(--transition);
+         border: 1px solid var(--card-border);
      }
      
-     .order-card-header {
+     .modern-order-card:hover {
+         box-shadow: var(--shadow-hover);
+         border-color: #d1d5db;
+     }
+     
+     /* Order Header */
+     .order-header {
+         background: linear-gradient(135deg, #047857 0%, #059669 100%);
+         padding: 20px 24px;
+         color: white;
          display: flex;
          justify-content: space-between;
          align-items: center;
-         margin-bottom: 10px;
-         padding-bottom: 10px;
-         border-bottom: 1px solid var(--light-gray);
+         flex-wrap: wrap;
+         gap: 12px;
      }
      
-     .order-card-body {
+     .order-id-section {
+         display: flex;
+         align-items: center;
+         gap: 12px;
+     }
+     
+     .order-id-badge {
+         background: rgba(255, 255, 255, 0.2);
+         backdrop-filter: blur(10px);
+         padding: 8px 16px;
+         border-radius: 8px;
+         font-weight: 600;
+         font-size: 1.1rem;
+         border: 1px solid rgba(255, 255, 255, 0.2);
+     }
+     
+     .order-date {
+         font-size: 0.9rem;
+         opacity: 0.95;
+     }
+     
+     /* Status Badge */
+     .status-badge-modern {
+         padding: 8px 16px;
+         border-radius: 20px;
+         font-weight: 600;
+         font-size: 0.85rem;
+         letter-spacing: 0.5px;
+         text-transform: uppercase;
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         background: rgba(255, 255, 255, 0.25);
+         border: 1px solid rgba(255, 255, 255, 0.3);
+     }
+     
+     .status-badge-modern i {
+         font-size: 0.9rem;
+     }
+     
+     /* Order Body */
+     .order-body {
+         padding: 24px;
+     }
+     
+     .order-info-grid {
          display: grid;
-         grid-template-columns: repeat(2, 1fr);
-         grid-gap: 10px;
-         margin-bottom: 15px;
+         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+         gap: 20px;
+         margin-bottom: 24px;
      }
      
-     .order-card-item {
+     .info-item {
          display: flex;
          flex-direction: column;
+         gap: 6px;
+         background: #f9fafb;
+         padding: 16px;
+         border-radius: 10px;
+         border: 1px solid #e5e7eb;
      }
      
-     .order-card-label {
-         font-size: 0.8rem;
+     .info-label {
+         font-size: 0.75rem;
+         color: #6b7280;
+         font-weight: 600;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+     }
+     
+     .info-value {
+         font-size: 1.25rem;
+         font-weight: 700;
          color: var(--secondary-color);
-         margin-bottom: 5px;
-         font-weight: 500;
      }
      
-     .order-card-value {
+     .amount-value {
+         color: #059669;
+         font-size: 1.5rem;
+         font-weight: 800;
+     }
+     
+     /* Products Section */
+     .products-section {
+         margin-top: 24px;
+         padding-top: 24px;
+         border-top: 2px solid #e5e7eb;
+     }
+     
+     .products-header {
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         margin-bottom: 16px;
+         color: var(--secondary-color);
+         font-weight: 700;
          font-size: 1rem;
+     }
+     
+     .products-header i {
+         color: #059669;
+     }
+     
+     .product-item {
+         background: #ffffff;
+         border-radius: 10px;
+         padding: 16px;
+         margin-bottom: 12px;
+         transition: var(--transition);
+         border: 1px solid #e5e7eb;
+     }
+     
+     .product-item:hover {
+         background: #f9fafb;
+         border-color: #d1d5db;
+         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+     }
+     
+     .product-info-row {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         flex-wrap: wrap;
+         gap: 12px;
+         margin-bottom: 12px;
+     }
+     
+     .product-details {
+         flex: 1;
+         min-width: 200px;
+     }
+     
+     .product-name {
+         font-weight: 600;
+         color: var(--secondary-color);
+         margin-bottom: 4px;
+         font-size: 1rem;
+     }
+     
+     .product-price {
+         color: #059669;
+         font-weight: 700;
+         font-size: 1.1rem;
+     }
+     
+     .product-actions {
+         display: flex;
+         gap: 8px;
+         align-items: center;
+         flex-wrap: wrap;
+     }
+     
+     /* Action Section */
+     .action-section {
+         margin-top: 20px;
+         padding-top: 20px;
+         border-top: 2px solid #e5e7eb;
+     }
+     
+     .action-buttons {
+         display: flex;
+         gap: 10px;
+         flex-wrap: wrap;
+     }
+     
+     .btn-modern {
+         border-radius: 8px;
+         padding: 10px 20px;
+         font-weight: 600;
+         display: inline-flex;
+         align-items: center;
+         gap: 8px;
+         transition: var(--transition);
+         border: none;
+     }
+     
+     .btn-modern:hover {
+         transform: translateY(-1px);
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+     }
+     
+     .btn-primary {
+         background: #059669;
+         color: white;
+     }
+     
+     .btn-primary:hover {
+         background: #047857;
+         color: white;
+     }
+     
+     .btn-success {
+         background: #10b981;
+         color: white;
+     }
+     
+     .btn-success:hover {
+         background: #059669;
+         color: white;
+     }
+     
+     .btn-danger {
+         background: #ef4444;
+         color: white;
+     }
+     
+     .btn-danger:hover {
+         background: #dc2626;
+         color: white;
+     }
+     
+     .btn-info {
+         background: #3b82f6;
+         color: white;
+     }
+     
+     .btn-info:hover {
+         background: #2563eb;
+         color: white;
+     }
+     
+     .btn-secondary {
+         background: #6b7280;
+         color: white;
+     }
+     
+     .btn-secondary:hover {
+         background: #4b5563;
+         color: white;
+     }
+     
+     .alert-modern {
+         border-radius: 8px;
+         border: 1px solid;
+         padding: 12px 16px;
+         margin-bottom: 12px;
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         font-size: 0.875rem;
+     }
+     
+     .alert-info {
+         background: #eff6ff;
+         color: #1e40af;
+         border-color: #bfdbfe;
+     }
+     
+     .alert-success {
+         background: #f0fdf4;
+         color: #065f46;
+         border-color: #bbf7d0;
+     }
+     
+     .alert-danger {
+         background: #fef2f2;
+         color: #991b1b;
+         border-color: #fecaca;
+     }
+     
+     /* Filters */
+     .filter-section {
+         background: var(--white);
+         border-radius: 12px;
+         padding: 24px;
+         box-shadow: var(--shadow);
+         margin-bottom: 24px;
+         border: 1px solid var(--card-border);
+     }
+     
+     .custom-select {
+         background-color: #fff;
+         color: #333;
+         padding: 8px;
+         border-radius: 8px;
+         transition: all 0.3s ease-in-out;
+         border: 1px solid #d1d5db;
+     }
+     
+     .custom-select:focus {
+         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+         border-color: #059669;
+     }
+
+     .form-control {
+         border-radius: 8px;
+         border: 1px solid #d1d5db;
+         padding: 10px 14px;
+     }
+     
+     .form-control:focus {
+         border-color: #059669;
+         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+     }
+     
+     .form-select {
+         border: 1px solid #d1d5db;
+         padding: 10px 14px;
+     }
+     
+     .form-select:focus {
+         border-color: #059669;
+         box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+     }
+
+     .btn {
+         border-radius: 8px;
          font-weight: 600;
      }
-     
-     .order-card-actions {
-         padding-top: 10px;
-         border-top: 1px solid var(--light-gray);
+
+     .form-control:focus, .custom-select:focus {
+         outline: none;
+     }
+
+     .input-group .btn {
+         border-top-left-radius: 0;
+         border-bottom-left-radius: 0;
      }
      
-     /* Media queries */
+     .input-group-text {
+         background: #f9fafb;
+         border: 1px solid #d1d5db;
+         color: #6b7280;
+     }
+     
+     /* Page Title */
+     h1 {
+         color: #111827;
+         font-weight: 700;
+         font-size: 1.875rem;
+     }
+     
+     h1 i {
+         color: #059669;
+     }
+     
+     /* Pagination */
+     .pagination-modern {
+         display: flex;
+         justify-content: center;
+         margin-top: 32px;
+     }
+     
+     .pagination-modern .page-link {
+         border-radius: 8px;
+         margin: 0 4px;
+         border: 1px solid #d1d5db;
+         padding: 10px 16px;
+         font-weight: 600;
+         color: #374151;
+         transition: var(--transition);
+         background: white;
+     }
+     
+     .pagination-modern .page-item.active .page-link {
+         background: #059669;
+         color: white;
+         border-color: #059669;
+     }
+     
+     .pagination-modern .page-link:hover {
+         background: #f9fafb;
+         border-color: #059669;
+         color: #059669;
+     }
+     
+     .pagination-modern .page-item.disabled .page-link {
+         background: #f9fafb;
+         color: #9ca3af;
+         border-color: #e5e7eb;
+     }
+     
+     /* Responsive */
      @media screen and (max-width: 991px) {
          .filter-row > div {
              margin-bottom: 10px;
          }
+         
+         .order-info-grid {
+             grid-template-columns: repeat(2, 1fr);
+         }
      }
      
-     @media screen and (max-width: 767px) {
-         .table-view {
-             display: none; /* Hide table on mobile */
+     @media screen and (max-width: 768px) {
+         .container-fluid {
+             padding-left: 15px;
+             padding-right: 15px;
          }
          
-         .order-cards {
-             display: block; /* Show cards on mobile */
+         h1 {
+             font-size: 1.5rem;
+         }
+         
+         .filter-section {
+             padding: 16px;
+         }
+         
+         .order-header {
+             flex-direction: column;
+             align-items: flex-start;
+             padding: 16px;
+         }
+         
+         .order-id-badge {
+             font-size: 1rem;
+             padding: 6px 12px;
+         }
+         
+         .order-date {
+             font-size: 0.85rem;
+         }
+         
+         .status-badge-modern {
+             font-size: 0.75rem;
+             padding: 6px 12px;
+         }
+         
+         .order-body {
+             padding: 16px;
+         }
+         
+         .order-info-grid {
+             grid-template-columns: 1fr;
+             gap: 15px;
+         }
+         
+         .info-value {
+             font-size: 1rem;
+         }
+         
+         .amount-value {
+             font-size: 1.2rem;
+         }
+         
+         .products-header {
+             font-size: 1rem;
+         }
+         
+         .product-item {
+             padding: 12px;
+         }
+         
+         .product-name {
+             font-size: 0.95rem;
+         }
+         
+         .product-info-row {
+             flex-direction: column;
+             align-items: flex-start;
+         }
+         
+         .product-actions {
+             width: 100%;
+             justify-content: flex-start;
          }
          
          .action-buttons {
-             display: flex;
              flex-direction: column;
-             gap: 8px;
+             width: 100%;
+         }
+         
+         .btn-modern, .btn-sm {
+             width: 100%;
+             justify-content: center;
+         }
+         
+         .alert-modern {
+             font-size: 0.85rem;
+             padding: 10px 12px;
+         }
+         
+         .d-flex.gap-2 {
+             flex-direction: column;
+             gap: 8px !important;
+         }
+         
+         .d-flex.gap-2 .btn {
+             width: 100%;
+         }
+     }
+     
+     @media screen and (max-width: 576px) {
+         .modern-order-card {
+             border-radius: 12px;
+             margin-bottom: 16px;
+         }
+         
+         .order-header {
+             padding: 12px;
+         }
+         
+         .order-body {
+             padding: 12px;
+         }
+         
+         .products-section {
+             padding-top: 16px;
+             margin-top: 16px;
+         }
+         
+         .product-item {
+             padding: 10px;
+         }
+         
+         .pagination .page-link {
+             padding: 6px 12px;
+             font-size: 0.875rem;
+         }
+         
+         .filter-section .col-lg-9,
+         .filter-section .col-lg-3 {
+             width: 100%;
+         }
+         
+         .input-group {
+             flex-wrap: nowrap;
+         }
+         
+         .input-group .form-control {
+             font-size: 0.875rem;
+         }
+         
+         .input-group .btn {
+             font-size: 0.875rem;
+             padding: 8px 12px;
          }
      }
  </style>
- 
- <div class="container-fluid px-4">
-     <h1 class="mt-4">Order Management</h1>
-     <form method="GET" action="/admin/orders" class="mb-4 p-3 bg-light rounded shadow-sm">
-         <div class="row g-2 align-items-center filter-row">
-             <!-- Search Input -->
-             <div class="col-lg-4 col-md-6 col-sm-12">
-                 <div class="input-group">
-                     <input type="text" name="search" class="form-control border-primary" placeholder="Search Order ID..." value="<%= search %>">
-                     <button type="submit" name="action" value="search" class="btn btn-primary">Search</button>
-                 </div>
-             </div>
-     
-             
-             <!-- Sorting Options -->
-             
-             <!-- Filter and Clear Buttons -->
-             <!-- <div class="col-lg-1 col-md-2 col-sm-6 d-grid px-1">
-                 <button type="submit" class="btn btn-success">Filter</button>
-             </div> -->
-             <div class="col-lg-1 col-md-2 col-sm-6 d-grid px-1">
-                 <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear</button>
-             </div>
-         </div>
-     </form>
-     
-     <script>
-         function clearFilters() {
-             window.location.href = "/admin/orders";
-         }
-     </script>
-     
-     <style>
-         .custom-select {
-             background-color: #fff;
-             color: #333;
-             padding: 8px;
-             border-radius: 8px;
-             transition: all 0.3s ease-in-out;
-         }
-         
-         .custom-select:focus {
-             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-             border-color: #007bff;
-         }
-     
-         .form-control {
-             border-radius: 8px;
-         }
-     
-         .btn {
-             border-radius: 8px;
-         }
-     
-         .form-control:focus, .custom-select:focus {
-             outline: none;
-         }
-     
-         .input-group .btn {
-             border-top-left-radius: 0;
-             border-bottom-left-radius: 0;
-         }
-        
-         .status-badge {
-             font-weight: 700 !important;
-             font-size: 0.95rem;
-             letter-spacing: 0.4px;
-         }
-         
-         .text-true-black {
-             color: #000000 !important;
-         }
-     </style>
-     
-     <!-- Table View (Desktop) -->
-     <div class="card mb-4 table-view">
-         <div class="card-header">
-             <i class="fas fa-table me-1"></i>
-             All Orders
-         </div>
-         <div class="card-body">
-             <div class="table-responsive">
-                 <table class="table table-striped order-table">
-                     <thead class="text-center table-dark">
-                         <tr>
-                             <th>Order ID</th>
-                             <th>Date</th>
-                             <th>Customer</th>
-                             <th>Amount</th>
-                             <th>Status</th>
-                             <th>Actions</th>
-                         </tr>
-                     </thead>
-                     <tbody>
-                         <% orders.forEach(order => { %>
-                             <tr class="align-middle">
-                                 <td><%= order.orderId %></td>
-                                 <td><%= new Date(order.createdOn).toLocaleDateString() %></td>
-                                 <td>
-                                     <div>
-                                         <strong><%= order.userId.name %></strong>
-                                     </div>
-                                 </td>
-                                 <td>₹<%= Math.round(order.finalAmount) %></td>
-                                 <td>
-                                     <div>
-                                         <span class="status-badge d-inline-block px-3 py-1 rounded text-uppercase 
-                                             <%= order.status === 'delivered' ? 'bg-success text-white' :
-                                                  order.status === 'cancelled' ? 'bg-danger text-white' :
-                                                  order.status === 'shipped' ? 'bg-info text-true-black' :
-                                                  order.status === 'return requested' ? 'bg-warning text-true-black' :
-                                                  order.status === 'returning' ? 'bg-info text-true-black' :
-                                                  order.status === 'returned' ? 'bg-secondary text-white' :
-                                                  'bg-warning text-true-black' %>">
-                                             <%= order.status %>
-                                         </span>
-                                     </div>
-                                 </td>
-                                 <td class="text-center p-3">
-                                     <!-- View Details Button -->
-                                     <a href="/admin/adminOrders/<%= order._id %>" class="btn btn-primary btn-sm" style="display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: 10px;">
-                                         <i class="fas fa-eye" style="margin-right: 8px; color: white;"></i>
-                                         <span style="color: white;">View Details</span>
-                                     </a>
-                                     
-                                     <!-- Return Request Controls -->
-                                     <% if ((order.status || '').toLowerCase() === 'return requested' && order.requestStatus === 'pending') { %>
-                                        <!-- Approve / Reject buttons -->
-                                        <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
-                                            <button onclick="handleReturn('approved', '<%= order._id %>')" class="btn btn-success btn-sm">
-                                                <i class="fas fa-check-circle me-1"></i> Approve Return
-                                            </button>
-                                            <button onclick="handleReturn('rejected', '<%= order._id %>')" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-times-circle me-1"></i> Reject
-                                            </button>
-                                        </div>
-                                    
-                                    <% } else if (order.requestStatus === 'approved' && (order.status || '').toLowerCase() !== 'returned') { %>
-                                        <!-- Update Return Status -->
-                                        <button onclick="updateReturnStatus('<%= order._id %>')" class="btn btn-info btn-sm" style="width:100%; margin-top:10px;">
-                                            <i class="fas fa-truck-loading me-1"></i> Update Return Status
-                                        </button>
-                                    
-                                    <% } else if (order.requestStatus === 'rejected') { %>
-                                        <!-- Show rejection text and reason -->
-                                        <div style="margin-top:10px; text-align:center;">
-                                            <span class="badge bg-danger">Return Status: Rejected</span>
-                                            <% if (order.rejectionCategory || order.rejectionReason) { %>
-                                                <div class="mt-1 small text-muted">
-                                                    <strong>Reason:</strong>
-                                                    <%= order.rejectionCategory ? order.rejectionCategory : '' %>
-                                                    <% if (order.rejectionCategory && order.rejectionReason) { %> - <% } %>
-                                                    <%= order.rejectionReason ? order.rejectionReason : '' %>
-                                                </div>
-                                            <% } %>
-                                        </div>
-                                    
-                                    <% } else if (!['cancelled','delivered','returned','return requested','returning'].includes((order.status || '').toLowerCase())) { %>
-                                         <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
-                                            <%if(order.status){%>
-                                             <button onclick="updateStatus('<%= order.orderId %>')" 
-                                                     class="btn btn-info btn-sm" style="display: flex; align-items: center; justify-content: center;">
-                                                 <i class="fas fa-sync-alt" style="margin-right: 8px; color: white;"></i>
-                                                 <span style="color: white;">Update Status</span>
-                                             </button>
-                                             <%}%>
-                                             <button onclick="cancelOrder('<%= order.orderId %>')" 
-                                                     class="btn btn-danger btn-sm" style="display: flex; align-items: center; justify-content: center;">
-                                                 <i class="fas fa-ban" style="margin-right: 8px; color: white;"></i>
-                                                 <span style="color: white;">Cancel</span>
-                                             </button>
-                                         </div>
-                                     <% } %>
-                                 </td>
-                             </tr>
-                         <% }); %>
-                     </tbody>
-                 </table>
-             </div>
-         </div>
-     </div>
-     
-     <!-- Card View (Mobile) -->
-     <div class="order-cards">
-         <div class="card-header bg-dark text-white mb-3 rounded">
-             <i class="fas fa-table me-1"></i>
-             All Orders
-         </div>
-         
-         <% orders.forEach(order => { %>
-             <div class="order-card">
-                 <div class="order-card-header">
-                     <div>
-                         <div class="fw-bold">#<%= order.orderId %></div>
-                     </div>
-                     <div>
-                         <span class="status-badge d-inline-block px-3 py-1 rounded text-uppercase 
-                             <%= order.status === 'delivered' ? 'bg-success text-white' :
-                                  order.status === 'cancelled' ? 'bg-danger text-white' :
-                                  order.status === 'shipped' ? 'bg-info text-true-black' :
-                                  order.status === 'return requested' ? 'bg-warning text-true-black' :
-                                  order.status === 'returning' ? 'bg-info text-true-black' :
-                                  order.status === 'returned' ? 'bg-secondary text-white' :
-                                  'bg-warning text-true-black' %>">
-                             <%= order.status %>
-                         </span>
-                     </div>
-                 </div>
-                 
-                 <div class="order-card-body">
-                     <div class="order-card-item">
-                         <div class="order-card-label">Customer</div>
-                         <div class="order-card-value"><%= order.userId.name %></div>
-                     </div>
-                     
-                     <div class="order-card-item">
-                         <div class="order-card-label">Amount</div>
-                         <div class="order-card-value">₹<%= Math.round(order.finalAmount) %></div>
-                     </div>
-                     
-                     <div class="order-card-item">
-                         <div class="order-card-label">Date</div>
-                         <div class="order-card-value"><%= new Date(order.createdOn).toLocaleDateString() %></div>
-                     </div>
-                 </div>
-                 
-                 <div class="order-card-actions">
-                     <!-- View Details Button -->
-                     <a href="/admin/adminOrders/<%= order.orderId %>" class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2">
-                         <i class="fas fa-eye me-2"></i>
-                         <span>View Details</span>
-                     </a>
-                     
-                     <!-- Return Request Controls -->
-                     <% if (order.status === 'return requested' && order.requestStatus === 'pending') { %>
-                         <div class="d-flex flex-column gap-2 mt-2">
-                             <button onclick="handleReturn('approved', '<%= order._id %>')" 
-                                     class="btn btn-success btn-sm d-flex align-items-center justify-content-center">
-                                 <i class="fas fa-check-circle me-2"></i>
-                                 <span>Approve Return</span>
-                             </button>
-                             <button onclick="handleReturn('rejected', '<%= order._id %>')" 
-                                     class="btn btn-danger btn-sm d-flex align-items-center justify-content-center">
-                                 <i class="fas fa-times-circle me-2"></i>
-                                 <span>Reject</span>
-                             </button>
-                         </div>
-                     <% } else if (order.requestStatus === 'approved' && order.status != 'returned') { %>
-                         <button onclick="updateReturnStatus('<%= order._id %>')" 
-                                 class="btn btn-info btn-sm d-flex align-items-center justify-content-center mt-2">
-                             <i class="fas fa-truck-loading me-2"></i>
-                             <span>Update Return Status</span>
-                         </button>
-                     <% } else if (!['cancelled', 'delivered', 'returned', 'return requested', 'returning'].includes(order.status)) { %>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4 mb-4">
+        <i class="fas fa-shopping-cart me-2"></i>Order Management
+    </h1>
+    
+    <!-- Filter Section -->
+    <form method="GET" action="/admin/orders" class="filter-section">
+        <div class="row g-2 align-items-center filter-row">
+            <!-- Search Input -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control border-primary" placeholder="Search Order ID..." value="<%= search %>">
+                    <button type="submit" name="action" value="search" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-2 col-sm-6 d-grid px-1">
+                <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function clearFilters() {
+            window.location.href = "/admin/orders";
+        }
+    </script>
+
+    <!-- Orders Container -->
+    <div class="orders-container">
+        <% orders.forEach(order => { %>
+            <div class="modern-order-card">
+                <!-- Order Header -->
+                <div class="order-header">
+                    <div class="order-id-section">
+                        <i class="fas fa-receipt fa-lg"></i>
+                        <div>
+                            <div class="order-id-badge">#<%= order.orderId %></div>
+                            <div class="order-date">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                <%= new Date(order.createdOn).toLocaleDateString() %>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="status-badge-modern
+                            <%= order.status === 'delivered' ? 'bg-success text-white' :
+                                 order.status === 'cancelled' ? 'bg-danger text-white' :
+                                 order.status === 'shipped' ? 'bg-info text-true-black' :
+                                 order.status === 'return requested' ? 'bg-warning text-dark' :
+                                 order.status === 'returning' ? 'bg-info text-true-black' :
+                                 order.status === 'returned' ? 'bg-secondary text-white' :
+                                 'bg-warning text-dark' %>">
+                            <i class="fas fa-circle"></i>
+                            <%= order.status %>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Order Body -->
+                <div class="order-body">
+                    <!-- Order Info Grid -->
+                    <div class="order-info-grid">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-user me-1"></i>Customer
+                            </div>
+                            <div class="info-value"><%= order.userId.name %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-rupee-sign me-1"></i>Total Amount
+                            </div>
+                            <% if (order.status === "cancelled") { %>
+                                <div class="info-value amount-value">₹0</div>
+                            <% } else { %>
+                                <div class="info-value amount-value">₹<%= order.finalAmount.toFixed(2) %></div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="action-section">
+                        <!-- View Details Button -->
+                        <a href="/admin/adminOrders/<%= order._id %>" class="btn btn-primary btn-modern mb-2">
+                            <i class="fas fa-eye"></i>
+                            <span>View Details</span>
+                        </a>
+
+                        <% const itemsWithReturnRequests = order.orderedItems.filter(item => item.returnStatus === 'requested'); %>
+                        <% const itemsWithApprovedReturns = order.orderedItems.filter(item => item.returnStatus === 'approved'); %>
+                        
+                        <!-- Show badge if there are item return requests -->
+                        <% if (itemsWithReturnRequests.length > 0) { %>
+                            <div class="alert alert-info py-2 mb-2" style="font-size: 0.85rem;">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <%= itemsWithReturnRequests.length %> item(s) have return requests
+                            </div>
+                        <% } %>
+                        
+                        <% if (itemsWithReturnRequests.length > 0) { %>
+                            <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
+                               <select id="itemSelect_<%= order._id %>" class="form-select form-select-sm mb-2" onchange="selectItemForAction('<%= order._id %>', this.value)">
+                                   <option value="">Select Item to Handle</option>
+                                   <% itemsWithReturnRequests.forEach(item => { %>
+                                       <option value="<%= item._id %>"><%= item.product.productName %> (Qty: <%= item.quantity %>)</option>
+                                   <% }); %>
+                               </select>
+                               <button id="approveItemBtn_<%= order._id %>" onclick="handleItemReturn('approved', '<%= order._id %>', null)" class="btn btn-success btn-sm" disabled>
+                                   <i class="fas fa-check-circle me-1"></i> Approve Selected Item
+                               </button>
+                               <button id="rejectItemBtn_<%= order._id %>" onclick="handleItemReturn('rejected', '<%= order._id %>', null)" class="btn btn-danger btn-sm" disabled>
+                                   <i class="fas fa-times-circle me-1"></i> Reject Selected Item
+                               </button>
+                           </div>
+                        <% } %>
+
+                        <% if (itemsWithApprovedReturns.length > 0) { %>
+                           <div class="alert alert-success py-2 mb-2" style="font-size: 0.85rem;">
+                               <i class="fas fa-check-circle me-1"></i>
+                               <%= itemsWithApprovedReturns.length %> item return(s) approved
+                           </div>
+                           <!-- Update Status for Approved Items -->
+                           <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
+                               <button onclick="updateItemReturnStatus('<%= order._id %>')" class="btn btn-info btn-sm">
+                                   <i class="fas fa-truck-loading me-1"></i> Update Selected Item Status
+                               </button>
+                           </div>
+                       <% } %>
+
+                        <!-- Return Request Controls -->
+                        <% if ((order.status || '').toLowerCase() === 'return requested' && order.requestStatus === 'pending') { %>
+                           <!-- Approve / Reject buttons -->
+                           <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
+                               <button onclick="handleReturn('approved', '<%= order._id %>')" class="btn btn-success btn-sm">
+                                   <i class="fas fa-check-circle me-1"></i> Approve Return
+                               </button>
+                               <button onclick="handleReturn('rejected', '<%= order._id %>')" class="btn btn-danger btn-sm">
+                                   <i class="fas fa-times-circle me-1"></i> Reject
+                               </button>
+                           </div>
                        
-                         <div class="d-flex flex-column gap-2 mt-2">
-                             <button onclick="updateStatus('<%= order._id %>')" 
-                                     class="btn btn-info btn-sm d-flex align-items-center justify-content-center">
-                                 <i class="fas fa-sync-alt me-2"></i>
-                                 <span>Update Status</span>
-                             </button>
-                             <button onclick="cancelOrder('<%= order._id %>')" 
-                                     class="btn btn-danger btn-sm d-flex align-items-center justify-content-center">
-                                 <i class="fas fa-ban me-2"></i>
-                                 <span>Cancel</span>
-                             </button>
-                         </div>
-                         
-                     <% } %>
-                 </div>
-             </div>
-         <% }); %>
-     </div>
-     
-     <div class="pagination-container d-flex justify-content-center mt-4 mb-4">
+                       
+                       
+                       <% } else if (order.requestStatus === 'rejected') { %>
+                           <!-- Show rejection text and reason -->
+                           <div style="margin-top:10px; text-align:center;">
+                               <span class="badge bg-danger">Return Status: Rejected</span>
+                               <% if (order.rejectionCategory || order.rejectionReason) { %>
+                                   <div class="mt-1 small text-muted">
+                                       <strong>Reason:</strong>
+                                       <%= order.rejectionCategory ? order.rejectionCategory : '' %>
+                                       <% if (order.rejectionCategory && order.rejectionReason) { %> - <% } %>
+                                       <%= order.rejectionReason ? order.rejectionReason : '' %>
+                                   </div>
+                               <% } %>
+                           </div>
+                       
+                       <% } else if (!['cancelled','delivered','returned','return requested','returning'].includes((order.status || '').toLowerCase())) { %>
+                            <div class="action-buttons" style="display: flex; flex-direction: column; width: 100%; gap: 8px; margin-top: 10px;">
+                               <%if(order.status){%>
+                                <button onclick="updateStatus('<%= order.orderId %>')" 
+                                        class="btn btn-info btn-sm" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-sync-alt" style="margin-right: 8px; color: white;"></i>
+                                    <span style="color: white;">Update Status</span>
+                                </button>
+                                <%}%>
+                                <button onclick="cancelOrder('<%= order.orderId %>')" 
+                                        class="btn btn-danger btn-sm" style="display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-ban" style="margin-right: 8px; color: white;"></i>
+                                    <span style="color: white;">Cancel</span>
+                                </button>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <!-- Products Section -->
+                    <div class="products-section">
+                        <div class="products-header">
+                            <i class="fas fa-box-open"></i>
+                            <span>Ordered Items</span>
+                        </div>
+                        <% order.orderedItems.forEach(item => { %>
+                            <div class="product-item">
+                                <div class="product-info-row">
+                                    <div class="product-details">
+                                        <div class="product-name"><%= item.product.productName %></div>
+                                        <div class="product-price">Sale Price: ₹<%= item.product.salePrice %></div>
+                                        <div class="mt-1">
+                                            <small class="text-muted">Quantity: <%= item.quantity %></small>
+                                        </div>
+                                    </div>
+                                    <div class="product-actions">
+                                        <!-- Item Cancellation Status Badge -->
+                                        <% const cancelStatus = item.cancellationStatus || 'active'; %>
+                                        <span class="badge status-badge me-2 <%= 
+                                            cancelStatus === 'cancelled' ? 'bg-danger text-white' : 'bg-success text-white' %>">
+                                            <%= cancelStatus === 'cancelled' ? 'Item Cancelled' : 'Active' %>
+                                        </span>
+                                        
+                                        <!-- Item Return Status Badge -->
+                                        <!-- Item Return Status Badge -->
+<!-- Item Return Status Badge -->
+<% const rs = item.product.returnItemStatus || 'None'; %>
+<span class="badge status-badge <%= 
+    rs === 'return_requested' ? 'bg-warning text-dark' :
+    rs === 'returning' ? 'bg-primary text-white' :
+    rs === 'returned' ? 'bg-success text-white' :
+    rs === 'rejected' ? 'bg-danger text-white' :
+    'bg-light text-dark' %>">
+    <%= rs === 'None' ? 'No Return' : 
+        rs === 'return_requested' ? 'Requested' :
+        rs === 'returning' ? 'Returning' :
+        rs === 'returned' ? 'Returned' :
+        rs === 'rejected' ? 'Rejected' : rs %>
+</span>
+
+<!-- 🔍 DEBUG: Add this temporarily -->
+<div class="alert alert-info mt-1" style="font-size: 0.7rem;">
+    <strong>DEBUG:</strong> 
+    returnItemStatus = "<%= item.product.returnItemStatus %>"<br>
+    Is 'return_requested'? <%= item.product.returnItemStatus === 'return_requested' ? 'YES' : 'NO' %><br>
+    cancellationStatus = "<%= item.cancellationStatus %>"
+</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Show cancellation details if item is cancelled -->
+                                <% if (item.cancellationStatus === 'cancelled') { %>
+                                    <div class="alert alert-danger mt-2 mb-0" style="font-size: 0.875rem; padding: 8px 12px;">
+                                        <i class="fas fa-times-circle me-1"></i>
+                                        <strong>Cancelled:</strong> 
+                                        <%= item.cancellationReason || 'No reason provided' %>
+                                        <% if (item.cancelledAt) { %>
+                                            <br><small class="text-muted">on <%= new Date(item.cancelledAt).toLocaleDateString() %></small>
+                                        <% } %>
+                                    </div>
+                                <% } %>
+                                
+                                <!-- Return action buttons (only show if item is not cancelled) -->
+                                <!-- Return action buttons (only show if item is not cancelled) -->
+<% if (item.cancellationStatus !== 'cancelled') { %>
+
+    <div class="alert alert-warning mt-1" style="font-size: 0.7rem;">
+        Button check: cancellationStatus = "<%= item.cancellationStatus %>"<br>
+        returnItemStatus = "<%= item.product.returnItemStatus %>"<br>
+        Should show buttons? <%= item.product.returnItemStatus === 'return_requested' ? 'YES' : 'NO' %>
+    </div>
+
+    <% if(item.product.returnItemStatus === 'return_requested') { %>
+        <div class="d-flex justify-content-center gap-2 mt-2">
+            <button class="btn btn-success btn-sm mb-1 returnBtnAccept" 
+                    data-orderid="<%= order.orderId %>" 
+                    data-itemid="<%= item._id %>">
+                <i class="fas fa-check me-1"></i>Accept Return
+            </button>
+            <button class="btn btn-danger btn-sm mb-1 returnBtnReject" 
+                    data-orderid="<%= order.orderId %>" 
+                    data-itemid="<%= item._id %>">
+                <i class="fas fa-times me-1"></i>Reject Return
+            </button>
+        </div>
+    <% } else if(item.product.returnItemStatus === 'approved' || item.product.returnItemStatus === 'returning') { %>
+
+        <!-- 🔍 DEBUG -->
+        <div class="text-danger small">No buttons because status is: "<%= item.product.returnItemStatus %>"</div>
+        <button onclick="updateItemReturnStatus('<%= order.orderId %>', '<%= item._id %>')" 
+                class="btn btn-info btn-sm mt-2">
+            <i class="fas fa-sync-alt me-1"></i>Update Return Status
+        </button>
+    <% } else if(item.product.returnItemStatus === 'rejected') { %>
+        <div class="alert alert-danger mt-2 mb-0" style="font-size: 0.875rem; padding: 8px 12px;">
+            <i class="fas fa-exclamation-circle me-1"></i>
+            <strong>Return Rejected:</strong>
+            <% if (item.rejectionCategory) { %>
+                <%= item.rejectionCategory %>
+            <% } %>
+            <% if (item.rejectionReason) { %>
+                - <%= item.rejectionReason %>
+            <% } %>
+        </div>
+    <% } else if(item.product.returnItemStatus === 'returned') { %>
+        <div class="alert alert-success mt-2 mb-0" style="font-size: 0.875rem; padding: 8px 12px;">
+            <i class="fas fa-check-circle me-1"></i>
+            <strong>Item Returned & Refunded</strong>
+        </div>
+    <% } %>
+<% } %>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container d-flex justify-content-center mt-4 mb-4">
         <nav aria-label="Page navigation">
           <ul class="pagination pagination-sm flex-wrap">
             <% if (currentPage > 1) { %>
@@ -452,7 +957,7 @@
           </ul>
         </nav>
       </div>
- </div>
+</div>
 
 <!-- Rejection Modal -->
 <div class="modal fade" id="rejectModal" tabindex="-1">
@@ -484,20 +989,40 @@
                 <button type="button" class="btn btn-danger" onclick="submitRejection()">Submit</button>
             </div>
         </div>
-        
     </div>
-    
 </div>
 
+<div class="modal fade" id="returnModalNew" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="returnForm" method="POST">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="returnModalLabel">Return Action</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="returnReason" class="form-label">Reason (optional)</label>
+              <textarea class="form-control" id="returnReason" name="reason" rows="3"></textarea>
+            </div>
+            <input type="hidden" name="orderId" id="modalOrderId">
+            <input type="hidden" name="productId" id="modalProductId">
+            <input type="hidden" name="actionType" id="modalActionType">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="modalConfirmBtn">Confirm</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 let currentOrderId = null;
 
@@ -705,7 +1230,7 @@ async function submitRejection() {
     }
 }
 
-async function updateReturnStatus(orderId) {
+async function updateReturnStatus(orderId, productId) {
     const { value: status } = await Swal.fire({
         title: 'Update Return Status',
         input: 'select',
@@ -724,13 +1249,15 @@ async function updateReturnStatus(orderId) {
 
     if (status) {
         try {
-            const response = await fetch('/admin/updateReturnStatus', {
-                method: 'PUT',
+            const response = await fetch('/admin//handleReturn/:productId', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ orderId, status }),
+                body: JSON.stringify({ orderId, status, productId, actionType:"update" }),
             });
+
+            console.log("RESPONCE", response)
 
             const data = await response.json();
             
@@ -755,5 +1282,227 @@ async function updateReturnStatus(orderId) {
         }
     }
 }
-</script>
 
+function selectItemForAction(orderId, itemId) {
+    const approveBtn = document.getElementById(`approveItemBtn_${orderId}`);
+    const rejectBtn = document.getElementById(`rejectItemBtn_${orderId}`);
+    
+    if (itemId) {
+        approveBtn.disabled = false;
+        rejectBtn.disabled = false;
+    } else {
+        approveBtn.disabled = true;
+        rejectBtn.disabled = true;
+    }
+}
+
+function handleItemReturn(action, orderId, itemId) {
+    const select = document.getElementById(`itemSelect_${orderId}`);
+    const selectedItemId = itemId || select.value;
+    
+    if (!selectedItemId) {
+        Swal.fire('Error', 'Please select an item', 'error');
+        return;
+    }
+    
+    // Your item return logic here
+    console.log('Handle item return:', action, orderId, selectedItemId);
+}
+
+function updateItemReturnStatus(orderId) {
+    // Your update item return status logic here
+    console.log('Update item return status:', orderId);
+}
+
+// Accept/Reject Item Return Buttons
+document.addEventListener("DOMContentLoaded", function() {
+  // Accept Item Return Button
+  document.querySelectorAll('.returnBtnAccept').forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const orderId = this.dataset.orderid;
+      const itemId = this.dataset.itemid;
+      
+      const result = await Swal.fire({
+        title: 'Approve Item Return?',
+        text: "This will allow the return process to begin",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, approve it!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch('/admin/handleItemReturn', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              orderId: orderId,
+              itemId: itemId,
+              action: 'approved'
+            }),
+          });
+
+          const data = await response.json();
+          
+          if (data.success) {
+            await Swal.fire({
+              icon: 'success',
+              title: 'Approved!',
+              text: data.message,
+              timer: 2000
+            });
+            location.reload();
+          } else {
+            throw new Error(data.message);
+          }
+        } catch (error) {
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: error.message || 'Failed to approve return'
+          });
+        }
+      }
+    });
+  });
+
+  // Reject Item Return Button
+  document.querySelectorAll('.returnBtnReject').forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const orderId = this.dataset.orderid;
+      const itemId = this.dataset.itemid;
+      
+      const { value: formValues } = await Swal.fire({
+        title: 'Reject Item Return',
+        html:
+          '<select id="swal-category" class="swal2-select" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #d1d5db; border-radius: 8px;">' +
+          '<option value="">Select category</option>' +
+          '<option value="Invalid reason">Invalid reason</option>' +
+          '<option value="Outside return window">Outside return window</option>' +
+          '<option value="Product condition">Product condition</option>' +
+          '<option value="Policy violation">Policy violation</option>' +
+          '<option value="Other">Other</option>' +
+          '</select>' +
+          '<textarea id="swal-message" class="swal2-textarea" placeholder="Rejection reason" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;"></textarea>',
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Submit',
+        preConfirm: () => {
+          const category = document.getElementById('swal-category').value;
+          const message = document.getElementById('swal-message').value;
+          
+          if (!category || !message) {
+            Swal.showValidationMessage('Please fill both fields');
+            return false;
+          }
+          
+          return { category, message };
+        }
+      });
+
+      if (formValues) {
+        try {
+          const response = await fetch('/admin/handleItemReturn', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              orderId: orderId,
+              itemId: itemId,
+              action: 'rejected',
+              category: formValues.category,
+              message: formValues.message
+            }),
+          });
+
+          const data = await response.json();
+          
+          if (data.success) {
+            await Swal.fire({
+              icon: 'success',
+              title: 'Rejected!',
+              text: data.message,
+              timer: 2000
+            });
+            location.reload();
+          } else {
+            throw new Error(data.message);
+          }
+        } catch (error) {
+          await Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: error.message || 'Failed to reject return'
+          });
+        }
+      }
+    });
+  });
+});
+
+// Update Item Return Status
+async function updateItemReturnStatus(orderId, itemId) {
+  const { value: status } = await Swal.fire({
+    title: 'Update Item Return Status',
+    input: 'select',
+    inputOptions: {
+      'returning': 'Returning (In Transit)',
+      'returned': 'Returned (Refund Now)'
+    },
+    inputPlaceholder: 'Select status',
+    showCancelButton: true,
+    confirmButtonColor: '#3b82f6',
+    cancelButtonColor: '#6b7280',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to select a status!';
+      }
+    }
+  });
+
+  if (status) {
+    try {
+      const response = await fetch('/admin/updateItemReturnStatus', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId: orderId,
+          itemId: itemId,
+          status: status
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          html: data.refundAmount > 0 
+            ? `Status updated!<br><strong>₹${data.refundAmount} refunded to wallet</strong>` 
+            : 'Status updated successfully',
+          timer: 2500
+        });
+        location.reload();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: error.message || 'Failed to update status'
+      });
+    }
+  }
+}
+</script>

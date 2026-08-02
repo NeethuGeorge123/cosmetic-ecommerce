@@ -4,7 +4,7 @@ const User=require("../models/userSignupSchema")
 const env=require("dotenv").config();
 
 
-
+ 
 passport.use(new GoogleStrategy({
     clientID:process.env.GOOGLE_CLIENT_ID,
     clientSecret:process.env.GOOGLE_CLIENT_SECRET,
@@ -13,7 +13,9 @@ passport.use(new GoogleStrategy({
 
 async (accessToken,refreshToken,profile,done)=>{
     try {
+        console.log("PROFILE",profile)
         let user=await User.findOne({googleId:profile.id});
+        console.log("USERRR",user)
         if(user){
             return done(null,user)
         }else{
@@ -30,7 +32,7 @@ async (accessToken,refreshToken,profile,done)=>{
         return done(err,null)
     }
 }
-
+ 
 ));
 
 

@@ -7,38 +7,49 @@ const Product=require("../../models/productSchema")
 
 
 
-const categoryInfo=async (req,res)=>{
+const categoryInfo = async (req, res) => {
     try {
         console.log("Fetching categories...");
-        const page=parseInt(req.query.page) || 1;
-        const limit=7;
-        const skip=(page-1)*limit;
+        const page = parseInt(req.query.page) || 1;
+        const limit = 7;
+        const skip = (page - 1) * limit;
 
-        const categoryData=await Category.find({})
-        .sort({createdAt:1})
-        .skip(skip)
-        .limit(limit);
+        let search = "";
+        if (req.query.search) {
+            search = req.query.search;
+        }
 
+        const filter = {
+            $or: [
+                { name: { $regex: ".*" + search + ".*", $options: "i" } },
+                { description: { $regex: ".*" + search + ".*", $options: "i" } }
+            ]
+        };
 
-        const totalCategories=await Category.countDocuments();
-        const totalPages=Math.ceil(totalCategories/limit)
-        
-        console.log("Categories fetched successfully");
-        res.render("admin/category",{
-            cat:categoryData,
-            currentPage:page,
-            totalPages:totalPages,
-            totalCategories:totalCategories
+        const categoryData = await Category.find(filter)
+            .sort({ createdAt: 1 })
+            .skip(skip)
+            .limit(limit);
+
+        const totalCategories = await Category.countDocuments(filter);
+        const totalPages = Math.ceil(totalCategories / limit);
+
+        res.render("admin/category", {
+            cat: categoryData,
+            currentPage: page,
+            totalPages: totalPages,
+            totalCategories: totalCategories,
+            search: search   // ✅ pass back so input keeps its value
         });
     } catch (error) {
-         console.error(error);
-         res.redirect("/pageerror")
+        console.error(error);
+        res.redirect("/pageerror");
     }
 }
 
 
 const addCategory=async (req,res)=>{
-    console.log("enter the addCategory function",req.body)
+    
 
     const categoryName  = req.body.name.trim().toUpperCase();
         const description = req.body.description;
@@ -71,23 +82,22 @@ const addCategory=async (req,res)=>{
 
 const addCategoryOffer = async (req, res) => {
     try {
-      console.log('addCategoryOffer called at', new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
-      console.log('Request body:', req.body);
+      
   
       const { percentage, categoryId } = req.body;
   
       
       if (!categoryId) {
-        console.log('Missing categoryId');
+       
         return res.status(400).json({ status: false, message: 'Category ID is required' });
       }
       if (!mongoose.isValidObjectId(categoryId)) {
-        console.log('Invalid categoryId:', categoryId);
+       
         return res.status(400).json({ status: false, message: 'Invalid category ID' });
       }
       const offerPercentage = parseInt(percentage);
       if (isNaN(offerPercentage) || offerPercentage < 0 || offerPercentage > 100) {
-        console.log('Invalid percentage:', percentage);
+        
         return res.status(400).json({ status: false, message: 'Percentage must be a number between 0 and 100' });
       }
   
@@ -95,7 +105,7 @@ const addCategoryOffer = async (req, res) => {
       console.log('Fetching category:', categoryId);
       const category = await Category.findById(categoryId);
       if (!category) {
-        console.log('Category not found:', categoryId);
+        
         return res.status(404).json({ status: false, message: 'Category not found' });
       }
   

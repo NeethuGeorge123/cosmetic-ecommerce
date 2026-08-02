@@ -234,6 +234,12 @@
             <%if(item.productStatus === 'cancelled' && order.status != 'cancelled'){%>
              <br> <span class="badge bg-danger text-white">CANCELLED</span>
             <%}%>
+            <% if(item.productStatus === 'cancelled'){ %>
+              <br>
+              <span class="badge bg-danger text-white">
+                CANCELLED
+              </span>
+            <% } %>
             </td>
             <td><%= item.quantity %></td>
             <td>₹<%= (item.product.salePrice).toFixed(2) %></td>
@@ -292,7 +298,10 @@
       </div>
     </div>
     <div class="button-container">
-      <a href="/viewOrderDetails?orderId=<%=order.orderId%>" class="btn btn-warning">Go Back</a>
+
+       <!-- Debug info -->
+ 
+      <a href="/viewOrderDetails?id=<%=order._id%>" class="btn btn-warning">Go Back</a>
       <button onclick="downloadPDF()" class="download-btn">
         Download Invoice
       </button>

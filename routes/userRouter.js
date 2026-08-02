@@ -8,15 +8,16 @@ const cartController=require("../controllers/user/cartController")
 const orderController=require("../controllers/user/orderController")
 const wishlistController=require("../controllers/user/wishlistController")
 const walletController=require("../controllers/user/walletController")
+const returnController=require("../controllers/user/returnnController")
 const { userAuth } = require("../middlewares/auth");
 
 
 router.get("/pageNotFound",userController.pageNotFound)
 router.get("/",userController.loadHomepage)
 router.get("/shopnow",userAuth,userController.shopNow)
-router.get("/filter",userAuth,userController.filterProduct)
-router.get("/filterPrice",userAuth,userController.filterByPrice)
-router.post("/search",userAuth,userController.searchProducts);
+// router.get("/filter",userAuth,userController.filterProduct)
+// router.get("/filterPrice",userAuth,userController.filterByPrice)
+// router.post("/search",userAuth,userController.searchProducts);
 
 
 
@@ -94,6 +95,11 @@ router.get("/viewOrderDetails",userAuth,orderController.getOrderDetails)
 router.get("/invoice",userAuth,orderController.getInvoice)
 router.put("/cancelOrder",userAuth,orderController.cancelOrder)
 router.post("/returnOrder",userAuth,orderController.returnOrder)
+
+
+
+router.put("/orders/returnItem", userAuth,returnController.returnItem)
+
 
 router.put("/orders/cancelItem",userAuth,orderController.cancelOrderItem)
 router.get("/paymentFailure",userAuth,orderController.paymentFailure)

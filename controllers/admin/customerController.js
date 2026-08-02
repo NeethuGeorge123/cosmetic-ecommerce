@@ -3,56 +3,43 @@ const User=require("../../models/userSignupSchema")
 
 
 
-const customerInfo=async(req,res)=>{
+const customerInfo = async (req, res) => {
     try {
-        
-        let search="";
-        if(req.query.search){
-            search=req.query.search;
+        let search = "";
+        if (req.query.search) {
+            search = req.query.search;
         }
-        let page=1;
-        if(req.query.page){
-            page=req.query.page
+        let page = 1;
+        if (req.query.page) {
+            page = req.query.page;
         }
-        const limit=5
-        const userData=await User.find({
-            isAdmin:false,
-            $or:[
-                {
-                    name:{$regex:".*"+search+".*",$options:"i"},
-                    
-                },
-                {
-                    email:{$regex:".*"+search+".*",$options:"i"}
-                }
+        const limit = 5;
+        const userData = await User.find({
+            isAdmin: false,
+            $or: [
+                { name: { $regex: ".*" + search + ".*", $options: "i" } },
+                { email: { $regex: ".*" + search + ".*", $options: "i" } }
             ]
         }).limit(limit)
-        .skip((page-1)*limit)
+        .skip((page - 1) * limit)
         .exec();
 
-        const count=await User.find({
-
-            isAdmin:false,
-            $or:[
-                {
-                    name:{$regex:".*"+search+".*",$options:"i"},
-                    
-                },
-                {
-                    email:{$regex:".*"+search+".*",$options:"i"}
-                }
+        const count = await User.find({
+            isAdmin: false,
+            $or: [
+                { name: { $regex: ".*" + search + ".*", $options: "i" } },
+                { email: { $regex: ".*" + search + ".*", $options: "i" } }
             ],
         }).countDocuments();
 
-        res.render("admin/customers",{
-            data:userData,
-            currentPage:page,
-            totalPages:Math.ceil(count/limit)
+        res.render("admin/customers", {
+            data: userData,
+            currentPage: page,
+            totalPages: Math.ceil(count / limit),
+            search: search   // ✅ pass this through so the EJS input keeps its value
         });
 
-
     } catch (error) {
-        
         console.error("Error fetching customers:", error);
         res.redirect("/pageerror");
     }

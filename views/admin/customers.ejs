@@ -215,7 +215,15 @@
         <h1>Customers</h1>
         
         <div class="search-bar">
-            <input type="text" id="customerSearch" placeholder="Search Customers..." onkeyup="filterCustomers()">
+            <form method="GET" action="" id="searchForm">
+                <input 
+                    type="text" 
+                    name="search" 
+                    id="customerSearch" 
+                    placeholder="Search Customers..." 
+                    value="<%= typeof search !== 'undefined' ? search : '' %>"
+                >
+            </form>
         </div>
 
         <div class="table-wrapper">
@@ -249,39 +257,28 @@
 
         <div class="pagination-container">
             <ul class="pagination">
-                <% if (currentPage> 1) { %>
-                    <li><a href="?page=<%= currentPage - 1 %>">Previous</a></li>
-                    <% } %>
-                        <% for (let i=1; i <=totalPages; i++) { %>
-                            <li class="<%= currentPage === i ? 'active' : '' %>">
-                                <a href="?page=<%= i %>">
-                                    <%= i %>
-                                </a>
-                            </li>
-                            <% } %>
-                                <% if (currentPage < totalPages) { %>
-                                    <li><a href="?page=<%= currentPage + 1 %>">Next</a></li>
-                                    <% } %>
+                <% if (currentPage > 1) { %>
+                    <li><a href="?page=<%= currentPage - 1 %>&search=<%= search %>">Previous</a></li>
+                <% } %>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="<%= currentPage == i ? 'active' : '' %>">
+                        <a href="?page=<%= i %>&search=<%= search %>"><%= i %></a>
+                    </li>
+                <% } %>
+                <% if (currentPage < totalPages) { %>
+                    <li><a href="?page=<%= currentPage + 1 %>&search=<%= search %>">Next</a></li>
+                <% } %>
             </ul>
         </div>
     </div>
 </main>
 
 <script>
-    function filterCustomers() {
-        let input = document.getElementById("customerSearch").value.toLowerCase();
-        let rows = document.querySelectorAll("#customerTableBody tr");
-
-        rows.forEach(row => {
-            let name = row.cells[0].innerText.toLowerCase();
-            let email = row.cells[1].innerText.toLowerCase();
-            let phone = row.cells[2].innerText.toLowerCase();
-
-            if (name.includes(input) || email.includes(input) || phone.includes(input)) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
-    }
+    let searchTimeout;
+    document.getElementById('customerSearch').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('searchForm').submit();
+        }, 500); // waits 500ms after typing stops before submitting
+    });
 </script>

@@ -288,7 +288,7 @@
                     </td>
                     <td class="text-start"><%= coupon.minimumPrice %></td>
                     <td>
-                      <% if (new Date(coupon.createdOn) < Date.now() && new Date(coupon.expireOn) > Date.now()) { %>
+                      <% if (new Date(coupon.createdOn) <= Date.now() && new Date(coupon.expireOn) >= Date.now()) { %>
                         <span class="badge bg-success text-white">Active</span>
                       <% } else { %>
                         <span class="badge bg-danger text-white">Inactive</span>
@@ -321,7 +321,7 @@
             <div class="coupon-card-header">
               <div class="fw-bold fs-5"><%= coupon.name %></div>
               <div>
-                <% if (new Date(coupon.createdOn) < Date.now() && new Date(coupon.expireOn) > Date.now()) { %>
+                <% if (new Date(coupon.createdOn) <= Date.now() && new Date(coupon.expireOn) >= Date.now()) { %>
                   <span class="badge bg-success text-white">Active</span>
                 <% } else { %>
                   <span class="badge bg-danger text-white">Inactive</span>

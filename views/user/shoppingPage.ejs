@@ -409,23 +409,54 @@
                     </a>
                 </div>
 
-                
+
+
+                <!-- search bar -->
+
+
                 <div class="col-lg-7 col-md-6 mb-3 mb-md-0">
+                    <div class="d-flex">
+                        <div class="search-box input-group me-2">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="topSearchInput"
+                                placeholder="Search for organic cosmetics..."
+                                value="<%= filters.search || '' %>">
+                            <button class="btn" type="button" onclick="submitTopSearch()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                
+                        <% if (filters.search) { %>
+                            <a href="/shopnow" class="btn btn-outline-secondary">Clear</a>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- <div class="col-lg-7 col-md-6 mb-3 mb-md-0">
                     <form action="/shopnow" method="get" class="d-flex">
                         <div class="search-box input-group me-2">
-                          <input type="text" class="form-control" name="search" placeholder="Search for organic cosmetics..." value="<%= searchQuery || '' %>">
-                          <button class="btn" type="submit">
-                            <i class="fa fa-search"></i>
-                          </button>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="search"
+                                placeholder="Search for organic cosmetics..."
+                                value="<%= filters.search || '' %>">
+                            <button class="btn" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
-                        <% if (searchQuery) { %>
-                          <a href="/shopnow" class="btn btn-outline-secondary">Clear</a>
+                    
+                        <% if (filters.search) { %>
+                            <a href="/shopnow" class="btn btn-outline-secondary">Clear</a>
                         <% } %>
-                      </form>
+                    </form>
+                    
                       
                       
                       
-                </div>
+                </div> -->
 
                 
 
@@ -504,15 +535,18 @@
                               
                                 <!-- Filter Button -->
                                 <form id="filter-form" action="/shopnow" method="get" class="mt-2 px-2">
-                                  <input type="hidden" name="search" id="search-input" value="<%= searchQuery || '' %>">
-                                  <input type="hidden" name="category" id="category-input" value="<%= filters.category || '' %>">
-                                  <input type="hidden" name="brand" id="brand-input" value="<%= filters.brand || '' %>">
-                                  <input type="hidden" name="gt" id="gt-input" value="<%= filters.gt || '' %>">
-                                  <input type="hidden" name="lt" id="lt-input" value="<%= filters.lt || '' %>">
-                                  <input type="hidden" name="sort" id="sort-input" value="<%= filters.sort || '' %>">
-                              
-                                  <button type="submit" class="btn btn-primary w-100 mt-2">Apply Filters</button>
+                                    <input type="hidden" name="search" id="search-input" value="<%= filters.search || '' %>">
+                                    <input type="hidden" name="category" id="category-input" value="<%= filters.category || '' %>">
+                                    <input type="hidden" name="brand" id="brand-input" value="<%= filters.brand || '' %>">
+                                    <input type="hidden" name="gt" id="gt-input" value="<%= filters.gt || '' %>">
+                                    <input type="hidden" name="lt" id="lt-input" value="<%= filters.lt || '' %>">
+                                    <input type="hidden" name="sort" id="sort-input" value="<%= filters.sort || '' %>">
+                                
+                                    <button type="submit" class="btn btn-primary w-100 mt-2">
+                                        Apply Filters
+                                    </button>
                                 </form>
+                                
                               
                                 <a href="/shopnow" class="btn btn-secondary w-100 mt-2">Clear All Filters</a>
                               </div>
@@ -636,8 +670,10 @@
 <div class="pagination">
     <% if (totalPages > 1) { %>
         <div class="d-flex align-items-center">
+
             <% if (currentPage > 1) { %>
-                <a class="btn me-2" href="/shopnow?page=<%= currentPage - 1 %>">
+                <a class="btn me-2"
+                   href="/shopnow?<%= queryString %>&page=<%= currentPage - 1 %>">
                     <i class="fa fa-angle-left me-1"></i>
                 </a>
             <% } else { %>
@@ -649,7 +685,8 @@
             <span class="btn active"><%= currentPage %></span>
 
             <% if (currentPage < totalPages) { %>
-                <a class="btn ms-2" href="/shopnow?page=<%= currentPage + 1 %>">
+                <a class="btn ms-2"
+                   href="/shopnow?<%= queryString %>&page=<%= currentPage + 1 %>">
                     <i class="fa fa-angle-right ms-1"></i>
                 </a>
             <% } else { %>
@@ -657,9 +694,12 @@
                     <i class="fa fa-angle-right ms-1"></i>
                 </a>
             <% } %>
+
         </div>
     <% } %>
 </div>
+
+
             </div>
         </div>
     </div>
@@ -693,23 +733,56 @@
 </html>
 
 <script>
+    // function updateQueryParam(param, value) {
+    //     const url = new URL(window.location.href);
+    //     url.searchParams.set(param, value);
+    //     window.location.href = url.toString();
+    // }
+
+    // function updatePriceRange(gt, lt) {
+    //     const url = new URL(window.location.href);
+    //     url.searchParams.set('gt', gt);
+    //     url.searchParams.set('lt', lt);
+    //     url.searchParams.set('page', 1);
+    //     window.location.href = url.toString();
+    // }
+
+    // function updateSortOrder(order) {
+    //     document.getElementById('sort-input').value = order;
+    // }
+
     function updateQueryParam(param, value) {
-        const url = new URL(window.location.href);
-        url.searchParams.set(param, value);
-        window.location.href = url.toString();
-    }
+  document.getElementById(param + '-input').value = value;
+  document.getElementById('filter-form').submit();
+}
 
-    function updatePriceRange(gt, lt) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('gt', gt);
-        url.searchParams.set('lt', lt);
-        url.searchParams.set('page', 1);
-        window.location.href = url.toString();
-    }
+function updatePriceRange(gt, lt) {
+  document.getElementById('gt-input').value = gt;
+  document.getElementById('lt-input').value = lt;
+  document.getElementById('filter-form').submit();
+}
 
-    function updateSortOrder(order) {
-        document.getElementById('sort-input').value = order;
+function updateSortOrder(order) {
+  document.getElementById('sort-input').value = order;
+  document.getElementById('filter-form').submit();
+}
+
+
+function submitTopSearch() {
+    const value = document.getElementById('topSearchInput').value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('search', value);
+    url.searchParams.set('page', 1); // reset to page 1 on new search
+    window.location.href = url.toString();
+}
+
+
+document.getElementById('topSearchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        submitTopSearch();
     }
+});
 
     function updateCartCount() {
         $.ajax({
@@ -785,6 +858,7 @@
                     $('#cart-count').text(response.count);
                 }
                 // DON'T call updateCartCount() here - it makes another AJAX request
+                updateWishlistCount();
             } else {
                 Swal.fire({
                     title: 'Already in Cart',

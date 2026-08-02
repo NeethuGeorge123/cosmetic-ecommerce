@@ -407,6 +407,180 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /*css for related products */
+
+    /* Related Products Section */
+.related-products-section {
+  background-color: #fff;
+  padding: 50px 0;
+  margin-top: 40px;
+}
+
+.section-title-related {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-title-related h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.section-title-related p {
+  color: #6c757d;
+  font-size: 15px;
+}
+
+.related-product-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  height: 100%;
+  border: 1px solid #f0f0f0;
+}
+
+.related-product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.related-product-image {
+  position: relative;
+  overflow: hidden;
+  height: 220px;
+  background-color: #f8f9fa;
+}
+
+.related-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.related-product-card:hover .related-product-image img {
+  transform: scale(1.1);
+}
+
+.related-product-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.related-product-info {
+  padding: 15px;
+}
+
+.related-product-category {
+  color: #3498db;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.related-product-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  line-height: 1.4;
+  height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.related-product-title a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.related-product-title a:hover {
+  color: #3498db;
+}
+
+.related-product-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.related-current-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2ecc71;
+}
+
+.related-old-price {
+  font-size: 13px;
+  color: #95a5a6;
+  text-decoration: line-through;
+}
+
+.related-discount-badge {
+  background-color: #fff8e8;
+  color: #ff9800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.view-product-btn {
+  width: 100%;
+  background: linear-gradient(45deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.view-product-btn:hover {
+  background: linear-gradient(45deg, #2980b9, #3498db);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  color: white;
+}
+
+.no-related-products {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .related-product-image {
+    height: 180px;
+  }
+  
+  .section-title-related h2 {
+    font-size: 22px;
+  }
+}
     </style>
 </head>
 <body>
@@ -436,23 +610,33 @@
                                 <!-- Product Gallery -->
                                 <div class="col-lg-6">
                                     <div class="detail-gallery">
-                                        <div class="product-image-slider">
-                                            <figure>
-                                                <img src="/uploads/re-image/<%=product.productImage[0] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[0] %>" id="zoom_image">
-                                            </figure>
-                                            <figure>
-                                                <img src="/uploads/re-image/<%=product.productImage[1] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[1] %>" id="zoom_image">
-                                            </figure>
-                                            <figure>
-                                                <img src="/uploads/re-image/<%=product.productImage[2] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[2] %>" id="zoom_image">
-                                            </figure>
-                                            <figure>
-                                                <img src="/uploads/re-image/<%=product.productImage[3] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[3] %>" id="zoom_image">
-                                            </figure>
-                                            <figure>
-                                                <img src="/uploads/re-image/<%=product.productImage[4] %>" alt="product image" class="zoom-img" data-zoom-image="/uploads/re-image/<%=product.productImage[4] %>" id="zoom_image">
-                                            </figure>
-                                        </div>
+                                      <div class="product-image-slider">
+                                        <figure>
+                                            <img src="/uploads/re-image/<%=product.productImage[0] %>" 
+                                                 data-zoom-image="/uploads/re-image/<%=product.productImage[0] %>"
+                                                 alt="product image" class="zoom-img">
+                                        </figure>
+                                        <figure>
+                                            <img src="/uploads/re-image/<%=product.productImage[1] %>" 
+                                                 data-zoom-image="/uploads/re-image/<%=product.productImage[1] %>"
+                                                 alt="product image" class="zoom-img">
+                                        </figure>
+                                        <figure>
+                                            <img src="/uploads/re-image/<%=product.productImage[2] %>" 
+                                                 data-zoom-image="/uploads/re-image/<%=product.productImage[2] %>"
+                                                 alt="product image" class="zoom-img">
+                                        </figure>
+                                        <figure>
+                                            <img src="/uploads/re-image/<%=product.productImage[3] %>" 
+                                                 data-zoom-image="/uploads/re-image/<%=product.productImage[3] %>"
+                                                 alt="product image" class="zoom-img">
+                                        </figure>
+                                        <figure>
+                                            <img src="/uploads/re-image/<%=product.productImage[4] %>" 
+                                                 data-zoom-image="/uploads/re-image/<%=product.productImage[4] %>"
+                                                 alt="product image" class="zoom-img">
+                                        </figure>
+                                    </div>
                                         <div class="slider-nav-thumbnails">
                                             <%for(let i=0;i<product.productImage.length;i++){%>
                                             <div>
@@ -544,6 +728,73 @@
             </div>
         </section>
     </main>
+
+
+    <!-- related product code -->
+  </main>
+    
+  <!-- Related Products Section -->
+  <section class="related-products-section">
+    <div class="container">
+      <div class="section-title-related">
+        <h2>Related Products</h2>
+        <p>You might also like these products from the same category</p>
+      </div>
+      
+      <% if (relatedProducts && relatedProducts.length > 0) { %>
+        <div class="row g-3">
+          <% relatedProducts.forEach(relatedProduct => { %>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+              <div class="related-product-card">
+                <div class="related-product-image">
+                  <a href="/productDetails?id=<%= relatedProduct._id %>">
+                    <img src="/uploads/re-image/<%= relatedProduct.productImage[0] %>" 
+                         alt="<%= relatedProduct.productName %>">
+                  </a>
+                  <% if (relatedProduct.totalOffer && relatedProduct.totalOffer > 0) { %>
+                    <span class="related-product-badge"><%= relatedProduct.totalOffer %>% OFF</span>
+                  <% } %>
+                </div>
+                
+                <div class="related-product-info">
+                  <div class="related-product-category">
+                    <%= relatedProduct.category ? relatedProduct.category.name : 'Uncategorized' %>
+                  </div>
+                  <h3 class="related-product-title">
+                    <a href="/productDetails?id=<%= relatedProduct._id %>">
+                      <%= relatedProduct.productName %>
+                    </a>
+                  </h3>
+                  
+                  <div class="related-product-price">
+                    <span class="related-current-price">₹<%= relatedProduct.salePrice %></span>
+                    <% if (relatedProduct.regularPrice > relatedProduct.salePrice) { %>
+                      <span class="related-old-price">₹<%= relatedProduct.regularPrice %></span>
+                    <% } %>
+                    <% if (relatedProduct.totalOffer && relatedProduct.totalOffer > 0) { %>
+                      <span class="related-discount-badge"><%= relatedProduct.totalOffer %>% OFF</span>
+                    <% } %>
+                  </div>
+                  
+                  <a href="/productDetails?id=<%= relatedProduct._id %>" class="view-product-btn">
+                    <i class="fas fa-eye me-1"></i>View Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="no-related-products">
+          <i class="fas fa-box-open fa-3x mb-3" style="color: #ddd;"></i>
+          <p>No related products found in this category.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+  
+  <!-- Footer placeholder -->
+  <footer class="bg-dark text-white py-4 mt-5">
     
     <!-- Footer placeholder -->
     <footer class="bg-dark text-white py-4 mt-5">
@@ -590,190 +841,234 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script>
-        $(document).ready(function(){
-            // Initialize product slider
-            $('.product-image-slider').slick({
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                arrows: true,
-                fade: true,
-                asNavFor: '.slider-nav-thumbnails',
-                responsive: [
-                    {
-                        breakpoint: 768,
-                        settings: {
-                            arrows: false,
-                        }
-                    }
-                ]
-            });
-            
-            // Initialize thumbnail navigation
-            $('.slider-nav-thumbnails').slick({
-                slidesToShow: 4,
-                slidesToScroll: 1,
-                asNavFor: '.product-image-slider',
-                dots: false,
-                focusOnSelect: true,
-                prevArrow: '<button type="button" class="slick-prev"><i class="fas fa-chevron-left"></i></button>',
-                nextArrow: '<button type="button" class="slick-next"><i class="fas fa-chevron-right"></i></button>',
-                responsive: [
-                    {
-                        breakpoint: 768,
-                        settings: {
-                            slidesToShow: 4,
-                        }
-                    },
-                    {
-                        breakpoint: 576,
-                        settings: {
-                            slidesToShow: 3,
-                        }
-                    }
-                ]
-            });
-            
-            // Initialize Elevate Zoom
-            function initZoom() {
-                if ($(window).width() > 767) {
-                    $('.zoom-img').elevateZoom({
-                        zoomType: "inner",
-                        cursor: "crosshair",
-                        zoomWindowFadeIn: 500,
-                        zoomWindowFadeOut: 750
-                    });
-                } else {
-                    $('.zoom-img').elevateZoom({
-                        zoomType: "inner",
-                        cursor: "crosshair",
-                        zoomWindowFadeIn: 500,
-                        zoomWindowFadeOut: 750
-                    });
-                }
-            }
-            
-            // Initialize zoom on page load
-            initZoom();
-            
-            // Reinitialize zoom on window resize
-            $(window).resize(function() {
-                $('.zoomContainer').remove();
-                initZoom();
-            });
-            
-            // Reinitialize zoom when slider changes
-            $('.product-image-slider').on('afterChange', function(event, slick, currentSlide) {
-                $('.zoomContainer').remove();
-                setTimeout(function() {
-                    $('.zoom-img').elevateZoom({
-                        zoomType: "inner",
-                        cursor: "crosshair",
-                        zoomWindowFadeIn: 500,
-                        zoomWindowFadeOut: 750
-                    });
-                }, 100);
-            });
-            
-            // Quantity buttons
-            $('.qty-up').on('click', function(e) {
-                e.preventDefault();
-                var qtyVal = parseInt($('#quantity').text());
-                $('#quantity').text(qtyVal + 1);
-            });
-            
-            $('.qty-down').on('click', function(e) {
-                e.preventDefault();
-                var qtyVal = parseInt($('#quantity').text());
-                if (qtyVal > 1) {
-                    $('#quantity').text(qtyVal - 1);
-                }
-            });
-            
-            // Add to cart button effect
-            
+      $(document).ready(function(){
+          // Initialize product slider
+          $('.product-image-slider').slick({
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              arrows: true,
+              fade: true,
+              asNavFor: '.slider-nav-thumbnails',
+              responsive: [
+                  {
+                      breakpoint: 768,
+                      settings: {
+                          arrows: false,
+                      }
+                  }
+              ]
+          });
+          
+          // Initialize thumbnail navigation
+          $('.slider-nav-thumbnails').slick({
+              slidesToShow: 4,
+              slidesToScroll: 1,
+              asNavFor: '.product-image-slider',
+              dots: false,
+              focusOnSelect: true,
+              prevArrow: '<button type="button" class="slick-prev"><i class="fas fa-chevron-left"></i></button>',
+              nextArrow: '<button type="button" class="slick-next"><i class="fas fa-chevron-right"></i></button>',
+              responsive: [
+                  {
+                      breakpoint: 768,
+                      settings: {
+                          slidesToShow: 4,
+                      }
+                  },
+                  {
+                      breakpoint: 576,
+                      settings: {
+                          slidesToShow: 3,
+                      }
+                  }
+              ]
+          });
+          
+          // Initialize Elevate Zoom - FIXED VERSION
+          // NEW CODE - PASTE THIS INSTEAD
+          function initZoom() {
+    $('.zoomContainer').remove();
+    
+    // ✅ Replace ez.destroy() with this
+    $('.zoom-img').each(function() {
+        $(this).removeData('elevateZoom');
+        $(this).off('mouseenter mouseleave mousemove');
+    });
+
+    var $currentImg = $('.product-image-slider .slick-current .zoom-img');
+    
+    if ($currentImg.length === 0) {
+        $currentImg = $('.zoom-img').first();
+    }
+
+    if ($(window).width() > 767) {
+        $currentImg.elevateZoom({
+            zoomType: "lens",
+            lensShape: "round",
+            lensSize: 200,
+            cursor: "crosshair",
+            responsive: true,
+            zoomWindowFadeIn: 500,
+            zoomWindowFadeOut: 500
+        });
+    } else {
+        $currentImg.elevateZoom({
+            zoomType: "inner",
+            cursor: "crosshair",
+            responsive: true
+        });
+    }
+}
+
+// Initialize zoom after slider is fully loaded
+setTimeout(function() {
+    initZoom();
+}, 500);
+
+// Reinitialize zoom on window resize (with debouncing)
+var resizeTimer;
+$(window).resize(function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        initZoom();
+    }, 250);
+});
+
+// Reinitialize zoom when slider changes
+$('.product-image-slider').on('afterChange', function(event, slick, currentSlide) {
+    console.log('=== Slide Changed ===');
+    console.log('Current slide index:', currentSlide);
+    
+    setTimeout(function() {
+        // ✅ Remove zoom containers (no destroy needed)
+        $('.zoomContainer').remove();
+        
+        // ✅ Remove elevateZoom data manually instead of destroy()
+        $('.zoom-img').each(function() {
+            $(this).removeData('elevateZoom');
+            $(this).off('mouseenter mouseleave mousemove');
         });
 
+        var $currentImg = $('.product-image-slider .slick-current img.zoom-img');
+        console.log('Found current img elements:', $currentImg.length);
+        console.log('Current img src:', $currentImg.attr('src'));
 
-        function addToWishlist(productId){
-        $.ajax({
-            url:'/addToWishlist',
-            method:'POST',
-            data:{productId:productId},
-            success:(response)=>{
-                if(response.status){
-                    Swal.fire({
-                        title:'Added to wishlist',
-                        text:'The product has been added to your wishlist',
-                        icon:'success',
-                        timer:2000
-                    });
-                }else{
-                    Swal.fire({
-                        title:'Warning',
-                        text:response.message,
-                        icon:'warning',
-                        timer:2000,
-                        
+        var currentSrc = $currentImg.attr('src');
+        $currentImg.attr('data-zoom-image', currentSrc);
 
-                    })
-                }
-            },
-            error:(error)=>{
-                Swal.fire({
-                    title:'Error',
-                    text:'There was an error adding the product to your wishlist',
-                    icon:'error',
-                    timer:2000,
-                })
-            }
-        })
-    }
-
-
-
-
-    function addToCart(productId){
-        $.ajax({
-            url:'/cart',
-            method:'POST',
-            data:{productId:productId},
-            success:(response)=>{
-                if(response.status){
-                  $('#cart-count').text(response.count);
-                    Swal.fire({
-                        title:'Added to cart',
-                        text:'The product has been added to your cart',
-                        icon:'success',
-                        timer:2000
-                    });
-                }else{
-                    Swal.fire({
-                        title:'Already in cart',
-                        text:response.message,
-                        icon:'info',
-                        timer:2000,
-
-                    })
-                }
-            },
-            error:(error)=>{
-               
-                Swal.fire({
-                    title:'Error',
-                    text:'There was an error adding the product to your cart',
-                    icon:'error',
-                    timer:2000,
-                })
-            }
-        })
-    }
-
-
-
-
-
-    </script>
+        if ($(window).width() > 767) {
+            $currentImg.elevateZoom({
+                zoomType: "lens",
+                lensShape: "round",
+                lensSize: 200,
+                cursor: "crosshair",
+                responsive: true,
+                zoomWindowFadeIn: 500,
+                zoomWindowFadeOut: 500
+            });
+        } else {
+            $currentImg.elevateZoom({
+                zoomType: "inner",
+                cursor: "crosshair",
+                responsive: true
+            });
+        }
+    }, 200);
+});
+          
+          // Quantity buttons
+          $('.qty-up').on('click', function(e) {
+              e.preventDefault();
+              var qtyVal = parseInt($('#quantity').text());
+              $('#quantity').text(qtyVal + 1);
+          });
+          
+          $('.qty-down').on('click', function(e) {
+              e.preventDefault();
+              var qtyVal = parseInt($('#quantity').text());
+              if (qtyVal > 1) {
+                  $('#quantity').text(qtyVal - 1);
+              }
+          });
+      });
+  
+  
+      function addToWishlist(productId){
+          $.ajax({
+              url:'/addToWishlist',
+              method:'POST',
+              data:{productId:productId},
+              success:(response)=>{
+                  if(response.status){
+                      Swal.fire({
+                          title:'Added to wishlist',
+                          text:'The product has been added to your wishlist',
+                          icon:'success',
+                          timer:2000,
+                          showConfirmButton: false
+                      });
+                  }else{
+                      Swal.fire({
+                          title:'Warning',
+                          text:response.message,
+                          icon:'warning',
+                          timer:2000,
+                          showConfirmButton: false
+                      })
+                  }
+              },
+              error:(error)=>{
+                  Swal.fire({
+                      title:'Error',
+                      text:'There was an error adding the product to your wishlist',
+                      icon:'error',
+                      timer:2000,
+                      showConfirmButton: false
+                  })
+              }
+          })
+      }
+  
+      function addToCart(productId){
+          $.ajax({
+              url:'/cart',
+              method:'POST',
+              data:{productId:productId},
+              success:(response)=>{
+                  if(response.status){
+                      $('#cart-count').text(response.count);
+                      Swal.fire({
+                          title:'Added to cart',
+                          text:'The product has been added to your cart',
+                          icon:'success',
+                          timer:2000,
+                          showConfirmButton: false
+                      });
+                  }else{
+                      Swal.fire({
+                          title:'Already in cart',
+                          text:response.message,
+                          icon:'info',
+                          timer:2000,
+                          showConfirmButton: false
+                      })
+                  }
+              },
+              error:(error)=>{
+                  Swal.fire({
+                      title:'Error',
+                      text:'There was an error adding the product to your cart',
+                      icon:'error',
+                      timer:2000,
+                      showConfirmButton: false
+                  })
+              }
+          })
+      }
+  </script>
+    
+    
 </body>
 </html>

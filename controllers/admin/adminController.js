@@ -7,7 +7,7 @@ const pageerror = async (req, res) => {
     res.render("admin/admin-error");
 };
 
-const loadLogin = (req, res) => {
+const  loadLogin = (req, res) => {
     if (req.session.admin) {
         return res.redirect("/admin/dashboard");
     }
@@ -103,7 +103,7 @@ const getDashboardData = async (filter, startDate, endDate) => {
         
         const matchCondition = {
             createdOn: { $gte: startDate, $lte: endDate },
-            status: { $in: ['delivered', 'Shipped', 'Processing'] },
+            status: { $in: [/^delivered$/i, /^shipped$/i, /^processing$/i] },
             paymentMethod: { $in: ['online payment', 'cash on delivery', 'wallet'] } // Include all payment methods
         };
 
@@ -406,7 +406,12 @@ const getDashboardData = async (filter, startDate, endDate) => {
             bestSellingProducts,
             bestSellingCategories,
             bestSellingBrands,
-            salesOverview,
+            salesOverview:{
+                ...salesOverview,
+            dateFormat: filter,
+            startDate: startDate.toISOString().split('T')[0],  
+            endDate: endDate.toISOString().split('T')[0]        
+            },
             filter,
             startDate: startDate.toISOString().split('T')[0],
             endDate: endDate.toISOString().split('T')[0]
@@ -422,41 +427,98 @@ const getSalesOverview = async (filter, startDate, endDate) => {
 
     switch (filter) {
         case 'yearly':
-            groupBy = { $month: '$createdOn' };
-            dateFormat = 'month';
+            
+            groupBy = { $year: '$createdOn' };
+            dateFormat = 'yearly';
             break;
         case 'monthly':
-            groupBy = { $dayOfMonth: '$createdOn' };
-            dateFormat = 'day';
+           
+            groupBy = { $month: '$createdOn' };
+            dateFormat = 'monthly';
             break;
         case 'weekly':
-            groupBy = { $dayOfWeek: '$createdOn' };
-            dateFormat = 'day';
+            
+            groupBy = { $week: '$createdOn' };
+            dateFormat = 'weekly';
+            break;
+        case 'daily':
+            
+            groupBy = { $dayOfMonth: '$createdOn' };
+            dateFormat = 'daily';
+            break;
+        case 'custom':
+            
+            groupBy = null; 
+            dateFormat = 'custom';
             break;
         default:
-            groupBy = { $dayOfMonth: '$createdOn' };
-            dateFormat = 'day';
+            groupBy = { $month: '$createdOn' };
+            dateFormat = 'monthly';
     }
 
-    const salesData = await Order.aggregate([
+    const aggregationPipeline = [
         {
             $match: {
                 createdOn: { $gte: startDate, $lte: endDate },
                 status: { $in: ['delivered', 'Shipped', 'Processing'] }
             }
-        },
-        {
-            $group: {
-                _id: groupBy,
-                totalSales: { $sum: '$finalAmount' },
-                orderCount: { $sum: 1 }
+        }
+    ];
+
+    if (filter === 'custom') {
+        
+        aggregationPipeline.push(
+            {
+                $group: {
+                    _id: 'total',
+                    totalSales: { $sum: '$finalAmount' },
+                    orderCount: { $sum: 1 },
+                    date: { $first: startDate }
+                }
             }
-        },
-        { $sort: { '_id': 1 } }
-    ]);
+        );
+    } else if (filter === 'weekly') {
+        
+        aggregationPipeline.push(
+            {
+                $addFields: {
+                    weekOfMonth: {
+                        $ceil: {
+                            $divide: [{ $dayOfMonth: '$createdOn' }, 7]
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$weekOfMonth',
+                    totalSales: { $sum: '$finalAmount' },
+                    orderCount: { $sum: 1 },
+                    date: { $first: '$createdOn' }
+                }
+            }
+        );
+    } else {
+        aggregationPipeline.push(
+            {
+                $group: {
+                    _id: groupBy,
+                    totalSales: { $sum: '$finalAmount' },
+                    orderCount: { $sum: 1 },
+                    date: { $first: '$createdOn' }
+                }
+            }
+        );
+    }
+
+    aggregationPipeline.push({ $sort: { '_id': 1 } });
+
+    const salesData = await Order.aggregate(aggregationPipeline);
 
     return { salesData, dateFormat };
 };
+
+
 
 const generateLedgerBook = async (req, res) => {
     try {
@@ -468,7 +530,7 @@ const generateLedgerBook = async (req, res) => {
             {
                 $match: {
                     createdOn: { $gte: start, $lte: end },
-                    status: { $in: ['delivered', 'Shipped', 'Processing', 'cancelled', 'returned'] }
+                    status: { $in: [/^delivered$/i, /^shipped$/i, /^processing$/i, /^cancelled$/i, /^returned$/i] }
                 }
             },
             {
@@ -487,7 +549,7 @@ const generateLedgerBook = async (req, res) => {
         ]);
 
         const totalRevenue = ledgerData.reduce((sum, order) => {
-            return order.status === 'delivered' ? sum + order.finalAmount : sum;
+            return order.status?.toLowerCase() === 'delivered' ? sum + order.finalAmount : sum;
         }, 0);
 
         const totalDiscount = ledgerData.reduce((sum, order) => sum + (order.discount || 0), 0);

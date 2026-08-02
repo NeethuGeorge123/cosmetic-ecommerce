@@ -13,7 +13,7 @@ const walletSchema = new mongoose.Schema(
     balance: { type: Number, default: 0 }, 
     transactions: [
       {
-        transactionId:{
+        transactionId:{ 
           type: String,
               default: () => uuidv4(),
               unique: true,

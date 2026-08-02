@@ -94,6 +94,7 @@
 
 let otpTimerInterval;
 let timer=60;
+let otpExpired=false
 
 
 function updateTimerColor(percentage){
@@ -118,6 +119,7 @@ function startOtpTimer(){
       clearInterval(otpTimerInterval);
       timerElement.textContent='Expired';
       timerElement.style.backgroundColor='red';
+      otpExpired=true
     }
   },1000);
 }
@@ -136,6 +138,16 @@ function initializeOtpTimer(){
 
 
 function validateOtpForm(){
+
+  if(otpExpired){
+    Swal.fire({
+      icon: 'warning',
+      title: 'OTP Expired',
+      text: 'Your OTP has expired. Please click Resend OTP to continue.',
+    });
+    return false;
+  }
+
   const otpInput=document.getElementById('otp').value;
   $.ajax({
     type:"POST",
@@ -181,6 +193,7 @@ function validateOtpForm(){
 function resendOtp(){
   clearInterval(otpTimerInterval);
   timer=60;
+  otpExpired = false;
   startOtpTimer();
   $.ajax({
     type:'POST',

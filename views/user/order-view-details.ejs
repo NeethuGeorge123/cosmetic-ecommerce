@@ -1,4 +1,5 @@
-<%- include("../../views/partials/user/header") %>
+
+<!-- <%- include("../../views/partials/user/header") %> -->
 <style>
  .card-green {
    background-color: #ADD8E6;
@@ -13,7 +14,7 @@
    border-radius: 10px;
    padding: 15px;
    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
- }
+ } */
 
 
  .dashboard-menu .nav-link {
@@ -183,9 +184,93 @@
             padding: 0 10px;
             color: #ccc;
         }
-        
+        /* Enhanced Dashboard Menu */
+.dashboard-menu {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(196, 149, 109, 0.08);
+    margin-bottom: 30px;
+    overflow: hidden;
+    border: 1px solid #E8DDD4;
+    position: relative;
+}
+
+.dashboard-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #E8B4A0 0%, #D4A484 50%, #C8956D 100%);
+}
+
+.dashboard-menu .nav-link {
+    color: #3A2F2A;
+    padding: 18px 24px;
+    border: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.dashboard-menu .nav-link:last-child {
+    border-bottom: none;
+}
+
+.dashboard-menu .nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: linear-gradient(135deg, #E8B4A0 0%, #D4A484 50%, #C8956D 100%);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-menu .nav-link i {
+    margin-right: 16px;
+    width: 20px;
+    text-align: center;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-menu .nav-link:hover {
+    background: linear-gradient(135deg, #FAF6F2 0%, #F5E6D3 100%);
+    color: #3A2F2A;
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(232, 180, 160, 0.25);
+}
+
+.dashboard-menu .nav-link:hover::before {
+    width: 4px;
+}
+
+.dashboard-menu .nav-link:hover i {
+    color: #C8956D;
+    transform: scale(1.1);
+}
+
+.dashboard-menu .nav-link.active {
+    background: linear-gradient(135deg, #F5E6D3 0%, #F0D7C7 50%, #E8B4A0 100%);
+    color: #3A2F2A;
+    font-weight: 600;
+}
+
+.dashboard-menu .nav-link.active::before {
+    width: 4px;
+}
+
+.dashboard-menu .nav-link.active i {
+    color: #C8956D;
+}
         /* Dashboard sidebar */
-        .dashboard-menu {
+        /* .dashboard-menu {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
@@ -219,7 +304,7 @@
             color: var(--primary-color);
             border-left: 4px solid var(--primary-color);
         }
-        
+         */
         /* Content area */
         .dashboard-content .card {
             border: none;
@@ -477,6 +562,7 @@
     </style>
 </head>
 <body>
+  <%- include("../../views/partials/user/header1") %>
     <!-- Header can be included here -->
     
     <main class="main">
@@ -502,45 +588,40 @@
                         <div class="row">
                             <!-- Sidebar Menu -->
                             <div class="col-lg-4 col-md-5">
-                                <div class="dashboard-menu" id="sidebarMenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="/my-profile">
-                                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="/myAddress">
-                                                <i class="fas fa-map-marker-alt"></i> My Address
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="/orders">
-                                                <i class="fas fa-shopping-bag"></i> Orders
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="/wallet-status">
-                                                <i class="fas fa-wallet"></i> Wallet Status
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="/wallet-history">
-                                                <i class="fas fa-history"></i> Wallet History
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link " href="/referrals">
-                                                <i class="fas fa-user-plus"></i> Referrals
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/logout">
-                                                <i class="fas fa-sign-out-alt"></i> Logout
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                              <div class="dashboard-menu" id="sidebarMenu">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/my-profile">
+                                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/myAddress">
+                                            <i class="fas fa-map-marker-alt"></i> My Address
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="/orders">
+                                            <i class="fas fa-shopping-bag"></i> Orders
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a class="nav-link" href="/wallet">
+                                          <i class="fas fa-wallet"></i> Wallet
+                                      </a>
+                                  </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/referrals">
+                                            <i class="fas fa-user-plus"></i> Referrals
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/logout">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                             </div>
                             
                             <!-- Content Area -->
@@ -550,7 +631,7 @@
 
 
                                     <div class="container">
-                                      <div class="section-title">Order Details</div>
+                                      <div class="section-title" style="text-decoration: none;">Order Details</div>
                                   
                                       <div class="order-status">
                                         <strong>Status:</strong> <%= order.status %>
@@ -595,11 +676,26 @@
                                       </div>
                                   
                                       <div class="order-summary">
-                                        <div class="section-title">Order Summary</div>
+                                        <div class="section-title" style="text-decoration: none;">Order Summary</div>
                                         <div class="summary-row">
                                           <span>Subtotal:</span>
                                           <span>₹<%= order.totalPrice %></span>
                                         </div>
+                                        <% if(order.discount>0){ %>
+
+                                          <div class="summary-row">
+                                          
+                                          <span>Coupon Discount</span>
+                                          
+                                          <span class="text-success">
+                                          
+                                          -₹<%= order.discount %>
+                                          
+                                          </span>
+                                          
+                                          </div>
+                                          
+                                          <% } %>
                                         <div class="summary-row">
                                           <span>Delivery Charge:</span>
                                           <% if(order.status === 'cancelled') { %>

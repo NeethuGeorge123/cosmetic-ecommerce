@@ -9,6 +9,7 @@ const bannerController=require("../controllers/admin/bannerController")
 const adminOrderController=require("../controllers/admin/adminOrderController")
 const couponController=require("../controllers/admin/couponController")
 const walletController=require("../controllers/admin/walletController")
+const returnController=require("../controllers/admin/returnController")
 //const walletController=require("../controllers/admin/walletController")
 
 const {userAuth,adminAuth}=require("../middlewares/auth")
@@ -109,17 +110,22 @@ router.get("/deleteBanner",adminAuth,bannerController.deleteBanner);
 
 //Order Management
 
+
 router.get("/orders",adminAuth, adminOrderController.getOrders);
 router.put("/updateStatus",adminAuth,adminOrderController.updateStatus)
 router.put("/orderCancel",adminAuth,adminOrderController.cancelOrder)
 router.get("/adminOrders/:orderId", adminAuth, adminOrderController.getOrderDetails);
 router.put("/handleReturn",adminAuth,adminOrderController.handleReturn)
- router.put("/updateReturnStatus",adminAuth,adminOrderController.updateReturnStatus)
+ //router.put("/updateReturnStatus",adminAuth,adminOrderController.updateReturnStatus)
  router.get("/sales",adminAuth,adminOrderController.loadSales)
  router.get("/salesReport",adminAuth,adminOrderController.loadSalesReport)
 //wallet
 router.get("/walletHistory",adminAuth,walletController.loadWalletHistory)
 
+router.post("/handleReturn/:productId", adminAuth, adminOrderController.returnItemStatus);
+router.post("/handleItemReturn", adminAuth, returnController.handleItemReturn);
+router.put("/updateItemReturnStatus", adminAuth, returnController.updateItemReturnStatus);
+// router.put("/updateOrderReturnStatus", adminAuth, returnController.updateOrderReturnStatus);
 
 
 //stock

@@ -37,13 +37,13 @@ app.use((req, res, next) => {
     res.locals.error_msg = req.flash('error_msg');
     next();
   });
-app.use(passport.initialize());
+app.use(passport.initialize()); 
 app.use(passport.session());
 app.use((req,res,next)=>{
     res.set('cache-control','no-store')
     next()
 })  
-app.use(express.static(path.join(__dirname,"public")));
+app.use(express.static(path.join(__dirname,"public")));//absolute path get
 app.set("view engine","ejs")
 
 app.set("views", path.join(__dirname, "views"));

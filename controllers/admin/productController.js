@@ -137,8 +137,7 @@ const getAllProducts = async (req, res) => {
       res.render("admin/products", {
         data: productData,
         currentPage: page,
-        totalPages: page,
-        totalPages: Math.ceil(count / limit),
+         totalPages: Math.ceil(count / limit),
         cat: category,
         brand: brand,
       });

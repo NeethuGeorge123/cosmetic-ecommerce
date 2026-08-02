@@ -131,7 +131,7 @@ const updateCartQuantity = asyncHandler(async (req, res) => {
 
   res.json({ success: true, grandTotal });
 });
-
+     
 const deleteFromCart = asyncHandler(async (req, res) => {
   const userId = req.session.user;
   const productId = req.query.productId;
@@ -162,7 +162,7 @@ const getCheckout = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
   const wallet = await Wallet.findOne({ userId });
   const userAddress = await Address.findOne({ userId });
-  const coupon = await Coupon.find({ isList: true });
+  const coupon = await Coupon.find({ isList: true,expireOn:{$gte:new Date()} });
   const cart = await Cart.findOne({ userId }).populate({ path: "items.productId" });
 
   let subtotal = 0;

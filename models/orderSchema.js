@@ -20,6 +20,11 @@ const orderSchema=new Schema({
                 type:String,
                
             },
+            returnItemStatus:{
+                type:String,
+                enum:['returned','returning','return_requested','None','rejected'],
+                default:"None"
+            },
             _id:{
                 type:Schema.Types.ObjectId,
 
@@ -63,6 +68,7 @@ const orderSchema=new Schema({
                 type:[String],
                 
             },
+            
         },
         quantity:{
             type:Number,
@@ -72,6 +78,7 @@ const orderSchema=new Schema({
             type:Number,
             default:0
         },
+       
         cancellationStatus: { type: String, default: "active" }, // Added
         cancellationReason: { type: String }, // Added
         cancellationOtherReason: { type: String }, // Added

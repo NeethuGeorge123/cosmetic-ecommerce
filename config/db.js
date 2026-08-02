@@ -11,13 +11,13 @@ const connectDatabase = async () => {
    
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    });
+    }); 
 
     console.log(`\nMONGO DB CONNECTION IS SUCCESSFUL!: ${con.connection.host}`);
   } catch (err) {
     console.log(err);
     // process.exit(1)
-  }
+  }  
 };
 
 module.exports = connectDatabase;

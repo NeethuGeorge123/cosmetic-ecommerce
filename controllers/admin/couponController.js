@@ -91,12 +91,17 @@ const loadCoupon = async (req, res) => {
         return res.status(400).json({ success: false, message: "Coupon name already exists" });
       }
       
-      
+      const startDateObj = new Date(startDate);
+startDateObj.setHours(0, 0, 0, 0);   
+
+const endDateObj = new Date(endDate);
+endDateObj.setHours(23, 59, 59, 999);   
+
     
       const coupon = new Coupon({
         name: couponName,
-        createdOn: new Date(startDate),
-        expireOn: new Date(endDate),
+        createdOn: startDateObj,
+        expireOn:  endDateObj,
         offerPrice: discountType === "offerPrice" ? offerPriceNum : 0,
         discountPercentage: discountType === "offerPercentage" ? discountPercentageNum : 0,
         maxDiscountAmount: discountType === "offerPercentage" ? maxDiscountAmountNum : 0,
@@ -180,13 +185,19 @@ const loadCoupon = async (req, res) => {
         return res.status(400).json({ success: false, message: "Coupon name already exists" });
       }
   
-    
+      
+      const createdOnObj = new Date(createdOn);
+createdOnObj.setHours(0, 0, 0, 0);
+
+const expireOnObj = new Date(expireOn);
+expireOnObj.setHours(23, 59, 59, 999);
+
       const updatedCoupon = await Coupon.findByIdAndUpdate(
         couponId,
         {
           name,
-          createdOn: new Date(createdOn),
-          expireOn: new Date(expireOn),
+          createdOn: createdOnObj,
+          expireOn: expireOnObj,
           offerPrice: discountType === "offerPrice" ? offerPriceNum : 0,
           discountPercentage: discountType === "offerPercentage" ? discountPercentageNum : 0,
           maxDiscountAmount: discountType === "offerPercentage" ? maxDiscountAmountNum : 0,

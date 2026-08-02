@@ -30,10 +30,11 @@
                     <tr>
                         <th>Image</th>
                         <th>Name</th>
-                        
                         <th>Price</th>
                         <th>Qty</th>
                         <th>Subtotal</th>
+                        <th>Cancellation Status</th>
+                        <th>Return Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,10 +48,32 @@
                                 <% } %>
                             </td>
                             <td><%= item.product.productName %></td>
-                           
                             <td>₹<%= item.price %></td>
                             <td><%= item.quantity %></td>
                             <td>₹<%= item.price * item.quantity %></td>
+                            <td>
+                                <% if (item.cancellationStatus === 'cancelled') { %>
+                                    <span class="badge bg-danger">Cancelled</span>
+                                <% } else { %>
+                                    <span class="badge bg-success">Active</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% const rs = item.product.returnItemStatus || 'None'; %>
+                                <% if (rs === 'None') { %>
+                                    <span class="badge bg-secondary">No Return</span>
+                                <% } else if (rs === 'return_requested') { %>
+                                    <span class="badge bg-warning text-dark">Return Requested</span>
+                                <% } else if (rs === 'approved') { %>
+                                    <span class="badge bg-success">Return Approved</span>
+                                <% } else if (rs === 'rejected') { %>
+                                    <span class="badge bg-danger">Return Rejected</span>
+                                <% } else if (rs === 'returning') { %>
+                                    <span class="badge bg-info text-white">Returning</span>
+                                <% } else if (rs === 'returned') { %>
+                                    <span class="badge bg-dark text-white">Returned</span>
+                                <% } %>
+                            </td>
                         </tr>
                     <% }) %>
                 </tbody>
@@ -62,4 +85,3 @@
         </div>
     </div>
 </main>
-
