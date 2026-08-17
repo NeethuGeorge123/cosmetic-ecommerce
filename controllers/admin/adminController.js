@@ -104,12 +104,12 @@ const getDashboardData = async (filter, startDate, endDate) => {
         const matchCondition = {
             createdOn: { $gte: startDate, $lte: endDate },
             status: { $in: [/^delivered$/i, /^shipped$/i, /^processing$/i] },
-            paymentMethod: { $in: ['online payment', 'cash on delivery', 'wallet'] } // Include all payment methods
+            paymentMethod: { $in: ['online payment', 'cash on delivery', 'wallet'] } 
         };
 
         
         const matchedOrders = await Order.find(matchCondition).limit(3);
-        console.log('Matched Orders Sample:', JSON.stringify(matchedOrders, null, 2));
+        
 
         
         const categoryDebug = await Order.aggregate([
@@ -126,11 +126,11 @@ const getDashboardData = async (filter, startDate, endDate) => {
             { $sort: { count: -1 } },
             { $limit: 10 }
         ]);
-        console.log('Category IDs in Orders:', JSON.stringify(categoryDebug, null, 2));
+        
 
         
         const categoryCount = await mongoose.connection.db.collection('categories').countDocuments();
-        console.log('Total Categories in DB:', categoryCount);
+        
 
         
         const unmatchedCategories = await Order.aggregate([
@@ -165,7 +165,7 @@ const getDashboardData = async (filter, startDate, endDate) => {
             { $group: { _id: '$orderedItems.product.categoryObjectId', count: { $sum: 1 } } },
             { $limit: 10 }
         ]);
-        console.log('Unmatched Category IDs:', JSON.stringify(unmatchedCategories, null, 2));
+        
 
         
         const brandSample = await Order.aggregate([
@@ -182,7 +182,7 @@ const getDashboardData = async (filter, startDate, endDate) => {
             { $sort: { count: -1 } },
             { $limit: 15 }
         ]);
-        console.log('Brand Distribution:', JSON.stringify(brandSample, null, 2));
+        
 
         
         const bestSellingProducts = await Order.aggregate([
@@ -216,7 +216,7 @@ const getDashboardData = async (filter, startDate, endDate) => {
                 }
             }
         ]);
-        console.log('Best Selling Products:', JSON.stringify(bestSellingProducts, null, 2));
+        
 
         
         const bestSellingCategories = await Order.aggregate([
@@ -330,7 +330,7 @@ const getDashboardData = async (filter, startDate, endDate) => {
                 }
             }
         ]);
-        console.log('Best Selling Categories:', JSON.stringify(bestSellingCategories, null, 2));
+        
 
         
         const bestSellingBrands = await Order.aggregate([
@@ -397,7 +397,7 @@ const getDashboardData = async (filter, startDate, endDate) => {
                 }
             }
         ]);
-        console.log('Best Selling Brands:', JSON.stringify(bestSellingBrands, null, 2));
+        
 
         
         const salesOverview = await getSalesOverview(filter, startDate, endDate);
@@ -548,18 +548,30 @@ const generateLedgerBook = async (req, res) => {
             { $sort: { createdOn: 1 } }
         ]);
 
+        const revenueStatuses = ['delivered', 'processing', 'shipped'];
+
         const totalRevenue = ledgerData.reduce((sum, order) => {
-            return order.status?.toLowerCase() === 'delivered' ? sum + order.finalAmount : sum;
+            const status = order.status?.toLowerCase();
+            return revenueStatuses.includes(status) ? sum + order.finalAmount : sum;
         }, 0);
 
-        const totalDiscount = ledgerData.reduce((sum, order) => sum + (order.discount || 0), 0);
-        const totalOrders = ledgerData.length;
+        // only count discount from orders that generated actual revenue —
+        // exclude cancelled/returned since that discount didn't result in a completed sale
+        const totalDiscount = ledgerData.reduce((sum, order) => {
+            const status = order.status?.toLowerCase();
+            return revenueStatuses.includes(status) ? sum + (order.discount || 0) : sum;
+        }, 0);
+
+        const netAmount = +(totalRevenue - totalDiscount).toFixed(2);
+
+        const totalOrders = ledgerData.length; // all statuses, as intended
 
         res.render('admin/ledger', {
             title: 'Ledger Book',
             ledgerData,
             totalRevenue,
             totalDiscount,
+            netAmount,
             totalOrders,
             startDate: startDate,
             endDate: endDate

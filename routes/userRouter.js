@@ -15,9 +15,6 @@ const { userAuth } = require("../middlewares/auth");
 router.get("/pageNotFound",userController.pageNotFound)
 router.get("/",userController.loadHomepage)
 router.get("/shopnow",userAuth,userController.shopNow)
-// router.get("/filter",userAuth,userController.filterProduct)
-// router.get("/filterPrice",userAuth,userController.filterByPrice)
-// router.post("/search",userAuth,userController.searchProducts);
 
 
 

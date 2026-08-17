@@ -216,7 +216,7 @@ const handleReturn = async (req, res) => {
 
       let refundAmount = 0;
 
-      // Process every non-cancelled, not-already-returned item
+      
       for (const item of order.orderedItems) {
         if (item.cancellationStatus === 'cancelled') {
          
@@ -232,7 +232,7 @@ const handleReturn = async (req, res) => {
         const itemTotal = item.price * item.quantity;
         
 
-        // Proportional coupon discount adjustment
+        
         let couponDiscount = 0;
         if (order.discount && order.discount > 0) {
           const orderSubtotal = order.orderedItems.reduce(
@@ -246,13 +246,13 @@ const handleReturn = async (req, res) => {
         refundAmount += itemRefund;
         
 
-        // Restore stock
+        
         await Product.findByIdAndUpdate(item.product._id, { $inc: { quantity: item.quantity } });
       }
 
       console.log("🏁 Final refundAmount:", refundAmount);
 
-      // Refund to wallet
+      
       if (refundAmount > 0) {
        
         const walletResult = await refundToWallet(
@@ -519,7 +519,7 @@ const loadSales = async (req, res) => {
     const orders = await Order.aggregate([
       {
         $match: {
-          status: "delivered",
+          status: {$in:[/^delivered$/i, /^processing$/i, /^shipped$/i]},
           createdOn: { $gte: startDate, $lte: endDate },
         },
       },
@@ -652,7 +652,7 @@ const loadSalesReport = async (req, res, next) => {
     const orders = await Order.aggregate([
       {
         $match: {
-          status: "delivered",
+          status: {$in:[/^delivered$/i, /^processing$/i, /^shipped$/i]},//i changed
           createdOn: { $gte: startDate, $lte: endDate },
         },
       },

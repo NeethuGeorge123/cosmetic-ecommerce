@@ -303,9 +303,13 @@ const getOrderDetails = asyncHandler(async (req, res) => {
     if (!order) {
       return res.status(404).render("404", { message: messages.ORDER_NOT_FOUND });
     }
-
+    const originalSubtotal=order.orderedItems.reduce((sum,item)=>sum+(item.price || 0)*item.quantity,0)
+    
+    const deliveryCharge=originalSubtotal>=500 ? 0 : 50;
+    
     res.render('user/order-view-details', {
-      order
+      order,
+      deliveryCharge
     });
   
 });
@@ -328,15 +332,26 @@ const getInvoice = asyncHandler(async (req, res) => {
       return res.status(400).send(messages.ORDER_NOT_FOUND);
     }
 
-    const user = await User.findById(order.userId).lean();
-
     if (!order.invoiceDate) {
       const currentDate = new Date();
       await Order.updateOne({ orderId }, { $set: { invoiceDate: currentDate } });
       order.invoiceDate = currentDate;
     }
 
-    res.render('user/invoice', { order, user });
+    const user = await User.findById(order.userId).lean();
+    const activeItems=order.orderedItems.filter(item=>{const isCancel = item.product?.returnItemStatus==="returned" || item.product?.returnItemStatus==="returning";
+      const isReturn= item.cancellationStatus==="cancelled";
+      return !isCancel && !isReturn
+    })
+
+    
+    const activeSubtotal=activeItems.reduce((sum,item)=>sum+(item.product?.salePrice||0)*item.quantity,0)
+
+    const originalSubtotal=order.orderedItems.reduce((sum,item)=>sum+(item.price || 0)*item.quantity,0)
+
+    const deliveryCharge=originalSubtotal>=500? 0 : 50;
+
+    res.render('user/invoice', { order, user,activeItems,activeSubtotal,deliveryCharge });
 
  
 });

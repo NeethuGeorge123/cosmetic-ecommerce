@@ -15,11 +15,39 @@ const productDetails = asyncHandler(async(req, res) => {
 
     
     const product = await Product.findById(productId).populate('category');
+    
+    if (!product) {
+        return res.render("user/product-details", {
+            user: userData,
+            product: null,
+            unavailableReason: "This product no longer exists."
+        });
+    }
+
+    if (product.isBlocked) {
+        return res.render("user/product-details", {
+            user: userData,
+            product: null,
+            unavailableReason: "This product is currently unavailable."
+        });
+    }
+    
+    
     const findCategory = product.category;
+    
+    if (!findCategory || findCategory.isListed === false) {
+        return res.render("user/product-details", {
+            user: userData,
+            product: null,
+            unavailableReason: "This product's category is currently unavailable."
+        });
+    }
+
+    
     const categoryOffer = findCategory?.categoryOffer || 0;
     const productOffer = product.productOffer || 0;
     const totalOffer = categoryOffer + productOffer;
-
+    const isOutOfStock = product.quantity <= 0;
     
     const relatedProducts = await Product.find({
         category: findCategory._id,
@@ -38,7 +66,8 @@ const productDetails = asyncHandler(async(req, res) => {
         
         return {
             ...relatedProduct.toObject(),
-            totalOffer: relTotalOffer
+            totalOffer: relTotalOffer,
+            isOutOfStock: relatedProduct.quantity <= 0
         };
     });
 
@@ -46,11 +75,13 @@ const productDetails = asyncHandler(async(req, res) => {
         user: userData,
         product: product,
         quantity: product.quantity,
+        isOutOfStock: isOutOfStock,
+        unavailableReason: null,
         totalOffer: totalOffer,
         category: findCategory,
         relatedProducts: relatedProductsWithOffers 
     });
-   
+     
 });
 
 

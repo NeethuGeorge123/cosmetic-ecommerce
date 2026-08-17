@@ -120,6 +120,7 @@ const getAllProducts = async (req, res) => {
         { brand: { $regex: new RegExp(".*" + search + ".*", "i") } },
       ],
     })
+    //.sort({ createdAt: -1 }) 
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .populate("category")
@@ -140,6 +141,7 @@ const getAllProducts = async (req, res) => {
          totalPages: Math.ceil(count / limit),
         cat: category,
         brand: brand,
+        status: req.query.status || null,
       });
     } else {
       res.render("page-404");
@@ -224,7 +226,7 @@ const blockProduct=async(req,res)=>{
     try {
         let id=req.query.id;
         await Product.updateOne({_id:id},{$set:{isBlocked:true}});
-        res.redirect("/admin/products")
+        res.redirect("/admin/products?status=blocked")
     } catch (error) {
         res.redirect("/pageerror")
     }
@@ -236,7 +238,7 @@ const unblockProduct=async(req,res)=>{
     try {
         let id=req.query.id;
         await Product.updateOne({_id:id},{$set:{isBlocked:false}})
-        res.redirect("/admin/products")
+        res.redirect("/admin/products?status=unblocked")
     } catch (error) {
         res.redirect("/pageerror")
     }

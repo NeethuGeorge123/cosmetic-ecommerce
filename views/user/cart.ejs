@@ -496,6 +496,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
+<% if (typeof removedProducts !== 'undefined' && removedProducts.length > 0) { %>
+        Swal.fire({
+            icon: 'info',
+            title: 'Cart Updated',
+            html: `The following items were removed because they're no longer available:<br><b><%= removedProducts.join(', ') %></b>`,
+        });
+    <% } %>
+
  function changeQuantity(productId, count, salePrice, productElementId, maxStock) {
     let quantityInput = $(`#cartProductQuantity${productElementId}`);
     let mobileQuantityInput = $(`#mobileCartQuantity${productElementId}`);
@@ -639,9 +648,11 @@
                     });
                 }
                 
-
                 $("#total").text(data.grandTotal.toFixed(2) || 0);
-                $("#totalabc").val(data.grandTotal.toFixed(2) || 0)
+$("#totalabc").val(data.grandTotal.toFixed(2) || 0);
+if (typeof data.count !== 'undefined') {
+    $('#cart-count').text(data.count);
+}
                 
 
                 if ($('tbody tr').length <= 1) { 

@@ -472,4 +472,23 @@
         })
 
     }
+
+    <% if (typeof status !== 'undefined' && status === 'blocked') { %>
+        Swal.fire({
+            icon: 'success',
+            title: 'Product Blocked',
+            text: 'The product has been blocked successfully.',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    <% } else if (typeof status !== 'undefined' && status === 'unblocked') { %>
+        Swal.fire({
+            icon: 'success',
+            title: 'Product Unblocked',
+            text: 'The product has been unblocked successfully.',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    <% } %>
+
 </script>

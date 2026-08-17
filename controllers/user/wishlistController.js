@@ -28,7 +28,24 @@ const loadWishlist = asyncHandler(async (req, res) => {
                 pid => !cartProductIds.includes(pid) 
             );
 
-            wishlistProducts = await Product.find({ _id: { $in: filteredProductIds } }).populate('category');
+            wishlistProducts = await Product.find({
+                _id: { $in: filteredProductIds },
+                isBlocked: false,
+                quantity: { $gt: 0 }
+            }).populate('category');
+
+            // clean these out of the wishlist doc itself so they don't linger
+            const validProductIds = wishlistProducts.map(p => p._id.toString());
+            const removedProductIds = filteredProductIds.filter(
+                pid => !validProductIds.includes(pid)
+            );
+
+            if (removedProductIds.length > 0) {
+                await Wishlist.updateOne(
+                    { userId },
+                    { $pull: { products: { productId: { $in: removedProductIds } } } }
+                );
+            }
         }
 
         res.render("user/wishlist", {
@@ -129,7 +146,13 @@ const getBadgeCount = asyncHandler(async (req, res) => {
         pid => !cartProductIds.includes(pid)
       );
   
-      res.json({ count: filteredProductIds.length });
+      const availableCount = await Product.countDocuments({
+        _id: { $in: filteredProductIds },
+        isBlocked: false,
+        quantity: { $gt: 0 }
+      });
+  
+      res.json({ count: availableCount });
     
   });
   

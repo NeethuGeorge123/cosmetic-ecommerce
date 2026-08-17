@@ -17,9 +17,9 @@ const addToCart = async (req, res) => {
     const userId = req.session.user;
     const productId = req.body.productId;
 
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate("category");
 
-    if (!product || product.isBlocked || product.isUnlisted || product.stock <= 0) {
+    if (!product || product.isBlocked || product.isUnlisted || product.quantity <= 0) {
       return res.status(400).json({ status: false, message: Messages.CART.PRODUCT_NOT_AVAILABLE });
     }
 
@@ -64,29 +64,38 @@ const getCart = asyncHandler(async (req, res) => {
   const user = req.session.user;
   const cart = await Cart.findOne({ userId: user }).populate({
     path: "items.productId",
-    populate: [
-      {
-        path: 'category',
-        model: 'Category'
-      }
-    ]
+    populate: [{ path: 'category', model: 'Category' }]
   });
 
-  const cartData = cart.items
-    .filter(item => item.productId && item.productId.isBlocked === false)
-    .map(item => ({
-      productDetails: item.productId,
-      quantity: item.quantity
-    }));
+  if (!cart) {
+    return res.render("user/cart", { data: [], grandTotal: 0, user: user, removedProducts: [] });
+  }
 
-  let grandTotal = cart.items
-    .filter(item => item.productId && item.productId.isBlocked === false)
-    .reduce((acc, item) => acc + (item.productId?.salePrice || 0) * item.quantity, 0);
+  const staleItems = cart.items.filter(item => !item.productId || item.productId.isBlocked === true);
+  const removedProductNames = staleItems
+    .filter(item => item.productId)
+    .map(item => item.productId.productName);
+
+  const staleItemIds = staleItems.map(item => item._id);
+
+  if (staleItemIds.length > 0) {
+    cart.items = cart.items.filter(item => !staleItemIds.includes(item._id));
+    await cart.save();
+  }
+
+  const cartData = cart.items
+    .filter(item => item.productId)
+    .map(item => ({ productDetails: item.productId, quantity: item.quantity }));
+
+  let grandTotal = cartData.reduce(
+    (acc, item) => acc + (item.productDetails?.salePrice || 0) * item.quantity, 0
+  );
 
   res.render("user/cart", {
     data: cartData,
     grandTotal,
-    user: user
+    user: user,
+    removedProducts: removedProductNames  // NEW
   });
 });
 
@@ -154,7 +163,9 @@ const deleteFromCart = asyncHandler(async (req, res) => {
     if (product) grandTotal += product.salePrice * item.quantity;
   }
 
-  res.json({ success: true, message: Messages.CART.PRODUCT_REMOVED, grandTotal });
+  const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+
+  res.json({ success: true, message: Messages.CART.PRODUCT_REMOVED, grandTotal,count });
 });
 
 const getCheckout = asyncHandler(async (req, res) => {
@@ -192,8 +203,26 @@ const validateCheckout = asyncHandler(async (req, res) => {
 
   for (let item of cart.items) {
     const product = item.productId;
-    if (!product || product.isBlocked || product.quantity < item.quantity) {
-      return res.status(400).json({ status: false, message: Messages.CART.STOCK_NOT_AVAILABLE });
+
+    if (!product || product.isBlocked) {
+      return res.status(400).json({
+        status: false,
+        message: Messages.CART.PRODUCT_UNAVAILABLE(product ? product.productName : 'This product')
+      });
+    }
+
+    if (product.quantity <= 0) {
+      return res.status(400).json({
+        status: false,
+        message: Messages.CART.OUT_OF_STOCK(product.productName)
+      });
+    }
+
+    if (product.quantity < item.quantity) {
+      return res.status(400).json({
+        status: false,
+        message: Messages.CART.STOCK_LIMITED(product.productName, product.quantity, item.quantity)
+      });
     }
   }
 
@@ -211,7 +240,14 @@ const getCartCount = asyncHandler(async (req, res) => {
     return res.status(200).json({ status: false, count: 0 });
   }
 
-  const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+  const count = cart.items.reduce((sum, item) => {
+    const product = item.productId;
+    if (!product || product.isBlocked) {
+      return sum;
+    }
+    return sum + item.quantity;
+  }, 0);
+
   return res.status(200).json({ status: true, count });
 });
   

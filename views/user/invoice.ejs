@@ -221,7 +221,7 @@
           </tr>
         </thead>
         <tbody>
-          <% order.orderedItems.forEach(item => { %>
+          <% activeItems.forEach(item => { %>
           <tr>
             <td>
               <img
@@ -230,22 +230,19 @@
                 class="product-image"
               />
             </td>
-            <td><%= item.product.productName %>
-            <%if(item.productStatus === 'cancelled' && order.status != 'cancelled'){%>
-             <br> <span class="badge bg-danger text-white">CANCELLED</span>
-            <%}%>
-            <% if(item.productStatus === 'cancelled'){ %>
-              <br>
-              <span class="badge bg-danger text-white">
-                CANCELLED
-              </span>
-            <% } %>
-            </td>
+            <td><%= item.product.productName %></td>
             <td><%= item.quantity %></td>
             <td>₹<%= (item.product.salePrice).toFixed(2) %></td>
-            <td>₹<%= (item.product.salePrice)*(item.quantity).toFixed(2) %></td>
+            <td>₹<%= ((item.product.salePrice) * item.quantity).toFixed(2) %></td>
           </tr>
           <% }); %>
+          <% if (activeItems.length === 0) { %>
+          <tr>
+            <td colspan="5" style="text-align:center; padding: 20px;">
+              All items in this order were cancelled or returned.
+            </td>
+          </tr>
+          <% } %>
         </tbody>
       </table>
 
@@ -253,13 +250,13 @@
         <div class="total-row">
           <div class="total-label">Subtotal:</div>
           <div class="total-value">
-            ₹<%= (order.totalPrice-(order.totalPrice*.18)).toFixed(2) %>
+            ₹<%= (activeSubtotal - (activeSubtotal * .18)).toFixed(2) %>
           </div>
         </div>
         <div class="total-row">
           <div class="total-label">GST:</div>
           <div class="total-value">
-            ₹<%= (order.totalPrice*.18).toFixed(2) %>
+            ₹<%= (activeSubtotal * .18).toFixed(2) %>
           </div>
         </div>
         <% if (order.discount > 0) { %>
@@ -271,13 +268,15 @@
 
         <div class="total-row">
           <div class="total-label">Delivery Charge:</div>
-          <% if(order.status === 'cancelled') { %>
-            <span>₹ 0</span>
-          <% } else if(order.totalPrice<500){%>
-          <div class="total-value">₹50.00</div>
-          <%}else{%>
-          <div class="total-value">Free Shipping</div>
-          <%}%>
+          <div class="total-value">
+            <% if (order.status === 'cancelled') { %>
+              ₹0.00
+            <% } else if (deliveryCharge === 0) { %>
+              Free Shipping
+            <% } else { %>
+              ₹<%= deliveryCharge.toFixed(2) %>
+            <% } %>
+          </div>
         </div>
         <div class="total-row grand-total">
           <div class="total-label">Grand Total:</div>

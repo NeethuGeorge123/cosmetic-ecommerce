@@ -20,6 +20,7 @@ const pageNotFound = asyncHandler(async (req, res) => {
 
 const loadHomepage = asyncHandler(async (req, res) => {
   
+  
     const brands = await Brand.find({ isBlocked: false });
     const today = new Date().toISOString();
     const findBanner = await Banner.find({
@@ -121,7 +122,7 @@ const shopNow = asyncHandler(async (req, res) => {
   } else if (sort === "highToLow") {
     sortQuery.salePrice = -1;
   } else {
-    sortQuery.createdOn = -1;
+    sortQuery.createdAt= -1;
   }
 
   
