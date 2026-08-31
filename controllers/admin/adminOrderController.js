@@ -13,6 +13,7 @@ const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 
 
+
 const getOrders = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
@@ -250,8 +251,7 @@ const handleReturn = async (req, res) => {
         await Product.findByIdAndUpdate(item.product._id, { $inc: { quantity: item.quantity } });
       }
 
-      console.log("🏁 Final refundAmount:", refundAmount);
-
+      
       
       if (refundAmount > 0) {
        
@@ -524,16 +524,50 @@ const loadSales = async (req, res) => {
         },
       },
       {
+        $addFields: {
+          validItems: {
+            $filter: {
+              input: "$orderedItems",
+              as: "item",
+              cond: {
+                $and: [
+                  { $ne: ["$$item.cancellationStatus", "cancelled"] },
+                  { $ne: ["$$item.product.returnItemStatus", "returned"] },
+                ],
+              },
+            },
+          },
+          validSubtotal: {
+            $reduce: {
+              input: {
+                $filter: {
+                  input: "$orderedItems",
+                  as: "item",
+                  cond: {
+                    $and: [
+                      { $ne: ["$$item.cancellationStatus", "cancelled"] },
+                      { $ne: ["$$item.product.returnItemStatus", "returned"] },
+                    ],
+                  },
+                },
+              },
+              initialValue: 0,
+              in: { $add: ["$$value", { $multiply: ["$$this.price", "$$this.quantity"] }] },
+            },
+          },
+        },
+      },
+      {
         $facet: {
           overallStats: [
             {
               $group: {
                 _id: null,
-                totalSales: { $sum: "$totalPrice" },
+                totalSales: { $sum: "$validSubtotal" },
                 totalDiscounts: { $sum: "$discount" },
                 totalPrice: { $sum: "$finalAmount" },
                 totalOrders: { $sum: 1 },
-                totalProducts: { $sum: { $size: "$orderedItems" } },
+                totalProducts: { $sum: { $size: "$validItems" } },
               },
             },
           ],
@@ -668,16 +702,50 @@ const loadSalesReport = async (req, res, next) => {
         $unwind: "$user",
       },
       {
+        $addFields: {
+          validItems: {
+            $filter: {
+              input: "$orderedItems",
+              as: "item",
+              cond: {
+                $and: [
+                  { $ne: ["$$item.cancellationStatus", "cancelled"] },
+                  { $ne: ["$$item.product.returnItemStatus", "returned"] },
+                ],
+              },
+            },
+          },
+          validSubtotal: {
+            $reduce: {
+              input: {
+                $filter: {
+                  input: "$orderedItems",
+                  as: "item",
+                  cond: {
+                    $and: [
+                      { $ne: ["$$item.cancellationStatus", "cancelled"] },
+                      { $ne: ["$$item.product.returnItemStatus", "returned"] },
+                    ],
+                  },
+                },
+              },
+              initialValue: 0,
+              in: { $add: ["$$value", { $multiply: ["$$this.price", "$$this.quantity"] }] },
+            },
+          },
+        },
+      },
+      {
         $facet: {
           overallStats: [
             {
               $group: {
                 _id: null,
-                totalSales: { $sum: "$totalPrice" },
+                totalSales: { $sum: "$validSubtotal" },
                 totalDiscounts: { $sum: "$discount" },
                 totalPrice: { $sum: "$finalAmount" },
                 totalOrders: { $sum: 1 },
-                totalProducts: { $sum: { $size: "$orderedItems" } },
+                totalProducts: { $sum: { $size: "$validItems" } },
               },
             },
           ],

@@ -518,6 +518,90 @@
         .dashboard-menu {
             animation: fadeInUp 0.6s ease 0.2s both;
         }
+        .avatar-wrapper {
+    cursor: pointer;
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 20px;
+    right: -4px;
+    width: 36px;
+    height: 36px;
+    background: var(--gradient-accent);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--white);
+    box-shadow: 0 4px 12px var(--shadow-medium);
+    z-index: 3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.avatar-edit-btn:hover {
+    transform: scale(1.1);
+}
+
+.profile-title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.edit-name-btn {
+    background: none;
+    border: none;
+    color: var(--deep-peach);
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.edit-name-btn:hover {
+    background: var(--gradient-subtle);
+    transform: scale(1.1);
+}
+
+#nameEditForm {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+#nameEditForm input {
+    max-width: 220px;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    padding: 6px 12px;
+}
+
+#nameEditForm button {
+    border-radius: 8px;
+    padding: 6px 14px;
+    border: none;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+#nameEditForm .save-btn {
+    background: var(--gradient-accent);
+    color: white;
+}
+
+#nameEditForm .cancel-btn {
+    background: var(--light-gray);
+    color: var(--text-secondary);
+}
     </style>
 </head>
 <body>
@@ -592,10 +676,27 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="text-center mb-4">
-                                                <div class="avatar-wrapper">
-                                                    <img src="uploads/re-image/profile.jpg" alt="Profile Avatar" class="rounded-circle img-thumbnail">
+                                                <div class="avatar-wrapper" id="avatarWrapper">
+                                                    <img src="<%= user.profileImage || 'uploads/re-image/profile.jpg' %>" alt="Profile Avatar" class="rounded-circle img-thumbnail" id="profileImg">
+                                                    <span class="avatar-edit-btn" id="avatarEditBtn">
+                                                        <i class="fas fa-camera"></i>
+                                                    </span>
+                                                    <input type="file" id="profileImageInput" accept="image/png, image/jpeg, image/jpg, image/webp" hidden>
                                                 </div>
-                                                <h5 class="profile-title"><%= user.name %></h5>
+                                            
+                                                <div class="profile-title-wrap">
+                                                    <h5 class="profile-title" id="profileNameDisplay"><%= user.name %></h5>
+                                                    <button class="edit-name-btn" id="editNameBtn" title="Edit name">
+                                                        <i class="fas fa-pen"></i>
+                                                    </button>
+                                                </div>
+                                            
+                                                <form id="nameEditForm">
+                                                    <input type="text" id="nameInput" value="<%= user.name %>" placeholder="Enter name">
+                                                    <button type="button" class="save-btn" id="saveNameBtn">Save</button>
+                                                    <button type="button" class="cancel-btn" id="cancelNameBtn">Cancel</button>
+                                                    <div id="nameError" class="text-danger small mt-1" style="display:none; width:100%; text-align:center;"></div>
+                                                </form>
                                             </div>
                                             
                                             <div class="row">
@@ -672,6 +773,110 @@
                         ripple.remove();
                     }, 600);
                 });
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const editNameBtn = document.getElementById('editNameBtn');
+        const nameEditForm = document.getElementById('nameEditForm');
+        const profileNameDisplay = document.getElementById('profileNameDisplay');
+        const nameInput = document.getElementById('nameInput');
+        const saveNameBtn = document.getElementById('saveNameBtn');
+        const cancelNameBtn = document.getElementById('cancelNameBtn');
+        const nameError = document.getElementById('nameError');
+    
+        editNameBtn.addEventListener('click', () => {
+            profileNameDisplay.parentElement.style.display = 'none';
+            nameEditForm.style.display = 'flex';
+            nameInput.focus();
+        });
+    
+        cancelNameBtn.addEventListener('click', () => {
+            nameInput.value = profileNameDisplay.textContent.trim();
+            nameError.style.display = 'none';
+            nameEditForm.style.display = 'none';
+            profileNameDisplay.parentElement.style.display = 'flex';
+        });
+    
+        saveNameBtn.addEventListener('click', () => {
+            const newName = nameInput.value.trim();
+            nameError.style.display = 'none';
+    
+            if (!newName) {
+                nameError.textContent = 'Name cannot be empty';
+                nameError.style.display = 'block';
+                return;
+            }
+            if (!/^[A-Za-z ]{3,50}$/.test(newName)) {
+                nameError.textContent = 'Name must be 3-50 letters only';
+                nameError.style.display = 'block';
+                return;
+            }
+    
+            fetch('/updateProfileName', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newName })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    profileNameDisplay.textContent = newName;
+                    nameEditForm.style.display = 'none';
+                    profileNameDisplay.parentElement.style.display = 'flex';
+                    Swal.fire({ icon: 'success', title: 'Updated', text: 'Name updated successfully', timer: 1500, showConfirmButton: false });
+                } else {
+                    nameError.textContent = data.message || 'Failed to update name';
+                    nameError.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                nameError.textContent = 'Server error. Please try again.';
+                nameError.style.display = 'block';
+            });
+        });
+    
+        const avatarEditBtn = document.getElementById('avatarEditBtn');
+        const profileImageInput = document.getElementById('profileImageInput');
+        const profileImg = document.getElementById('profileImg');
+    
+        avatarEditBtn.addEventListener('click', () => {
+            profileImageInput.click();
+        });
+    
+        profileImageInput.addEventListener('change', () => {
+            const file = profileImageInput.files[0];
+            if (!file) return;
+    
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                Swal.fire({ icon: 'error', title: 'Invalid file', text: 'Only JPEG, PNG, JPG, WEBP images are allowed' });
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                Swal.fire({ icon: 'error', title: 'Too large', text: 'Image must be under 2MB' });
+                return;
+            }
+    
+            const formData = new FormData();
+            formData.append('profileImage', file);
+    
+            fetch('/updateProfileImage', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    profileImg.src = data.imageUrl + '?t=' + Date.now();
+                    Swal.fire({ icon: 'success', title: 'Updated', text: 'Profile image updated', timer: 1500, showConfirmButton: false });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Failed', text: data.message || 'Could not update image' });
+                }
+            })
+            .catch(() => {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Server error while uploading image' });
             });
         });
     </script>

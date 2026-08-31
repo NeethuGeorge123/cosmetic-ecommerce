@@ -685,7 +685,7 @@
                                           <span>Subtotal:</span>
                                           <span>₹<%= (order.status === 'cancelled' || order.status==='returned') ? 0 : order.totalPrice %></span>
                                         </div>
-                                        <% if(order.discount>0 && order.status !=='cancelled' && order.status==='returned'){ %>
+                                        <% if(order.discount>0 && order.status !=='cancelled' && order.status!='returned'){ %>
 
                                           <div class="summary-row">
                                           

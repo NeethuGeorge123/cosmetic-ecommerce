@@ -6,6 +6,7 @@
     <title>E-commerce Admin Dashboard</title>
     <link rel="stylesheet" href="/css/admin-style.css">
     <link rel="stylesheet" href="/css/edit-category.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .content {
             padding: 0.5rem 1.5rem 1.5rem; /* Match previous files */
@@ -165,13 +166,13 @@
             <form action="/admin/editCategory/<%=category._id%>" method="POST" class="edit-category-form" onsubmit="return validateForm(event)">
                 <div class="form-group">
                     <label for="name">Category Name</label>
-                    <input type="text" id="name" value="<%= category.name%>" name="categoryName" placeholder="Enter category name" required>
+                    <input type="text" id="name" value="<%= category.name%>" name="categoryName" placeholder="Enter category name" >
                     <span class="error-message" id="name-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter category description" required><%= category.description%></textarea>
+                    <textarea id="description" name="description" placeholder="Enter category description" ><%= category.description%></textarea>
                     <span class="error-message" id="description-error"></span>
                 </div>
 
@@ -179,50 +180,78 @@
             </form>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function validateForm(event) {
-            event.preventDefault();
-            clearErrorMessages();
+      function validateForm(event) {
+    event.preventDefault();
+    clearErrorMessages();
 
-            const name = document.getElementById("name").value;
-            const description = document.getElementById("description").value;
-            let isValid = true;
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+    let isValid = true;
 
-            // Category Name validations
-            if (name.trim() === "") {
-                displayErrorMessage("name-error", "Category name cannot be empty");
-                isValid = false;
-            } else if (/^\s*$/.test(name)) {
-                displayErrorMessage("name-error", "Category name cannot contain only spaces");
-                isValid = false;
-            } else if (/^\d+$/.test(name.trim())) {
-                displayErrorMessage("name-error", "Category name cannot contain only numbers");
-                isValid = false;
-            } else if (name.trim().length < 3) {
-                displayErrorMessage("name-error", "Category name must be at least 3 characters long");
-                isValid = false;
+    if (name.trim() === "") {
+        displayErrorMessage("name-error", "Category name cannot be empty");
+        isValid = false;
+    } else if (/^\s*$/.test(name)) {
+        displayErrorMessage("name-error", "Category name cannot contain only spaces");
+        isValid = false;
+    } else if (/^\d+$/.test(name.trim())) {
+        displayErrorMessage("name-error", "Category name cannot contain only numbers");
+        isValid = false;
+    } else if (name.trim().length < 3) {
+        displayErrorMessage("name-error", "Category name must be at least 3 characters long");
+        isValid = false;
+    }
+
+    if (description.trim() === "") {
+        displayErrorMessage("description-error", "Description cannot be empty");
+        isValid = false;
+    } else if (/^\s*$/.test(description)) {
+        displayErrorMessage("description-error", "Description cannot contain only spaces");
+        isValid = false;
+    } else if (/^\d+$/.test(description.trim())) {
+        displayErrorMessage("description-error", "Description cannot contain only numbers");
+        isValid = false;
+    } else if (description.trim().length < 4) {
+        displayErrorMessage("description-error", "Description must be at least 4 characters long");
+        isValid = false;
+    }
+
+    if (!isValid) return false;
+
+    fetch(event.target.action, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ categoryName: name, description: description })
+    })
+        .then((response) => {
+            if (!response.ok) {
+                return response.json().then((err) => {
+                    throw new Error(err.error);
+                });
             }
+            return response.json();
+        })
+        .then(() => {
+            Swal.fire({
+                icon: "success",
+                title: "Updated",
+                text: "Category updated successfully!"
+            }).then(() => {
+                window.location.href = "/admin/category";
+            });
+        })
+        .catch((error) => {
+            Swal.fire({
+                icon: "error",
+                title: "OOPs",
+                text: error.message || "An error occurred while updating the category"
+            });
+        });
 
-            // Description validations
-            if (description.trim() === "") {
-                displayErrorMessage("description-error", "Description cannot be empty");
-                isValid = false;
-            } else if (/^\s*$/.test(description)) {
-                displayErrorMessage("description-error", "Description cannot contain only spaces");
-                isValid = false;
-            } else if (/^\d+$/.test(description.trim())) {
-                displayErrorMessage("description-error", "Description cannot contain only numbers");
-                isValid = false;
-            } else if (description.trim().length < 4) {
-                displayErrorMessage("description-error", "Description must be at least 4 characters long");
-                isValid = false;
-            }
-
-            if (isValid) {
-                event.target.submit(); // Submit form if valid
-            }
-            return isValid;
-        }
+    return false;
+}
 
         function displayErrorMessage(elementId, message) {
             const errorElement = document.getElementById(elementId);

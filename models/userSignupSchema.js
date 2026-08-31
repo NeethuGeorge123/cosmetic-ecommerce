@@ -47,7 +47,12 @@ const userSignupSchema=new mongoose.Schema({
         type:String,
         unique:true,
         sparse:true
-    },cart:[{
+    },
+    profileImage: {
+        type: String,
+        default: ""
+    },
+    cart:[{
         type:Schema.Types.ObjectId,
         ref:"Cart",
     }],

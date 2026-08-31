@@ -5,7 +5,7 @@ const User=require("../models/userSignupSchema")
 
 const userAuth = (req, res, next) => {
     if (!req.session?.user) {
-        //console.log("🔴 No session found → redirecting to login");
+        
         return res.redirect("/login");
     }
 
@@ -15,14 +15,14 @@ const userAuth = (req, res, next) => {
                 console.log("✅ User is valid:", data.email || data._id);
                 return next();
             } else {
-                //console.log("🔴 User is blocked or not found → destroying session");
+                
                 req.session.destroy(err => {
                     if (err) {
-                        console.error("❌ Error destroying session:", err);
+                       
                         return res.status(500).send("Internal Server Error (session destroy failed)");
                     }
-                    res.clearCookie("connect.sid"); // clear cookie
-                    return res.redirect("/login");
+                    res.clearCookie("user_sid"); // clear cookie
+                    return res.redirect("/login?blocked=true");
                 });
             }
         })
@@ -32,21 +32,24 @@ const userAuth = (req, res, next) => {
         });
 };
 
-const adminAuth=(req,res,next)=>{
-    User.findOne({isAdmin:true})
-    .then(data=>{
-        if(data){
-            next()
-        }else{
-            res.redirect("/admin/login")
-        }
-    })
-    .catch(error=>{
-        console.log("Error admin middleware")
-        res.status(500).send("internal Server eooror")
-    })
-}
-
+const adminAuth = (req, res, next) => {
+    if (!req.session?.admin) {
+        return res.redirect("/admin/login");
+    }
+    User.findById(req.session.admin)
+        .then(data => {
+            if (data && data.isAdmin && !data.isBlocked) {
+                return next();
+            } else {
+                req.session.destroy(err => {
+                    if (err) return res.status(500).send("Internal Server Error");
+                    res.clearCookie("admin_sid");
+                    return res.redirect("/admin/login");
+                });
+            }
+        })
+        .catch(() => res.status(500).send("Internal Server Error"));
+};
 
 module.exports={
     userAuth,

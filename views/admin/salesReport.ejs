@@ -68,10 +68,9 @@
       border: 1px solid #dee2e6;
       padding: 8px;
     }
-  </style>
-</head>
-<body>
-    <style>
+  
+
+    
         .button-container .download-btn {
           background-color: #0d6efd;
           color: #fff;
@@ -85,57 +84,110 @@
         .button-container .download-btn:hover {
           background-color: #084298;
         }
-        .filter-form {
-          display: flex;
-          align-items: center;
-          gap: 1px;
-          padding: 6px 12px;
-          background-color: #f8f9fa;
-          border: 1px solid #dee2e6;
-          border-radius: 6px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .filter-form select {
-          min-width: 100px;
-        }
+        .report-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  max-width: 280px;
+  margin: 20px 0 20px auto;
+  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.report-toolbar .btn {
+  width: 100%;
+  text-align: center;
+  margin: 0 !important;
+}
+
+.report-toolbar .action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.filter-form label {
+  margin: 0 0 2px 0 !important;
+}
+
+.filter-form select,
+.filter-form input {
+  width: 100%;
+}
+
+#customDateBlock {
+  flex-direction: column;
+}
+
+#customDateBlock .d-flex {
+  flex-direction: column;
+  gap: 8px;
+}
+
+#customDateBlock input,
+#customDateBlock button {
+  width: 100%;
+}
+
+@media (max-width: 576px) {
+  .report-toolbar {
+    max-width: 100%;
+    margin: 15px auto;
+  }
+}
+
     </style>
-      
-    <div class="col d-flex justify-content-end align-items-center mb-3 me-5 mt-3">
-        <div class="d-flex gap-2">
-            <a href="/admin/sales" class="btn btn-warning">Go Back</a>
-            <button onclick="generatePDF()" class="btn btn-primary " style="margin-right: 10px;">
-              Download PDF
-            </button>
-            <button onclick="downloadExcel()" class="btn btn-primary " style="margin-right: 10px;">
-              Download ExcelSheet
-            </button>
-        </div>
-        <form method="GET" action="/admin/salesReport" class="d-flex align-items-center bg-light p-2 rounded shadow-sm flex-wrap gap-2" id="filterForm">
-            <label for="range" class="form-label mb-0 me-2 fw-semibold text-primary">
-              Sort By:
-            </label>
-            <select 
-              name="range" 
-              id="range" 
-              class="form-select form-select-sm w-auto border-primary me-2" 
-              onchange="handleRangeChange()"
-            >
-              <option value="daily" <%= range === 'daily' ? 'selected' : '' %>>Daily</option>
-              <option value="weekly" <%= range === 'weekly' ? 'selected' : '' %>>Weekly</option>
-              <option value="monthly" <%= range === 'monthly' ? 'selected' : '' %>>Monthly</option>
-              <option value="yearly" <%= range === 'yearly' ? 'selected' : '' %>>Yearly</option>
-              <option value="custom" <%= range === 'custom' ? 'selected' : '' %>>Custom</option>
-            </select>
-            <div id="customDateBlock" class="d-flex flex-column" style="display: none;">
-              <div class="d-flex flex-row gap-2">
-                <input type="date" name="from" id="fromDate" class="form-control form-control-sm" value="<%= from || '' %>">
-                <input type="date" name="to" id="toDate" class="form-control form-control-sm" value="<%= to || '' %>">
-                <button type="submit" class="btn btn-primary btn-sm" id="applyBtn">Apply</button>
+      </head>
+      <body>
+        <div class="report-toolbar">
+          <div class="action-buttons">
+              <a href="/admin/sales" class="btn btn-warning">Go Back</a>
+              <button onclick="generatePDF()" class="btn btn-primary">Download PDF</button>
+              <button onclick="downloadExcel()" class="btn btn-primary">Download ExcelSheet</button>
+          </div>
+          <form method="GET" action="/admin/salesReport" class="filter-form" id="filterForm">
+              <label for="range" class="form-label mb-0 fw-semibold text-primary">
+                Sort By:
+              </label>
+              <select 
+                name="range" 
+                id="range" 
+                class="form-select form-select-sm border-primary" 
+                onchange="handleRangeChange()"
+              >
+                <option value="daily" <%= range === 'daily' ? 'selected' : '' %>>Daily</option>
+                <option value="weekly" <%= range === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                <option value="monthly" <%= range === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                <option value="yearly" <%= range === 'yearly' ? 'selected' : '' %>>Yearly</option>
+                <option value="custom" <%= range === 'custom' ? 'selected' : '' %>>Custom</option>
+              </select>
+              <div id="customDateBlock" class="d-flex" style="display: none;">
+                <div class="d-flex flex-column gap-2">
+                  <input type="date" name="from" id="fromDate" class="form-control form-control-sm" value="<%= from || '' %>">
+                  <input type="date" name="to" id="toDate" class="form-control form-control-sm" value="<%= to || '' %>">
+                  <button type="submit" class="btn btn-primary btn-sm" id="applyBtn">Apply</button>
+                </div>
+                <p id="dateError" class="text-danger mt-1 mb-0" style="display: none;"></p>
               </div>
-              <p id="dateError" class="text-danger mt-1 mb-0" style="display: none;"></p>
-            </div>
-        </form>
-    </div>
+          </form>
+      </div>
       
     <div id="salesReport" class="container p-4">
         <div class="text-center mb-4">

@@ -9,7 +9,7 @@ const Product=require("../../models/productSchema")
 
 const categoryInfo = async (req, res) => {
     try {
-        console.log("Fetching categories...");
+        
         const page = parseInt(req.query.page) || 1;
         const limit = 7;
         const skip = (page - 1) * limit;
@@ -27,7 +27,7 @@ const categoryInfo = async (req, res) => {
         };
 
         const categoryData = await Category.find(filter)
-            .sort({ createdAt: 1 })
+            .sort({ createdAt:-1 ,_id:-1})
             .skip(skip)
             .limit(limit);
 
@@ -218,40 +218,56 @@ const getEditCategory=async (req,res)=>{
 }
 
 
-const editCategory=async(req,res)=>{
+const editCategory = async (req, res) => {
     try {
-        const id=req.params.id;
-        
-        // const {categoryName,description}=req.body;
-        const categoryName  = req.body.categoryName.trim().toUpperCase();
-        const description = req.body.description;
-        const existingCategory = await Category.findOne({  name: { $regex: `^${categoryName}$`, $options: 'i' } });
+        const id = req.params.id;
 
-        
+       
 
-        if(existingCategory){
-            return res.status(400).json({error:"Category exist,Please choose another name"})
+        if (!req.body.categoryName || !req.body.description) {
+            return res.status(400).json({ error: "Name and description are required" });
         }
 
-        const updateCategory =await Category.findByIdAndUpdate(id,{
-            name:categoryName,
-            description:description,
-        },{new:true});
+        const categoryName = req.body.categoryName.trim().toUpperCase();
+        const description = req.body.description.trim();
 
-        if(updateCategory){
-            res.redirect("/admin/category");
-        }else{
-            res.status(400).json({error:"category not found"})
+        if (categoryName.length < 3) {
+            return res.status(400).json({ error: "Category name must be at least 3 characters" });
+        }
+        if (/^\d+$/.test(categoryName)) {
+            return res.status(400).json({ error: "Category name cannot contain only numbers" });
+        }
+        if (description.length < 4) {
+            return res.status(400).json({ error: "Description must be at least 4 characters" });
         }
 
+        const existingCategory = await Category.findOne({
+            _id: { $ne: id },
+            name: { $regex: `^${categoryName}$`, $options: 'i' }
+        });
 
+        
+        if (existingCategory) {
+            return res.status(400).json({ error: "Category exists, please choose another name" });
+        }
 
+        const updateCategory = await Category.findByIdAndUpdate(
+            id,
+            { name: categoryName, description: description },
+            { new: true }
+        );
+
+        if (updateCategory) {
+            return res.json({ message: "Category updated successfully" });
+        } else {
+            return res.status(400).json({ error: "Category not found" });
+        }
 
     } catch (error) {
-        
-        res.status(500).json({error:"Internal server error"})
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
     }
-}
+};
 
 module.exports={
     categoryInfo,

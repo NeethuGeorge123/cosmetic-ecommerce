@@ -36,7 +36,8 @@ const customerInfo = async (req, res) => {
             data: userData,
             currentPage: page,
             totalPages: Math.ceil(count / limit),
-            search: search   
+            search: search   ,
+            status:req.query.status || null
         });
 
     } catch (error) {
@@ -51,7 +52,7 @@ const customerBlocked=async(req,res)=>{
         
         let id=req.query.id;
         await User.updateOne({_id:id},{$set:{isBlocked:true}});
-        res.redirect("/admin/users")
+        res.redirect("/admin/users?status=blocked")
     } catch (error) {
         res.redirect("/pageerror")
     }
@@ -63,7 +64,7 @@ const customerunBlocked=async(req,res)=>{
     try {
         let id=req.query.id;
         await User.updateOne({_id:id},{$set:{isBlocked:false}})
-        res.redirect("/admin/users")
+        res.redirect("/admin/users?status=unblocked")
     } catch (error) {
         res.redirect("/pageerror")
     }

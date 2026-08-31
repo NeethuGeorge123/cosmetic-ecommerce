@@ -727,7 +727,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
    
     await Coupon.findOneAndUpdate(
       { name: couponCode },
-      { $addToSet: { userId: userId } } // Changed from usedBy to userId
+      { $addToSet: { userId: userId } } 
     );
    
   }

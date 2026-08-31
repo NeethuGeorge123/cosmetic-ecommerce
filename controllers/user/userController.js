@@ -184,26 +184,32 @@ const signup = asyncHandler(async (req, res, next) => {
     const existEmail = await User.findOne({ email });
 
     if (existEmail) {
-    
-      return res.render("user/signup", {
-        message: "User with this email already exist",
+      return res.status(400).json({
+          success: false,
+          field: "email",
+          message: "User with this email already exists"
       });
-    }
+  }
      
 
-    if (password !== cpassword) {
-      
-      return res.render("user/signup", { message: "Password do not match" });
-    }
-
-    if (referral && referral.trim()) {
-      const referralCode = referral.toUpperCase();
-      const referredUser = await User.findOne({ referralCode: referralCode });
-      if (!referredUser) {
-        req.flash("error", "Not a Valid Refferal Code");
-        return res.redirect("/signup");
-      }
-    }
+  if (password !== cpassword) {
+    return res.status(400).json({
+        success: false,
+        field: "confirm-password",
+        message: "Passwords do not match"
+    });
+}
+if (referral && referral.trim()) {
+  const referralCode = referral.toUpperCase();
+  const referredUser = await User.findOne({ referralCode: referralCode });
+  if (!referredUser) {
+      return res.status(400).json({
+          success: false,
+          field: "referral",
+          message: "Not a valid referral code"
+      });
+  }
+}
 
     const otp = generateOtp();
     const emailSent = await sendVerificationEmail(email, otp);
@@ -222,8 +228,8 @@ const signup = asyncHandler(async (req, res, next) => {
     req.session.userData = { name, phone, email, password: hashedPassword ,referral};
     //console.log(req.session.userData);
 
-    res.render("user/verify-otp.ejs");
     console.log("OTP Sent", otp);
+return res.json({ success: true, redirect: "/verify-otp" });
   
 });
 
@@ -245,7 +251,8 @@ const loadLogin = asyncHandler(async (req, res) => {
     if(req.session.user){
      return res.redirect("/")
     }
-    return res.render("user/login.ejs", { message: null });
+    const message = req.query.blocked ? "Your account was blocked by admin. You have been logged out." : null;
+    return res.render("user/login.ejs", { message });
  
 });
 
@@ -282,6 +289,13 @@ const securePassword =asyncHandler(async (password) => {
 
     return passwordHash;
   
+});
+
+const getVerifyOtp = asyncHandler(async (req, res) => {
+  if (!req.session.userOtp || !req.session.userData) {
+      return res.redirect("/signup");
+  }
+  res.render("user/verify-otp");
 });
 
 const verifyOtp = asyncHandler(async (req, res) => {
@@ -434,6 +448,7 @@ const logout = async (req, res) => {
         console.log("Session destructure error");
         return res.redirect("/pageNotFound");
       }
+      res.clearCookie("user_sid"); 
       return res.redirect("/login");
     });
   } catch (error) {
@@ -451,6 +466,7 @@ module.exports = {
   signup,
   loadLogin,
   userLogin,
+  getVerifyOtp,
   verifyOtp,
   resendOtp,
   logout,

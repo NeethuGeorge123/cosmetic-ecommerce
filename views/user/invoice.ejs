@@ -259,33 +259,33 @@
             ₹<%= (activeSubtotal * .18).toFixed(2) %>
           </div>
         </div>
-        <% if (order.discount > 0) { %>
-        <div class="total-row">
-          <div class="total-label">Discount:</div>
-          <div class="total-value">-₹<%= order.discount.toFixed(2) %></div>
-        </div>
-        <% } %>
-
-        <div class="total-row">
-          <div class="total-label">Delivery Charge:</div>
-          <div class="total-value">
-            <% if (order.status === 'cancelled') { %>
-              ₹0.00
-            <% } else if (deliveryCharge === 0) { %>
-              Free Shipping
-            <% } else { %>
-              ₹<%= deliveryCharge.toFixed(2) %>
-            <% } %>
+        <% if (order.discount > 0 && order.status !== 'cancelled' && order.status !== 'returned') { %>
+          <div class="total-row">
+            <div class="total-label">Discount:</div>
+            <div class="total-value">-₹<%= order.discount.toFixed(2) %></div>
           </div>
-        </div>
-        <div class="total-row grand-total">
-          <div class="total-label">Grand Total:</div>
-          <% if(order.status === 'cancelled') { %>
-            <span>₹ 0</span>
-            <%} else{%>
-          <div class="total-value">₹<%= order.finalAmount.toFixed(2) %></div>
-          <%}%>
-        </div>
+          <% } %>
+
+          <div class="total-row">
+            <div class="total-label">Delivery Charge:</div>
+            <div class="total-value">
+              <% if (order.status === 'cancelled' || order.status === 'returned') { %>
+                ₹0.00
+              <% } else if (deliveryCharge === 0) { %>
+                Free Shipping
+              <% } else { %>
+                ₹<%= deliveryCharge.toFixed(2) %>
+              <% } %>
+            </div>
+          </div>
+          <div class="total-row grand-total">
+            <div class="total-label">Grand Total:</div>
+            <% if(order.status === 'cancelled' || order.status === 'returned') { %>
+              <span>₹ 0</span>
+              <%} else{%>
+            <div class="total-value">₹<%= order.finalAmount.toFixed(2) %></div>
+            <%}%>
+          </div>
       </div>
 
       <div class="footer">

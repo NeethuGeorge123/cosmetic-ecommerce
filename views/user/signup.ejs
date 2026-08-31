@@ -11,15 +11,15 @@
         <div class="left-section">
             <h2>Sign Up</h2>
             <form id="signup-form" method="post" action="/signup">
-                <input type="text" id="full-name" placeholder="Full Name" name="name" required>
+                <input type="text" id="full-name" placeholder="Full Name" name="name" >
                 <span id="full-name-error"></span>
-                <input type="email" id="email" placeholder="Email Address" name="email" required>
+                <input type="email" id="email" placeholder="Email Address" name="email" >
                 <span id="email-error"></span>
-                <input type="tel" id="phone" placeholder="Phone Number" name="phone" required>
+                <input type="tel" id="phone" placeholder="Phone Number" name="phone" >
                 <span id="phone-error"></span>
-                <input type="password" id="password" placeholder="Password" name="password" required>
+                <input type="password" id="password" placeholder="Password" name="password" >
                 <span id="password-error"></span>
-                <input type="password" id="confirm-password" placeholder="Confirm Password" name="cpassword" required>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" name="cpassword" >
                 <span id="confirm-password-error"></span>
                 <div class="form-group">
                     <input
@@ -231,35 +231,55 @@
             const phone = document.getElementById("phone");
             const password = document.getElementById("password");
             const confirmPassword = document.getElementById("confirm-password");
+            const referral = document.getElementById("referral");
             const signupForm = document.getElementById("signup-form");
-
+    
             const fullNameError = document.getElementById("full-name-error");
             const emailError = document.getElementById("email-error");
             const phoneError = document.getElementById("phone-error");
             const passwordError = document.getElementById("password-error");
             const confirmPasswordError = document.getElementById("confirm-password-error");
- 
+    
+            // Create a referral error span if it doesn't exist
+            let referralError = document.getElementById("referral-error");
+            if (!referralError) {
+                referralError = document.createElement("span");
+                referralError.id = "referral-error";
+                referral.parentElement.appendChild(referralError);
+            }
+    
             const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             const phonePattern = /^[0-9]{10}$/;
             const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+    
             function showErrorMessage(element, message) {
                 element.textContent = message;
                 element.style.color = "red";
             }
-
+    
             function clearErrorMessage(element) {
                 element.textContent = "";
             }
-
+    
+            function clearAllErrors() {
+                [fullNameError, emailError, phoneError, passwordError, confirmPasswordError, referralError].forEach(clearErrorMessage);
+            }
+    
+            // Map field name (from server) -> its error span + input element
+            const fieldMap = {
+                "email": { input: email, error: emailError },
+                "confirm-password": { input: confirmPassword, error: confirmPasswordError },
+                "referral": { input: referral, error: referralError },
+            };
+    
             fullName.addEventListener("input", function () {
-                if (fullName.value.trim() === "" || !( /^[A-Za-z\s]+$/.test(fullName.value) )) {
+                if (fullName.value.trim() === "" || !(/^[A-Za-z\s]+$/.test(fullName.value))) {
                     showErrorMessage(fullNameError, "Full Name is required.");
                 } else {
                     clearErrorMessage(fullNameError);
                 }
             });
-
+    
             email.addEventListener("input", function () {
                 if (!emailPattern.test(email.value.trim())) {
                     showErrorMessage(emailError, "Enter a valid email address.");
@@ -267,7 +287,7 @@
                     clearErrorMessage(emailError);
                 }
             });
-
+    
             phone.addEventListener("input", function () {
                 if (!phone.value.match(/^[0-9]*$/)) {
                     showErrorMessage(phoneError, "Phone number must contain only digits.");
@@ -279,7 +299,7 @@
                     clearErrorMessage(phoneError);
                 }
             });
-
+    
             password.addEventListener("input", function () {
                 if (!passwordPattern.test(password.value.trim())) {
                     showErrorMessage(passwordError, "Password must be at least 8 characters, contain one uppercase, one lowercase, one number, and one special character.");
@@ -287,7 +307,7 @@
                     clearErrorMessage(passwordError);
                 }
             });
-
+    
             confirmPassword.addEventListener("input", function () {
                 if (confirmPassword.value !== password.value) {
                     showErrorMessage(confirmPasswordError, "Passwords do not match.");
@@ -295,39 +315,73 @@
                     clearErrorMessage(confirmPasswordError);
                 }
             });
-
+    
             signupForm.addEventListener("submit", function (event) {
                 event.preventDefault();
-
-                let errors = [];
-
-                if (fullName.value.trim() === "") errors.push("Full Name is required.");
-                if (!emailPattern.test(email.value.trim())) errors.push("Enter a valid email address.");
-                if (!phonePattern.test(phone.value.trim())) errors.push("Phone number must be exactly 10 digits.");
-                if (!passwordPattern.test(password.value.trim())) errors.push("Password must meet complexity requirements.");
-                if (confirmPassword.value !== password.value) errors.push("Passwords do not match.");
-
-                if (errors.length > 0) {
-    Swal.fire({
-        icon: "error",
-        title: "Validation Failed",
-        html: errors.join("<br>"),
-        confirmButtonColor: "#ff5c7a"
-    });
-} else {
-    Swal.fire({
-        icon: "success",
-        title: "OTP Sent",
-        text: "We’ve sent a One-Time Password (OTP) to your email. Please verify to complete signup.",
-        confirmButtonColor: "#ff5c7a"
-    }).then(() => {
-        // ✅ Submit form after showing SweetAlert
-        signupForm.submit();
-    });
-}
-
+                clearAllErrors();
+    
+                let hasError = false;
+    
+                if (fullName.value.trim() === "" || !(/^[A-Za-z\s]+$/.test(fullName.value))) {
+                    showErrorMessage(fullNameError, "Full Name is required.");
+                    hasError = true;
+                }
+                if (!emailPattern.test(email.value.trim())) {
+                    showErrorMessage(emailError, "Enter a valid email address.");
+                    hasError = true;
+                }
+                if (!phonePattern.test(phone.value.trim())) {
+                    showErrorMessage(phoneError, "Phone number must be exactly 10 digits.");
+                    hasError = true;
+                }
+                if (!passwordPattern.test(password.value.trim())) {
+                    showErrorMessage(passwordError, "Password must meet complexity requirements.");
+                    hasError = true;
+                }
+                if (confirmPassword.value !== password.value) {
+                    showErrorMessage(confirmPasswordError, "Passwords do not match.");
+                    hasError = true;
+                }
+    
+                if (hasError) return;
+    
+                const submitBtn = signupForm.querySelector("button[type='submit']");
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Please wait...";
+    
+                const formData = new FormData(signupForm);
+    
+                fetch("/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                })
+                .then(res => res.json().then(data => ({ status: res.status, data })))
+                .then(({ data }) => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Sign Up";
+    
+                    if (data.success) {
+                        window.location.href = data.redirect || "/verify-otp";
+                    } else {
+                        const target = fieldMap[data.field];
+                        if (target) {
+                            showErrorMessage(target.error, data.message);
+                            target.input.focus();
+                        } else {
+                            // fallback: show under email if field unknown
+                            showErrorMessage(emailError, data.message || "Something went wrong. Please try again.");
+                        }
+                    }
+                })
+                .catch(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Sign Up";
+                    showErrorMessage(emailError, "Server error. Please try again.");
+                });
             });
         });
     </script>
 </body>
 </html>
+

@@ -4,7 +4,7 @@ const multer = require("multer");
 
 const storage = multer.memoryStorage();
 const getBrandPage = async (req, res) => {
-  console.log("getbrand function");
+  
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 4;
@@ -21,6 +21,7 @@ const getBrandPage = async (req, res) => {
       currentPage: page,
       totalPages: totalPages,
       totalBrands: totalBrands,
+      status:req.query.status || null
     });
   } catch (error) {
     res.redirect("/pageerror");
@@ -77,7 +78,7 @@ const deleteBrand = async (req, res) => {
       return res.status(400).redirect("/pageerror");
     }
     await Brand.deleteOne({ _id: id });
-    res.redirect("/admin/brands");
+    res.redirect("/admin/brands?status=deleted");
   } catch (error) {
     console.error("Error deleting brand:", error);
     res.status(500).redirect("/pageerror");

@@ -18,21 +18,23 @@ const storage=multer.diskStorage({
 
 
 // File type filter
-// const fileFilter = (req, file, cb) => {
-//     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-//     if (allowedTypes.includes(file.mimetype)) {
-//         cb(null, true);
-//     } else {
-//         cb(new Error('Invalid file type. Only JPEG, PNG, JPG, and WEBP are allowed.'), false);
-//     }
-// };
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Invalid file type. Only JPEG, PNG, JPG, and WEBP are allowed.'), false);
+    }
+};
 
 // Export multer with both storage and filter
-// const upload = multer({ storage,fileFilter });
+const upload = multer({ storage,fileFilter,
+    //limits: { fileSize: 2 * 1024 * 1024 }
+ });
 
 
 
 
 
 
-module.exports={storage};
+module.exports={storage,upload};

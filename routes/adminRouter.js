@@ -10,6 +10,7 @@ const adminOrderController=require("../controllers/admin/adminOrderController")
 const couponController=require("../controllers/admin/couponController")
 const walletController=require("../controllers/admin/walletController")
 const returnController=require("../controllers/admin/returnController")
+const session = require("express-session");
 //const walletController=require("../controllers/admin/walletController")
 
 const {userAuth,adminAuth}=require("../middlewares/auth")
@@ -43,6 +44,19 @@ const uploads = multer({
 
 
 console.log("uploads",uploads)
+const adminSession = session({
+    name: "admin_sid",
+    secret: process.env.ADMIN_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+    }
+});
+
+router.use(adminSession);
 
 
 

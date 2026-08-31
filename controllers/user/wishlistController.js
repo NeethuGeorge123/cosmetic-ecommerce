@@ -34,7 +34,7 @@ const loadWishlist = asyncHandler(async (req, res) => {
                 quantity: { $gt: 0 }
             }).populate('category');
 
-            // clean these out of the wishlist doc itself so they don't linger
+            
             const validProductIds = wishlistProducts.map(p => p._id.toString());
             const removedProductIds = filteredProductIds.filter(
                 pid => !validProductIds.includes(pid)

@@ -30,7 +30,7 @@ const login = async (req, res) => {
             return res.redirect("/admin/login");
         }
 
-        req.session.admin = true;
+        req.session.admin = admin._id;
         return res.redirect("/admin/dashboard");
     } catch (error) {
         console.log("Login Error:", error);
@@ -555,8 +555,7 @@ const generateLedgerBook = async (req, res) => {
             return revenueStatuses.includes(status) ? sum + order.finalAmount : sum;
         }, 0);
 
-        // only count discount from orders that generated actual revenue —
-        // exclude cancelled/returned since that discount didn't result in a completed sale
+        
         const totalDiscount = ledgerData.reduce((sum, order) => {
             const status = order.status?.toLowerCase();
             return revenueStatuses.includes(status) ? sum + (order.discount || 0) : sum;
@@ -564,7 +563,7 @@ const generateLedgerBook = async (req, res) => {
 
         const netAmount = +(totalRevenue - totalDiscount).toFixed(2);
 
-        const totalOrders = ledgerData.length; // all statuses, as intended
+        const totalOrders = ledgerData.length;
 
         res.render('admin/ledger', {
             title: 'Ledger Book',
@@ -588,6 +587,7 @@ const logout = async (req, res) => {
             if (err) {
                 return res.redirect("/pageerror");
             }
+            res.clearCookie("admin_sid"); 
             res.redirect("/admin/login");
         });
     } catch (error) {

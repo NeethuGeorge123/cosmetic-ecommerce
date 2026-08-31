@@ -9,6 +9,7 @@ const sendVerificationEmail = require("../../util/sendVerificationEmail");
 const { format } = require("sharp");
 const asyncHandler = require("../../middlewares/asyncHandler");
 const Messages=require("../../util/messages/profileMessages")
+const { upload } = require("../../helpers/multer"); 
 
 
 function generateOtp(){
@@ -208,16 +209,74 @@ const verifyEmailOtp = asyncHandler(async (req,res)=>{
 })
 
 
-const updateEmail = asyncHandler(async(req,res)=>{
-    
-        const newEmail=req.body.newEmail;
-        const userId=req.session.user;
-        await User.findByIdAndUpdate(userId,{email:newEmail})
-        const user=await User.findById(userId)
-        res.render("user/myProfile",{user})
-    
-})
+const submitNewEmail = asyncHandler(async (req, res) => {
+    const newEmail = req.body.newEmail ? req.body.newEmail.trim().toLowerCase() : "";
+    const userId = req.session.user;
 
+    if (!userId) {
+        return res.status(401).json({ success: false, message: "Session expired. Please log in again." });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        return res.status(400).json({ success: false, message: "Please enter a valid email address" });
+    }
+
+    const currentUser = await User.findById(userId);
+    if (currentUser.email.toLowerCase() === newEmail) {
+        return res.status(400).json({ success: false, message: "This is already your current email" });
+    }
+
+    const emailTaken = await User.findOne({ email: newEmail });
+    if (emailTaken) {
+        return res.status(400).json({ success: false, message: "This email is already registered to another account" });
+    }
+
+    const otp = generateOtp();
+    const emailSent = await sendVerificationEmail(newEmail, otp);
+
+    if (!emailSent) {
+        return res.status(500).json({ success: false, message: "Failed to send OTP. Please try again" });
+    }
+
+    req.session.newEmailOtp = otp;
+    req.session.pendingNewEmail = newEmail;
+    console.log("New Email OTP:", otp);
+
+    return res.json({ success: true, message: "OTP sent to your new email" });
+});
+
+
+const verifyNewEmailOtp = asyncHandler(async (req, res) => {
+    const enteredOtp = req.body.otp;
+    const userId = req.session.user;
+
+    if (!req.session.pendingNewEmail || !req.session.newEmailOtp) {
+        return res.status(400).json({ success: false, message: "Session expired. Please restart the process." });
+    }
+
+    if (enteredOtp !== req.session.newEmailOtp) {
+        return res.status(400).json({ success: false, message: "Incorrect OTP" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { email: req.session.pendingNewEmail },
+        { new: true }
+    );
+
+    if (!updatedUser) {
+        return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    
+    delete req.session.newEmailOtp;
+    delete req.session.pendingNewEmail;
+    delete req.session.userOtp;
+    delete req.session.userData;
+    delete req.session.email;
+
+    return res.json({ success: true, message: "Email updated successfully" });
+});
 
 const changePassword = asyncHandler(async(req,res)=>{
     
@@ -415,6 +474,69 @@ const deleteAddress= asyncHandler(async(req,res)=>{
 
     
 })
+const updateProfileName = asyncHandler(async (req, res) => {
+    try {
+        const userId = req.session.user;
+        if (!userId) {
+            return res.status(401).json({ success: false, message: "Session expired. Please log in again." });
+        }
+
+        const name = req.body.name ? req.body.name.trim() : "";
+
+        if (!name) {
+            return res.status(400).json({ success: false, message: "Name is required" });
+        }
+        if (!/^[A-Za-z ]{3,50}$/.test(name)) {
+            return res.status(400).json({ success: false, message: "Name must be 3-50 letters only" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { name }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        return res.json({ success: true, message: "Name updated successfully" });
+
+    } catch (error) {
+        console.error("Error updating profile name:", error);
+        return res.status(500).json({ success: false, message: "Server error. Please try again." });
+    }
+});
+
+
+const updateProfileImage = [
+    upload.single("profileImage"),
+    asyncHandler(async (req, res) => {
+        try {
+            const userId = req.session.user;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Session expired. Please log in again." });
+            }
+            if (!req.file) {
+                return res.status(400).json({ success: false, message: "No image file uploaded" });
+            }
+
+            const imageUrl = `/uploads/re-image/${req.file.filename}`;
+
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { profileImage: imageUrl },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                return res.status(404).json({ success: false, message: "User not found" });
+            }
+
+            return res.json({ success: true, message: "Profile image updated", imageUrl });
+
+        } catch (error) {
+            console.error("Error updating profile image:", error);
+            return res.status(500).json({ success: false, message: "Server error while uploading image" });
+        }
+    })
+];
 
 
 module.exports={getForgotPassPage,
@@ -428,7 +550,7 @@ module.exports={getForgotPassPage,
     changeEmail,
     changeEmailValid,
     verifyEmailOtp,
-    updateEmail,
+    //updateEmail,
     changePassword,
     changePasswordValid,
     verifyChangePassOtp,
@@ -438,7 +560,12 @@ module.exports={getForgotPassPage,
     postAddAddress,
     editAddress,
     postEditAddress,
-    deleteAddress
+    deleteAddress,
+    updateProfileName,
+    updateProfileImage,
+    submitNewEmail,
+    verifyNewEmailOtp
+
 
     
 }

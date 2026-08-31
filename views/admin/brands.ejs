@@ -306,6 +306,7 @@
         }
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <%- include('../partials/admin/header') %>
@@ -383,11 +384,12 @@
                     >
                     <% } %>
                     <a
-                      href="/admin/deleteBrand?id=<%= brand._id %>"
-                      class="btn red"
-                      onclick="return confirmDelete()"
-                      >Delete</a
-                    >
+                      
+  href="#"
+  class="btn red"
+  onclick="confirmDelete(event, '/admin/deleteBrand?id=<%= brand._id %>')"
+  >Delete</a
+>
                   </td>
                 </tr>
                 <% }) %>
@@ -395,7 +397,7 @@
             </table>
 
             <script>
-              const existingBrands = <%- JSON.stringify(data.map(b => b.brandName.toLowerCase())) %>;
+              const existingBrands = <%- JSON.stringify(data.map(b => b.brandName.toLowerCase())) %>
             </script>
 
             <!-- Pagination -->
@@ -432,7 +434,7 @@
         const brandLower = name.trim().toLowerCase();
         
 
-        // Brand Name validations
+        
         if (name.trim() === "") {
           displayErrorMessage("name-error", "Brand name cannot be empty");
           isValid = false;
@@ -463,7 +465,7 @@
         }
         
 
-        // Brand Image validations
+        
         if (image.files.length === 0) {
           displayErrorMessage("image-error", "Please select an image file");
           isValid = false;
@@ -495,7 +497,7 @@
         }
 
         if (isValid) {
-          event.target.submit(); // Submit form if valid
+          event.target.submit(); 
         }
         return isValid;
       }
@@ -514,9 +516,35 @@
         });
       }
 
-      function confirmDelete() {
-        return confirm("Are you sure you want to delete this brand?");
-      }
+      
+  <% if (typeof status !== 'undefined' && status === 'deleted') { %>
+      Swal.fire({
+          icon: 'success',
+          title: 'Brand Deleted',
+          text: 'The brand has been deleted successfully.',
+          timer: 2000,
+          showConfirmButton: false
+      });
+  <% } %>
+
+
+  function confirmDelete(event, deleteUrl) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This brand will be permanently deleted.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = deleteUrl;
+        }
+    });
+}
     </script> 
   </body>
 </html>

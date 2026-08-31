@@ -25,7 +25,7 @@ router.post("/signup",userController.signup)
 router.get("/login",userController.loadLogin)
 router.post("/login",userController.userLogin)
 
-
+router.get("/verify-otp", userController.getVerifyOtp);
 router.post("/verify-otp",userController.verifyOtp)
 router.post("/resend-otp", userController.resendOtp);
 
@@ -40,13 +40,17 @@ router.post("/reset-password",profileController.postNewPassword)
 router.get("/userProfile",userAuth,profileController.userProfile)
 
 router.get("/my-profile",userAuth,profileController.getMyProfile)
+router.post("/updateProfileName", userAuth, profileController.updateProfileName);
+router.post("/updateProfileImage", userAuth, profileController.updateProfileImage);
 
 
 
 router.get("/change-email",userAuth,profileController.changeEmail)
 router.post("/change-email",userAuth,profileController.changeEmailValid)
 router.post("/verify-email-otp",userAuth,profileController.verifyEmailOtp);
-router.post("/update-email",userAuth,profileController.updateEmail)
+// router.post("/update-email",userAuth,profileController.updateEmail)
+router.post("/submitNewEmail", userAuth, profileController.submitNewEmail);
+router.post("/verifyNewEmailOtp", userAuth, profileController.verifyNewEmailOtp);
 router.get("/change-password",userAuth,profileController.changePassword)
 router.post("/change-password",userAuth,profileController.changePasswordValid)
 router.post("/verify-changepassword-otp",userAuth,profileController.verifyChangePassOtp)

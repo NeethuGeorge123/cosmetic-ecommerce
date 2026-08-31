@@ -11,7 +11,7 @@ const handleItemReturn = async (req, res) => {
   try {
     const { action, orderId, itemId, category, message } = req.body;
     
-    console.log("📥 handleItemReturn:", { action, orderId, itemId });
+   
     
     if (!orderId || !itemId) {
       return res.status(400).json({ 

@@ -120,7 +120,7 @@ const getAllProducts = async (req, res) => {
         { brand: { $regex: new RegExp(".*" + search + ".*", "i") } },
       ],
     })
-    //.sort({ createdAt: -1 }) 
+    .sort({ createdAt: -1 }) 
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .populate("category")
@@ -421,20 +421,7 @@ const deleteImage = async (req, res) => {
       await Product.findByIdAndUpdate(productIdToServer,{$pull:{productImage:imageNameToServer}})
 
       
-      // product.productImage = product.productImage.filter(img => img !== imageNameToServer);
-      // await product.save();
-
       
-      // const imagePath = path.join(__dirname, '../uploads/re-image', imageNameToServer);
-      // try {
-      //     await fs.access(imagePath); 
-      //     await fs.unlink(imagePath); 
-      // } catch (err) {
-      //     if (err.code !== 'ENOENT') {
-      //         throw err; 
-      //     }
-      //    
-      // }
 
       return res.status(200).json({ status: true, message: 'Image deleted successfully.' });
   } catch (error) {

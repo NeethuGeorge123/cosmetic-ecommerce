@@ -22,6 +22,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use(session({
+  name: "user_sid",
     secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:true,
