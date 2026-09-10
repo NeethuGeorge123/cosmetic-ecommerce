@@ -1,165 +1,149 @@
-const User=require("../../models/userSignupSchema")
-const Product=require("../../models/productSchema")
-const Wishlist=require("../../models/wishlistSchema")
-const Cart=require("../../models/cartSchema")
+const User = require("../../models/userSignupSchema");
+const Product = require("../../models/productSchema");
+const Wishlist = require("../../models/wishlistSchema");
+const Cart = require("../../models/cartSchema");
 const asyncHandler = require("../../middlewares/asyncHandler");
 
+const loadWishlist = asyncHandler(async (req, res) => {
+  const userId = req.session.user;
 
+  const wishlistDoc = await Wishlist.findOne({ userId });
 
-const loadWishlist = asyncHandler(async (req, res) => { 
-    
-        const userId = req.session.user;
+  let wishlistProducts = [];
 
-        const wishlistDoc = await Wishlist.findOne({ userId });
+  if (wishlistDoc && wishlistDoc.products.length > 0) {
+    const wishlistProductIds = wishlistDoc.products.map((item) =>
+      item.productId.toString()
+    );
 
-        let wishlistProducts = [];
+    const cart = await Cart.findOne({ userId });
+    const cartProductIds = cart
+      ? cart.items.map((item) => item.productId.toString())
+      : [];
 
-        if (wishlistDoc && wishlistDoc.products.length > 0) {
-        
-            const wishlistProductIds = wishlistDoc.products.map(item => item.productId.toString());
+    const filteredProductIds = wishlistProductIds.filter(
+      (pid) => !cartProductIds.includes(pid)
+    );
 
-            const cart = await Cart.findOne({ userId });
-            const cartProductIds = cart 
-                ? cart.items.map(item => item.productId.toString())
-                : [];
+    wishlistProducts = await Product.find({
+      _id: { $in: filteredProductIds },
+      isBlocked: false,
+      quantity: { $gt: 0 },
+    }).populate("category");
 
-            
-            const filteredProductIds = wishlistProductIds.filter(
-                pid => !cartProductIds.includes(pid) 
-            );
+    const validProductIds = wishlistProducts.map((p) => p._id.toString());
+    const removedProductIds = filteredProductIds.filter(
+      (pid) => !validProductIds.includes(pid)
+    );
 
-            wishlistProducts = await Product.find({
-                _id: { $in: filteredProductIds },
-                isBlocked: false,
-                quantity: { $gt: 0 }
-            }).populate('category');
+    if (removedProductIds.length > 0) {
+      await Wishlist.updateOne(
+        { userId },
+        { $pull: { products: { productId: { $in: removedProductIds } } } }
+      );
+    }
+  }
 
-            
-            const validProductIds = wishlistProducts.map(p => p._id.toString());
-            const removedProductIds = filteredProductIds.filter(
-                pid => !validProductIds.includes(pid)
-            );
-
-            if (removedProductIds.length > 0) {
-                await Wishlist.updateOne(
-                    { userId },
-                    { $pull: { products: { productId: { $in: removedProductIds } } } }
-                );
-            }
-        }
-
-        res.render("user/wishlist", {
-            wishlist: wishlistProducts
-        });
-
-    
+  res.render("user/wishlist", {
+    wishlist: wishlistProducts,
+  });
 });
-
-
-
 
 const addToWishlist = asyncHandler(async (req, res) => {
-    const userId = req.session.user;
-    const productId = req.body.productId;
-    const cart=await Cart.findOne({userId})
-    
+  const userId = req.session.user;
+  const productId = req.body.productId;
 
-    
-    const specificItem=cart.items.find((item)=>
-        item.productId && item.productId.toString()===productId.toString()
-    
-    )
+  const cart = await Cart.findOne({ userId });
 
-    
-    if(specificItem){
-        return res.status(200).json({ status: false, message: 'Product already in cart' });
+  if (cart) {
+    const specificItem = cart.items.find(
+      (item) =>
+        item.productId && item.productId.toString() === productId.toString()
+    );
+
+    if (specificItem) {
+      return res
+        .status(200)
+        .json({ status: false, message: "Product already in cart" });
     }
+  }
 
+  let wishlist = await Wishlist.findOne({ userId });
+  if (!wishlist) {
+    wishlist = new Wishlist({ userId, products: [] });
+  }
 
-    let wishlist = await Wishlist.findOne({ userId });
-    if (!wishlist) {
-        wishlist = new Wishlist({ userId, products: [] });
-    }
+  const alreadyExists = wishlist.products.find(
+    (p) => p.productId.toString() === productId
+  );
+  if (alreadyExists) {
+    return res
+      .status(200)
+      .json({ status: false, message: "Product already in wishlist" });
+  }
 
-    const alreadyExists = wishlist.products.find(p => p.productId.toString() === productId);
-    if (alreadyExists) {
-        return res.status(200).json({ status: false, message: 'Product already in wishlist' });
-    }
-
-    wishlist.products.push({ productId });
-    await wishlist.save();
-    return res.status(200).json({ status: true, message: 'Product added to wishlist' });
-    
+  wishlist.products.push({ productId });
+  await wishlist.save();
+  return res
+    .status(200)
+    .json({ status: true, message: "Product added to wishlist" });
 });
-
-
 
 const removeProduct = asyncHandler(async (req, res) => {
-    
-        const productId = req.query.productId;
-        const userId = req.session.user;
-        
+  const productId = req.query.productId;
+  const userId = req.session.user;
 
-        const wishlist = await Wishlist.findOne({ userId });
+  const wishlist = await Wishlist.findOne({ userId });
 
-        if (!wishlist) {
-            return res.status(400).json({success:false,message:'Wishlist not available'})
-        }
+  if (!wishlist) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Wishlist not available" });
+  }
 
-        wishlist.products = wishlist.products.filter(
-            (p) => p.productId.toString() !== productId
-        );
-        
+  wishlist.products = wishlist.products.filter(
+    (p) => p.productId.toString() !== productId
+  );
 
-        await wishlist.save();
-        return res.status(200).json({success:true,message:"Product removed successfully"})
-
-    
+  await wishlist.save();
+  return res
+    .status(200)
+    .json({ success: true, message: "Product removed successfully" });
 });
- 
 
 const getBadgeCount = asyncHandler(async (req, res) => {
-    
-      if (!req.session.user) {
-        return res.json({ count: 0 });
-      }
-  
-      const userId = req.session.user;
-  
-      const wishlist = await Wishlist.findOne({ userId });
-      const cart = await Cart.findOne({ userId });
-  
-      if (!wishlist) {
-        return res.json({ count: 0 });
-      }
-  
-      const wishlistProductIds = wishlist.products
-        .map(item => item.productId?.toString())
-        .filter(Boolean); 
-  
-      const cartProductIds = cart
-        ? cart.items.map(item => item.productId?.toString())
-        : [];
-  
-      
-      const filteredProductIds = wishlistProductIds.filter(
-        pid => !cartProductIds.includes(pid)
-      );
-  
-      const availableCount = await Product.countDocuments({
-        _id: { $in: filteredProductIds },
-        isBlocked: false,
-        quantity: { $gt: 0 }
-      });
-  
-      res.json({ count: availableCount });
-    
+  if (!req.session.user) {
+    return res.json({ count: 0 });
+  }
+
+  const userId = req.session.user;
+
+  const wishlist = await Wishlist.findOne({ userId });
+  const cart = await Cart.findOne({ userId });
+
+  if (!wishlist) {
+    return res.json({ count: 0 });
+  }
+
+  const wishlistProductIds = wishlist.products
+    .map((item) => item.productId?.toString())
+    .filter(Boolean);
+
+  const cartProductIds = cart
+    ? cart.items.map((item) => item.productId?.toString())
+    : [];
+
+  const filteredProductIds = wishlistProductIds.filter(
+    (pid) => !cartProductIds.includes(pid)
+  );
+
+  const availableCount = await Product.countDocuments({
+    _id: { $in: filteredProductIds },
+    isBlocked: false,
+    quantity: { $gt: 0 },
   });
-  
 
+  res.json({ count: availableCount });
+});
 
-module.exports={loadWishlist,
-    addToWishlist,
-    removeProduct,
-    getBadgeCount
-}     
+module.exports = { loadWishlist, addToWishlist, removeProduct, getBadgeCount };

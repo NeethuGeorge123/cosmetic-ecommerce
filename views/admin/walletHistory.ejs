@@ -20,88 +20,66 @@
       </thead>
       <tbody>
         <% if (transactions.length === 0) { %>
-          <tr>
-            <td colspan="9" class="no-data">No transactions found.</td>
-          </tr>
-        <% } else { %>
-          <% transactions.forEach((txn, index) => { %>
-            <tr>
-              <td><%= (currentPage - 1) * 10 + index + 1 %></td>
-              <td><%= txn.userName %></td>
-              <td><%= txn.userEmail %></td>
-              <td><%= txn.transactionId %></td>
-              <td><%= txn.orderId %></td>
-              <td>₹<%= txn.amount %></td>
-              <td class="<%= txn.type === 'credit' ? 'credit' : 'debit' %>">
-                <%= txn.type %>
-              </td>
-              <td><%= txn.description %></td>
-              <td><%= txn.date.toLocaleString() %></td>
-            </tr>
-          <% }); %>
-        <% } %>
+        <tr>
+          <td colspan="9" class="no-data">No transactions found.</td>
+        </tr>
+        <% } else { %> <% transactions.forEach((txn, index) => { %>
+        <tr>
+          <td><%= (currentPage - 1) * 10 + index + 1 %></td>
+          <td><%= txn.userName %></td>
+          <td><%= txn.userEmail %></td>
+          <td><%= txn.transactionId %></td>
+          <td><%= txn.orderId %></td>
+          <td>₹<%= txn.amount %></td>
+          <td class="<%= txn.type === 'credit' ? 'credit' : 'debit' %>">
+            <%= txn.type %>
+          </td>
+          <td><%= txn.description %></td>
+          <td><%= txn.date.toLocaleString() %></td>
+        </tr>
+        <% }); %> <% } %>
       </tbody>
     </table>
   </div>
 
-  <!-- Pagination -->
   <nav class="pagination-nav">
     <ul class="pagination">
-
-      <!-- Prev -->
       <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
         <a class="page-link" href="?page=<%= currentPage - 1 %>">Prev</a>
       </li>
-    
-      <!-- First Page -->
+
       <li class="page-item <%= currentPage === 1 ? 'active' : '' %>">
         <a class="page-link" href="?page=1">1</a>
       </li>
-    
-      <!-- Left Dots -->
+
       <% if (currentPage > 3) { %>
-        <li class="page-item disabled">
-          <span class="page-link">...</span>
-        </li>
+      <li class="page-item disabled">
+        <span class="page-link">...</span>
+      </li>
+      <% } %> <% for ( let i = Math.max(2, currentPage - 1); i <=
+      Math.min(totalPages - 1, currentPage + 1); i++ ) { %>
+      <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+      </li>
+      <% } %> <% if (currentPage < totalPages - 2) { %>
+      <li class="page-item disabled">
+        <span class="page-link">...</span>
+      </li>
+      <% } %> <% if (totalPages > 1) { %>
+      <li class="page-item <%= currentPage === totalPages ? 'active' : '' %>">
+        <a class="page-link" href="?page=<%= totalPages %>">
+          <%= totalPages %>
+        </a>
+      </li>
       <% } %>
-    
-      <!-- Pages Around Current Page -->
-      <% for (
-          let i = Math.max(2, currentPage - 1);
-          i <= Math.min(totalPages - 1, currentPage + 1);
-          i++
-      ) { %>
-        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-        </li>
-      <% } %>
-    
-      <!-- Right Dots -->
-      <% if (currentPage < totalPages - 2) { %>
-        <li class="page-item disabled">
-          <span class="page-link">...</span>
-        </li>
-      <% } %>
-    
-      <!-- Last Page -->
-      <% if (totalPages > 1) { %>
-        <li class="page-item <%= currentPage === totalPages ? 'active' : '' %>">
-          <a class="page-link" href="?page=<%= totalPages %>">
-            <%= totalPages %>
-          </a>
-        </li>
-      <% } %>
-    
-      <!-- Next -->
+
       <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
         <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
       </li>
-    
     </ul>
   </nav>
 </div>
 
-<!-- Move CSS inside <style> -->
 <style>
   .wallet-container {
     max-width: 95%;
@@ -110,7 +88,7 @@
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
+    font-family: "Arial", sans-serif;
   }
 
   .wallet-title {
@@ -130,7 +108,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
-    min-width: 900px; /* Makes table scroll on smaller screens */
+    min-width: 900px;
   }
 
   .wallet-table thead {
@@ -138,7 +116,8 @@
     color: #fff;
   }
 
-  .wallet-table th, .wallet-table td {
+  .wallet-table th,
+  .wallet-table td {
     padding: 12px 15px;
     text-align: center;
     border: 1px solid #ddd;
@@ -169,7 +148,6 @@
     font-weight: bold;
   }
 
-  /* Pagination styling */
   .pagination-nav {
     display: flex;
     justify-content: center;
@@ -205,13 +183,13 @@
     color: #fff;
   }
 
-  /* RESPONSIVE DESIGN */
   @media (max-width: 768px) {
     .wallet-title {
       font-size: 1.5rem;
     }
 
-    .wallet-table th, .wallet-table td {
+    .wallet-table th,
+    .wallet-table td {
       padding: 8px;
       font-size: 0.85rem;
     }
@@ -222,7 +200,8 @@
       font-size: 1.2rem;
     }
 
-    .wallet-table th, .wallet-table td {
+    .wallet-table th,
+    .wallet-table td {
       font-size: 0.8rem;
       padding: 6px;
     }

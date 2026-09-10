@@ -310,6 +310,9 @@
       font-size: 18px;
       transition: all 0.3s ease;
     }
+    .action-btn i.far {
+  color: #495057;
+}
     
     .action-btn:hover {
       background-color: #fee2e1;
@@ -711,9 +714,9 @@
                                               <button type="button" class="button button-add-to-cart" onclick="addToCart('<%=product._id%>')" <% if (isOutOfStock) { %> disabled style="opacity:0.5; cursor:not-allowed;" <% } %>>
                                                 <i class="fas fa-shopping-cart"></i> <%= isOutOfStock ? 'Out of Stock' : 'Add to cart' %>
                                             </button>
-                                                <button  class="action-btn" title="Add to Wishlist" onclick="addToWishlist('<%=product._id%>')">
-                                                    <i class="fas fa-heart"></i>
-                                                </button>
+                                            <button class="action-btn" title="Add to Wishlist" onclick="addToWishlist('<%=product._id%>', this)">
+                                              <i class="<%= isWishlisted ? 'fa fa-heart' : 'far fa-heart' %>" style="<%= isWishlisted ? 'color:#e74c3c;' : '' %>"></i>
+                                          </button>
                                             </div>
                                         </div>
                                         
@@ -1012,21 +1015,28 @@ $('.product-image-slider').on('afterChange', function(event, slick, currentSlide
       });
   
   
-      function addToWishlist(productId){
-          $.ajax({
-              url:'/addToWishlist',
-              method:'POST',
-              data:{productId:productId},
-              success:(response)=>{
-                  if(response.status){
-                      Swal.fire({
-                          title:'Added to wishlist',
-                          text:'The product has been added to your wishlist',
-                          icon:'success',
-                          timer:2000,
-                          showConfirmButton: false
-                      });
-                  }else{
+      function addToWishlist(productId, btnElement){
+    $.ajax({
+        url:'/addToWishlist',
+        method:'POST',
+        data:{productId:productId},
+        success:(response)=>{
+            if(response.status){
+              $('#wishlist-count').text(response.count); 
+                Swal.fire({
+                    title:'Added to wishlist',
+                    text:'The product has been added to your wishlist',
+                    icon:'success',
+                    timer:2000,
+                    showConfirmButton: false
+                });
+                if (btnElement) {
+                    const icon = btnElement.querySelector('i');
+                    icon.classList.remove('far');
+                    icon.classList.add('fa');
+                    icon.style.color = '#e74c3c';
+                }
+            }else{
                       Swal.fire({
                           title:'Warning',
                           text:response.message,

@@ -5,8 +5,9 @@
    justify-content: center;
    align-items: center;
    width: 100%;
-   padding-top: 80px;
+   padding: 40px 16px;
    min-height: 100vh;
+   box-sizing: border-box;
    background: linear-gradient(135deg, #fef7f0 0%, #fff5ee 100%);
  }
 
@@ -20,6 +21,7 @@
    text-align: center;
    position: relative;
    border: 1px solid rgba(251, 207, 185, 0.3);
+   box-sizing: border-box;
  }
 
  .otp-container::before {
@@ -73,6 +75,7 @@
    letter-spacing: 3px;
    font-weight: 600;
    color: #2c3e50;
+   box-sizing: border-box;
  }
 
  .otp-input:focus {
@@ -182,6 +185,12 @@
    color: #d97706;
  }
 
+ .alert-success {
+   background-color: #f0fdf4;
+   border: 1px solid #86efac;
+   color: #16a34a;
+ }
+
  .text-muted {
    font-size: 14px;
    color: #95a5a6;
@@ -209,13 +218,52 @@
  }
 
  @media (max-width: 480px) {
+   .otp-wrapper {
+     padding: 24px 12px;
+   }
+
    .otp-container {
-     max-width: 90%;
+     max-width: 100%;
      padding: 30px 20px;
    }
-   
+
    .otp-container h3 {
-     font-size: 24px;
+     font-size: 22px;
+   }
+
+   .subtitle {
+     font-size: 14px;
+     margin-bottom: 25px;
+   }
+
+   .otp-input {
+     font-size: 16px;
+     padding: 12px 15px;
+   }
+
+   .btn-primary {
+     padding: 13px 18px;
+     font-size: 15px;
+   }
+
+   .resend-btn {
+     padding: 9px 20px;
+     font-size: 13px;
+   }
+ }
+
+ @media (max-width: 350px) {
+   .otp-container {
+     padding: 24px 14px;
+   }
+
+   .icon {
+     width: 50px;
+     height: 50px;
+   }
+
+   .icon::before {
+     font-size: 20px;
    }
  }
 </style>
@@ -225,33 +273,33 @@
        <div class="icon"></div>
        <h3>Email Verification</h3>
        <p class="subtitle">We've sent a verification code to your email address. Please enter the code below to continue.</p>
-       
+
        <form action="/verify-email-otp" method="post" id="otpForm">
            <div class="form-group">
                <label for="otp">Enter OTP:</label>
-               <input type="text" id="otp" name="otp" class="otp-input" required maxlength="6" pattern="[0-9]{6}">
+               <input type="text" id="otp" name="otp" class="otp-input" required maxlength="6" pattern="[0-9]{6}" inputmode="numeric">
            </div>
-           
+
            <button type="submit" class="btn btn-primary" id="verifyBtn">Verify OTP</button>
-           
+
            <div class="timer-section">
                <div class="otp-timer" id="otpTimer">OTP Expires in: 1:00</div>
                <button type="button" onclick="resendOTP()" class="resend-btn" id="resendBtn">Resend OTP</button>
            </div>
-           
+
            <div id="expiredMessage" style="display: none;">
                <div class="alert alert-warning">
                    OTP expired! Please click "Resend OTP" to get a new verification code.
                </div>
            </div>
-           
+
            <% if (locals.message && message.length > 0) { %>
                <div class="alert alert-danger">
                    <%= message %>
                </div>
            <% } %>
        </form>
-       
+
        <p class="text-muted">Didn't receive the code? Check your spam folder or click resend.</p>
    </div>
 </div>
@@ -259,25 +307,23 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
  let isOTPExpired = false;
- let currentCountdown = null; // Store the current countdown interval
+ let currentCountdown = null;
 
  function startOTPTimer(durationInSeconds) {
-   // Clear any existing countdown
    if (currentCountdown) {
      clearInterval(currentCountdown);
    }
-   
+
    let timer = durationInSeconds;
    const timerElement = document.getElementById('otpTimer');
    const verifyBtn = document.getElementById('verifyBtn');
    const expiredMessage = document.getElementById('expiredMessage');
-   
-   // Reset expired state
+
    isOTPExpired = false;
    verifyBtn.disabled = false;
    expiredMessage.style.display = 'none';
    timerElement.classList.remove('expired');
-   
+
    currentCountdown = setInterval(function () {
      const minutes = Math.floor(timer / 60);
      const seconds = timer % 60;
@@ -289,8 +335,7 @@
        currentCountdown = null;
        timerElement.textContent = 'OTP Expired';
        timerElement.classList.add('expired');
-       
-       // Disable verify button and show expired message
+
        isOTPExpired = true;
        verifyBtn.disabled = true;
        expiredMessage.style.display = 'block';
@@ -302,49 +347,51 @@
    const resendBtn = document.getElementById('resendBtn');
    resendBtn.disabled = true;
    resendBtn.textContent = 'Sending...';
-   
+
    $.ajax({
      type: 'POST',
      url: '/resend-otp',
      success: function (response) {
        if (response.success) {
-         // Start fresh timer for 60 seconds
          startOTPTimer(60);
-         
-         // Clear the OTP input field
+
          document.getElementById('otp').value = '';
-         
-         // Hide any existing error messages
+
          const existingErrors = document.querySelectorAll('.alert-danger');
          existingErrors.forEach(error => {
            error.style.display = 'none';
          });
-         
-         // Show success message briefly
+
          const successMsg = document.createElement('div');
          successMsg.className = 'alert alert-success';
          successMsg.innerHTML = 'New OTP sent successfully!';
-         successMsg.style.marginTop = '15px';
          document.getElementById('expiredMessage').after(successMsg);
-         
+
          setTimeout(() => {
            successMsg.remove();
          }, 3000);
        } else {
-         alert('Failed to resend OTP. Please try again.');
+         Swal.fire({
+           icon: 'error',
+           title: 'Failed to resend OTP',
+           text: 'Please try again.'
+         });
        }
        resendBtn.disabled = false;
        resendBtn.textContent = 'Resend OTP';
      },
      error: function () {
-       alert('Error occurred while resending OTP. Please try again.');
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'Error occurred while resending OTP. Please try again.'
+       });
        resendBtn.disabled = false;
        resendBtn.textContent = 'Resend OTP';
      }
    });
  }
 
- // Prevent form submission when OTP is expired
  document.getElementById('otpForm').addEventListener('submit', function(e) {
    if (isOTPExpired) {
      e.preventDefault();
@@ -353,12 +400,9 @@
    }
  });
 
- // Auto-focus on OTP input and format input
  document.getElementById('otp').addEventListener('input', function(e) {
-   // Only allow numbers
    this.value = this.value.replace(/[^0-9]/g, '');
-   
-   // Hide any error messages when user starts typing
+
    const existingErrors = document.querySelectorAll('.alert-danger');
    existingErrors.forEach(error => {
      if (error.textContent.includes('not matched') || error.textContent.includes('incorrect') || error.textContent.includes('invalid')) {
@@ -367,30 +411,23 @@
    });
  });
 
- // Start timer when page loads (only if there's no existing error message)
  window.addEventListener('load', function() {
-   // Check if there's an error message on page load
-   const hasErrorMessage = document.querySelector('.alert-danger') && 
+   const hasErrorMessage = document.querySelector('.alert-danger') &&
                           document.querySelector('.alert-danger').style.display !== 'none';
-   
+
    if (!hasErrorMessage) {
      startOTPTimer(60);
    } else {
-     // If there's an error, still start timer but don't reset it
      const timerElement = document.getElementById('otpTimer');
      if (timerElement.textContent === 'OTP Expires in: 1:00') {
        startOTPTimer(60);
      }
    }
-   
-   // Focus on input when page loads
+
    document.getElementById('otp').focus();
  });
 
- // Handle page reload/refresh cases where timer should continue
- // This ensures timer doesn't restart unnecessarily when there are form errors
  document.addEventListener('DOMContentLoaded', function() {
-   // Only start timer if it's not already started and there's no active countdown
    if (!currentCountdown && !isOTPExpired) {
      const timerElement = document.getElementById('otpTimer');
      if (timerElement.textContent === 'OTP Expires in: 1:00' || timerElement.textContent.includes('OTP Expires in:')) {

@@ -212,7 +212,6 @@
         font-weight: bold;
       }
 
-      /* Media queries for responsiveness */
       @media (max-width: 768px) {
         .content {
           padding: 0.5rem 1rem 1rem;
@@ -316,7 +315,6 @@
         <h2 class="brands-heading">Brands</h2>
 
         <div class="brands-content">
-          <!-- Add Brand Form -->
           <div class="add-brand-form">
             <form
               action="/admin/addBrand"
@@ -384,12 +382,11 @@
                     >
                     <% } %>
                     <a
-                      
-  href="#"
-  class="btn red"
-  onclick="confirmDelete(event, '/admin/deleteBrand?id=<%= brand._id %>')"
-  >Delete</a
->
+                      href="#"
+                      class="btn red"
+                      onclick="confirmDelete(event, '/admin/deleteBrand?id=<%= brand._id %>')"
+                      >Delete</a
+                    >
                   </td>
                 </tr>
                 <% }) %>
@@ -424,127 +421,127 @@
     </div>
 
     <script>
-      function validateForm(event) {
-        event.preventDefault();
-        clearErrorMessages();
+            function validateForm(event) {
+              event.preventDefault();
+              clearErrorMessages();
 
-        const name = document.getElementById("brandName").value;
-        const image = document.getElementById("brandImage");
-        let isValid = true;
-        const brandLower = name.trim().toLowerCase();
-        
+              const name = document.getElementById("brandName").value;
+              const image = document.getElementById("brandImage");
+              let isValid = true;
+              const brandLower = name.trim().toLowerCase();
 
-        
-        if (name.trim() === "") {
-          displayErrorMessage("name-error", "Brand name cannot be empty");
-          isValid = false;
-        } else if (/^\s*$/.test(name)) {
-          displayErrorMessage(
-            "name-error",
-            "Brand name cannot contain only spaces"
-          );
-          isValid = false;
-        } else if (/^\d+$/.test(name.trim())) {
-          displayErrorMessage(
-            "name-error",
-            "Brand name cannot contain only numbers"
-          );
-          isValid = false;
-        } else if (name.trim().length < 3) {
-          displayErrorMessage(
-            "name-error",
-            "Brand name must be at least 3 characters long"
-          );
-          isValid = false;
-        }if (existingBrands.includes(brandLower)) {
-          displayErrorMessage(
-            "name-error",
-            "This brand name already exists (case-insensitive)"
-          );
-          isValid = false;
-        }
-        
 
-        
-        if (image.files.length === 0) {
-          displayErrorMessage("image-error", "Please select an image file");
-          isValid = false;
-        } else {
-          const file = image.files[0];
-          const allowedTypes = [
-            "image/jpeg",
-            "image/jpg",
-            "image/png",
-            "image/gif",
-          ];
-          const maxSize = 5 * 1024 * 1024; // 5MB in bytes
 
-          if (!allowedTypes.includes(file.type)) {
-            displayErrorMessage(
-              "image-error",
-              "Only JPG, JPEG, PNG, or GIF files are allowed"
-            );
-            isValid = false;
-          }
+              if (name.trim() === "") {
+                displayErrorMessage("name-error", "Brand name cannot be empty");
+                isValid = false;
+              } else if (/^\s*$/.test(name)) {
+                displayErrorMessage(
+                  "name-error",
+                  "Brand name cannot contain only spaces"
+                );
+                isValid = false;
+              } else if (/^\d+$/.test(name.trim())) {
+                displayErrorMessage(
+                  "name-error",
+                  "Brand name cannot contain only numbers"
+                );
+                isValid = false;
+              } else if (name.trim().length < 3) {
+                displayErrorMessage(
+                  "name-error",
+                  "Brand name must be at least 3 characters long"
+                );
+                isValid = false;
+              }if (existingBrands.includes(brandLower)) {
+                displayErrorMessage(
+                  "name-error",
+                  "This brand name already exists (case-insensitive)"
+                );
+                isValid = false;
+              }
 
-          if (file.size > maxSize) {
-            displayErrorMessage(
-              "image-error",
-              "Image file size must not exceed 5MB"
-            );
-            isValid = false;
-          }
-        }
 
-        if (isValid) {
-          event.target.submit(); 
-        }
-        return isValid;
+
+              if (image.files.length === 0) {
+                displayErrorMessage("image-error", "Please select an image file");
+                isValid = false;
+              } else {
+                const file = image.files[0];
+                const allowedTypes = [
+                  "image/jpeg",
+                  "image/jpg",
+                  "image/png",
+                  "image/gif",
+                ];
+                const maxSize = 5 * 1024 * 1024;
+
+                if (!allowedTypes.includes(file.type)) {
+                  displayErrorMessage(
+                    "image-error",
+                    "Only JPG, JPEG, PNG, or GIF files are allowed"
+                  );
+                  isValid = false;
+                }
+
+                if (file.size > maxSize) {
+                  displayErrorMessage(
+                    "image-error",
+                    "Image file size must not exceed 5MB"
+                  );
+                  isValid = false;
+                }
+              }
+
+              if (isValid) {
+                event.target.submit();
+              }
+              return isValid;
+            }
+
+            function displayErrorMessage(elementId, message) {
+              const errorElement = document.getElementById(elementId);
+              errorElement.innerText = message;
+              errorElement.style.display = "block";
+            }
+
+            function clearErrorMessages() {
+              const errorElements = document.getElementsByClassName("error-message");
+              Array.from(errorElements).forEach((element) => {
+                element.innerText = "";
+                element.style.display = "none";
+              });
+            }
+
+
+        <% if (typeof status !== 'undefined' && status === 'deleted') { %>
+            Swal.fire({
+                icon: 'success',
+                title: 'Brand Deleted',
+                text: 'The brand has been deleted successfully.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        <% } %>
+
+
+        function confirmDelete(event, deleteUrl) {
+          event.preventDefault();
+
+          Swal.fire({
+              title: "Are you sure?",
+              text: "This brand will be permanently deleted.",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#dc3545",
+              cancelButtonColor: "#6c757d",
+              confirmButtonText: "Yes, delete it!"
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  window.location.href = deleteUrl;
+              }
+          });
       }
-
-      function displayErrorMessage(elementId, message) {
-        const errorElement = document.getElementById(elementId);
-        errorElement.innerText = message;
-        errorElement.style.display = "block";
-      }
-
-      function clearErrorMessages() {
-        const errorElements = document.getElementsByClassName("error-message");
-        Array.from(errorElements).forEach((element) => {
-          element.innerText = "";
-          element.style.display = "none";
-        });
-      }
-
-      
-  <% if (typeof status !== 'undefined' && status === 'deleted') { %>
-      Swal.fire({
-          icon: 'success',
-          title: 'Brand Deleted',
-          text: 'The brand has been deleted successfully.',
-          timer: 2000,
-          showConfirmButton: false
-      });
-  <% } %>
-
-
-  function confirmDelete(event, deleteUrl) {
-    event.preventDefault();
-
-    Swal.fire({
-        title: "Are you sure?",
-        text: "This brand will be permanently deleted.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#dc3545",
-        cancelButtonColor: "#6c757d",
-        confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = deleteUrl;
-        }
-    });
-}
-    </script> 
+    </script>
   </body>
 </html>

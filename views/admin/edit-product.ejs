@@ -2,27 +2,27 @@
 <head>
    <style>
       
-/* General styling */
+
 .content-main {
   padding: 20px;
   background-color: #f9f9f9;
-  max-width: 1200px; /* Maintain increased width */
-  margin: 0 auto; /* Center horizontally */
-  display: flex; /* Use flexbox for centering */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center children horizontally */
-  min-height: calc(100vh - 40px); /* Ensure full viewport height minus padding */
+  max-width: 1200px; 
+  margin: 0 auto; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  min-height: calc(100vh - 40px); 
 }
 
-/* Content title */
+
 .content-title {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
-  text-align: center; /* Center the title */
+  text-align: center; 
 }
 
-/* Card styling */
+
 .card {
   background-color: #fff;
   border: 1px solid #e5e5e5;
@@ -40,7 +40,7 @@
   padding: 20px 0;
 }
 
-/* Input & select */
+
 .form-control,
 .form-select {
   border-radius: 6px;
@@ -55,14 +55,14 @@
   display: block;
 }
 
-/* Error messages */
+
 .error-message {
   color: #d9534f;
   font-size: 13px;
   margin-top: 5px;
 }
 
-/* Buttons */
+
 button#updatebtn {
   background-color: #28a745;
   color: white;
@@ -78,14 +78,14 @@ button#updatebtn:hover {
   background-color: #218838;
 }
 
-/* Center the update button container */
+
 .update-btn-container {
   display: flex;
-  justify-content: center; /* Center the button horizontally */
-  margin-top: 20px; /* Add some spacing above the button */
+  justify-content: center; 
+  margin-top: 20px; 
 }
 
-/* Image preview and cropper */
+
 img#imgView1,
 img#imgView2,
 img#imgView3,
@@ -115,13 +115,13 @@ img#imgView4 {
   height: 36px;
 }
 
-/* Existing images section */
+
 img.rounded {
   border-radius: 6px;
   border: 1px solid #ddd;
 }
 
-/* Cross button styling */
+
 .cross-btn {
   background-color: #d9534f;
   color: white;
@@ -149,8 +149,8 @@ img.rounded {
 
 .card.mb-4 {
   width: 100%;
-  max-width: 1000px; /* Maintain increased card width */
-  margin: 0 auto; /* Center the card */
+  max-width: 1000px; 
+  margin: 0 auto; 
 }
 
    </style>
@@ -376,7 +376,7 @@ let newImageCount = 0;
         displayErrorMessage('productName-error', 'Please enter a product name.');
         isValid = false;
     }else if (!/[A-Za-z0-9]/.test(name)) {
-    // Contains only special characters (no letters or numbers)
+    
     displayErrorMessage('productName-error', 'Product name should not contain only special characters.');
     isValid = false;
 }
@@ -388,7 +388,7 @@ if (description.trim() === '') {
     displayErrorMessage('description-error', 'Description should not contain only numbers.');
     isValid = false;
 } else if (!/[A-Za-z0-9]/.test(description)) {
-    // Contains only special characters (no letters or numbers)
+    
     displayErrorMessage('description-error', 'Description should not contain only special characters.');
     isValid = false;
 }
@@ -436,10 +436,10 @@ for (let i = 1; i <= 4; i++) {
     }
 }
 
-// Total images after edit
+
 const totalImages = existingCount + newImageCount;
 
-// Validate minimum 2 images
+
 if (totalImages < 2) {
     displayErrorMessage("images-error", "Please keep at least 2 product images.");
     isValid = false;
@@ -490,7 +490,7 @@ function deleteNewImage(index, buttonElement) {
     const cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
     const deleteButton = buttonElement;
     
-    // If the image has been uploaded to a temporary server location, send AJAX request
+    
     if (input.files.length > 0) {
         const fileName = input.files[0].name;
         $.ajax({
@@ -499,13 +499,13 @@ function deleteNewImage(index, buttonElement) {
             data: { imageNameToServer: fileName, productIdToServer: '<%=product._id%>' },
             success: function(response) {
                 if (response.status === true) {
-                    // Clear the file input
+                    
                     input.value = '';
-                    // Clear the preview image
+                    
                     img.src = '';
-                    // Hide the cropper container
+                    
                     cropperContainer.style.display = 'none';
-                    // Hide the delete button
+                    
                     deleteButton.style.display = 'none';
                 } else {
                     console.error("Failed to delete temporary image:", response.message);
@@ -518,7 +518,7 @@ function deleteNewImage(index, buttonElement) {
             }
         });
     } else {
-        // If no server-side image, just clear client-side
+        
         input.value = '';
         img.src = '';
         cropperContainer.style.display = 'none';

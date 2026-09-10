@@ -4,7 +4,6 @@ const multer = require("multer");
 
 const storage = multer.memoryStorage();
 const getBrandPage = async (req, res) => {
-  
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = 4;
@@ -21,7 +20,7 @@ const getBrandPage = async (req, res) => {
       currentPage: page,
       totalPages: totalPages,
       totalBrands: totalBrands,
-      status:req.query.status || null
+      status: req.query.status || null,
     });
   } catch (error) {
     res.redirect("/pageerror");
@@ -29,29 +28,22 @@ const getBrandPage = async (req, res) => {
 };
 
 const addBrand = async (req, res) => {
-  console.log("Inside of addBrand");
-  console.log("BODY", req.body);
-  console.log("fileeee", req.file);
-      try {
-
-  const brand= req.body.name;
-  const findBrand=await Brand.findOne({brand});
-  if(!findBrand){
-      const image=req.file.filename;
-      const newBrand=new Brand({
-          brandName:brand,
-          brandImage:image,
-          
-      })
+  try {
+    const brand = req.body.name;
+    const findBrand = await Brand.findOne({ brand });
+    if (!findBrand) {
+      const image = req.file.filename;
+      const newBrand = new Brand({
+        brandName: brand,
+        brandImage: image,
+      });
       await newBrand.save();
-      res.redirect("/admin/brands")
+      res.redirect("/admin/brands");
+    }
+  } catch (error) {
+    console.log("error", error);
   }
-}catch(error){
-   console.log("error",error) 
-}
 };
-
-
 
 const blockBrand = async (req, res) => {
   try {

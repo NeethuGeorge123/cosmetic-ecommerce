@@ -1,884 +1,1016 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --primary-peach: #F5E6D3;
-            --secondary-peach: #F0D7C7;
-            --accent-peach: #E8B4A0;
-            --dark-peach: #D4A484;
-            --deep-peach: #C8956D;
-            --gradient-peach: linear-gradient(135deg, #F5E6D3 0%, #F0D7C7 50%, #E8B4A0 100%);
-            --gradient-accent: linear-gradient(135deg, #E8B4A0 0%, #D4A484 50%, #C8956D 100%);
-            --gradient-subtle: linear-gradient(135deg, #FAF6F2 0%, #F5E6D3 100%);
-            --text-primary: #3A2F2A;
-            --text-secondary: #6B5B54;
-            --text-light: #9B8B82;
-            --white: #FFFFFF;
-            --light-gray: #FAF6F2;
-            --border-light: #E8DDD4;
-            --shadow-light: rgba(196, 149, 109, 0.08);
-            --shadow-medium: rgba(196, 149, 109, 0.15);
-            --shadow-hover: rgba(212, 164, 132, 0.2);
-            --shadow-peach: rgba(232, 180, 160, 0.25);
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: var(--text-primary);
-            background: #FAFAFA;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .main {
-            min-height: 100vh;
-            padding-bottom: 40px;
-        }
-        
-        /* Enhanced Breadcrumb */
+      :root {
+        --primary-peach: #f5e6d3;
+        --secondary-peach: #f0d7c7;
+        --accent-peach: #e8b4a0;
+        --dark-peach: #d4a484;
+        --deep-peach: #c8956d;
+        --gradient-peach: linear-gradient(
+          135deg,
+          #f5e6d3 0%,
+          #f0d7c7 50%,
+          #e8b4a0 100%
+        );
+        --gradient-accent: linear-gradient(
+          135deg,
+          #e8b4a0 0%,
+          #d4a484 50%,
+          #c8956d 100%
+        );
+        --gradient-subtle: linear-gradient(135deg, #faf6f2 0%, #f5e6d3 100%);
+        --text-primary: #3a2f2a;
+        --text-secondary: #6b5b54;
+        --text-light: #9b8b82;
+        --white: #ffffff;
+        --light-gray: #faf6f2;
+        --border-light: #e8ddd4;
+        --shadow-light: rgba(196, 149, 109, 0.08);
+        --shadow-medium: rgba(196, 149, 109, 0.15);
+        --shadow-hover: rgba(212, 164, 132, 0.2);
+        --shadow-peach: rgba(232, 180, 160, 0.25);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        color: var(--text-primary);
+        background: #fafafa;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+      }
+
+      .main {
+        min-height: 100vh;
+        padding-bottom: 40px;
+      }
+
+      /* Enhanced Breadcrumb */
+      .breadcrumb-wrap {
+        background: var(--gradient-peach);
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border-light);
+        margin-bottom: 0 !important;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .breadcrumb-wrap::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.3)
+        );
+        transform: skewX(-15deg);
+      }
+
+      .breadcrumb {
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 500;
+        background: none;
+        padding: 0;
+      }
+
+      .breadcrumb a {
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .breadcrumb a:hover {
+        color: var(--deep-peach);
+        transform: translateY(-1px);
+      }
+
+      .breadcrumb a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--deep-peach);
+        transition: width 0.3s ease;
+      }
+
+      .breadcrumb a:hover::after {
+        width: 100%;
+      }
+
+      .breadcrumb span {
+        padding: 0 12px;
+        color: var(--text-light);
+      }
+
+      /* Enhanced Dashboard Menu */
+      .dashboard-menu {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px var(--shadow-light);
+        margin-bottom: 30px;
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        position: relative;
+      }
+
+      .dashboard-menu::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-accent);
+      }
+
+      .dashboard-menu .nav-link {
+        color: var(--text-primary);
+        padding: 18px 24px;
+        border: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        position: relative;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+      }
+
+      .dashboard-menu .nav-link:last-child {
+        border-bottom: none;
+      }
+
+      .dashboard-menu .nav-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        background: var(--gradient-accent);
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .dashboard-menu .nav-link i {
+        margin-right: 16px;
+        width: 20px;
+        text-align: center;
+        font-size: 18px;
+        transition: all 0.3s ease;
+      }
+
+      .dashboard-menu .nav-link:hover {
+        background: var(--gradient-subtle);
+        color: var(--text-primary);
+        transform: translateX(8px);
+        box-shadow: 0 4px 20px var(--shadow-peach);
+      }
+
+      .dashboard-menu .nav-link:hover::before {
+        width: 4px;
+      }
+
+      .dashboard-menu .nav-link:hover i {
+        color: var(--deep-peach);
+        transform: scale(1.1);
+      }
+
+      .dashboard-menu .nav-link.active {
+        background: var(--gradient-peach);
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .dashboard-menu .nav-link.active::before {
+        width: 4px;
+      }
+
+      .dashboard-menu .nav-link.active i {
+        color: var(--deep-peach);
+      }
+
+      /* Enhanced Profile Card */
+      .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 12px 40px var(--shadow-light);
+        margin-bottom: 30px;
+        overflow: hidden;
+        background: var(--white);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 60px var(--shadow-medium);
+      }
+
+      .card-green::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: var(--gradient-accent);
+      }
+
+      .card-header {
+        background: var(--gradient-peach);
+        border-bottom: 1px solid var(--border-light);
+        padding: 24px 32px;
+        position: relative;
+      }
+
+      .card-header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--gradient-accent);
+        border-radius: 2px;
+      }
+
+      .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 20px;
+        color: var(--text-primary);
+      }
+
+      .card-body {
+        padding: 40px 32px;
+      }
+
+      /* Enhanced Avatar */
+      .avatar-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 24px;
+      }
+
+      .avatar-wrapper::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        background: var(--gradient-accent);
+        border-radius: 50%;
+        z-index: 1;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+
+      .avatar-wrapper:hover::before {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+
+      .avatar-wrapper img {
+        width: 120px !important;
+        height: 120px !important;
+        object-fit: cover;
+        border: 4px solid var(--white);
+        box-shadow: 0 8px 32px var(--shadow-medium);
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 2;
+      }
+
+      .avatar-wrapper:hover img {
+        transform: scale(1.05);
+      }
+
+      /* User Info Cards */
+      .user-info-item {
+        background: var(--white);
+        padding: 24px;
+        border-radius: 16px;
+        height: 100%;
+        border: 1px solid var(--border-light);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 16px var(--shadow-light);
+      }
+
+      .user-info-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-accent);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .user-info-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px var(--shadow-light);
+      }
+
+      .user-info-item:hover::before {
+        transform: scaleX(1);
+      }
+
+      .user-info-item label {
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        display: block;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .user-info-item p {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      /* Enhanced Buttons */
+      .btn-success {
+        background: var(--gradient-accent);
+        border: none;
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        color: var(--white);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-success::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px var(--shadow-peach);
+        background: var(--gradient-accent);
+        border: none;
+        color: var(--white);
+      }
+
+      .btn-success:hover::before {
+        left: 100%;
+      }
+
+      .btn-success:active {
+        transform: translateY(0);
+      }
+
+      /* Mobile Menu Toggle */
+      .mobile-menu-toggle {
+        display: none;
+        background: var(--gradient-accent);
+        color: var(--white);
+        border: none;
+        padding: 16px 24px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        width: 100%;
+        text-align: left;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px var(--shadow-light);
+      }
+
+      .mobile-menu-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px var(--shadow-medium);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--white);
+        padding: 32px 0;
+        text-align: center;
+        border-top: 1px solid var(--border-light);
+        margin-top: 60px;
+      }
+
+      footer p {
+        color: var(--text-light);
+        margin: 0;
+        font-weight: 400;
+      }
+
+      /* Profile Title Enhancement */
+      .profile-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 991px) {
         .breadcrumb-wrap {
-            background: var(--gradient-peach);
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border-light);
-            margin-bottom: 0 !important;
-            position: relative;
-            overflow: hidden;
+          margin-bottom: 20px !important;
         }
-        
-        .breadcrumb-wrap::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 200px;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3));
-            transform: skewX(-15deg);
-        }
-        
-        .breadcrumb {
-            margin-bottom: 0;
-            font-size: 14px;
-            font-weight: 500;
-            background: none;
-            padding: 0;
-        }
-        
-        .breadcrumb a {
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .breadcrumb a:hover {
-            color: var(--deep-peach);
-            transform: translateY(-1px);
-        }
-        
-        .breadcrumb a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--deep-peach);
-            transition: width 0.3s ease;
-        }
-        
-        .breadcrumb a:hover::after {
-            width: 100%;
-        }
-        
-        .breadcrumb span {
-            padding: 0 12px;
-            color: var(--text-light);
-        }
-        
-        /* Enhanced Dashboard Menu */
+
         .dashboard-menu {
-            background: var(--white);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px var(--shadow-light);
-            margin-bottom: 30px;
-            overflow: hidden;
-            border: 1px solid var(--border-light);
-            position: relative;
+          margin-bottom: 30px;
         }
-        
-        .dashboard-menu::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-accent);
-        }
-        
-        .dashboard-menu .nav-link {
-            color: var(--text-primary);
-            padding: 18px 24px;
-            border: none;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            position: relative;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
-        }
-        
-        .dashboard-menu .nav-link:last-child {
-            border-bottom: none;
-        }
-        
-        .dashboard-menu .nav-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 0;
-            background: var(--gradient-accent);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .dashboard-menu .nav-link i {
-            margin-right: 16px;
-            width: 20px;
-            text-align: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-        }
-        
-        .dashboard-menu .nav-link:hover {
-            background: var(--gradient-subtle);
-            color: var(--text-primary);
-            transform: translateX(8px);
-            box-shadow: 0 4px 20px var(--shadow-peach);
-        }
-        
-        .dashboard-menu .nav-link:hover::before {
-            width: 4px;
-        }
-        
-        .dashboard-menu .nav-link:hover i {
-            color: var(--deep-peach);
-            transform: scale(1.1);
-        }
-        
-        .dashboard-menu .nav-link.active {
-            background: var(--gradient-peach);
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-        
-        .dashboard-menu .nav-link.active::before {
-            width: 4px;
-        }
-        
-        .dashboard-menu .nav-link.active i {
-            color: var(--deep-peach);
-        }
-        
-        /* Enhanced Profile Card */
-        .card {
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 12px 40px var(--shadow-light);
-            margin-bottom: 30px;
-            overflow: hidden;
-            background: var(--white);
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px var(--shadow-medium);
-        }
-        
-        .card-green::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: var(--gradient-accent);
-        }
-        
-        .card-header {
-            background: var(--gradient-peach);
-            border-bottom: 1px solid var(--border-light);
-            padding: 24px 32px;
-            position: relative;
-        }
-        
-        .card-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--gradient-accent);
-            border-radius: 2px;
-        }
-        
-        .card-header h5 {
-            margin: 0;
-            font-weight: 600;
-            font-size: 20px;
-            color: var(--text-primary);
-        }
-        
+
         .card-body {
-            padding: 40px 32px;
+          padding: 30px 24px;
         }
-        
-        /* Enhanced Avatar */
-        .avatar-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 24px;
-        }
-        
-        .avatar-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
-            background: var(--gradient-accent);
-            border-radius: 50%;
-            z-index: 1;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .avatar-wrapper:hover::before {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        
-        .avatar-wrapper img {
-            width: 120px !important;
-            height: 120px !important;
-            object-fit: cover;
-            border: 4px solid var(--white);
-            box-shadow: 0 8px 32px var(--shadow-medium);
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .avatar-wrapper:hover img {
-            transform: scale(1.05);
-        }
-        
-        /* User Info Cards */
-        .user-info-item {
-            background: var(--white);
-            padding: 24px;
-            border-radius: 16px;
-            height: 100%;
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 16px var(--shadow-light);
-        }
-        
-        .user-info-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-accent);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .user-info-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px var(--shadow-light);
-        }
-        
-        .user-info-item:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .user-info-item label {
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            display: block;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .user-info-item p {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin: 0;
-        }
-        
-        /* Enhanced Buttons */
-        .btn-success {
-            background: var(--gradient-accent);
-            border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            color: var(--white);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .btn-success::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px var(--shadow-peach);
-            background: var(--gradient-accent);
-            border: none;
-            color: var(--white);
-        }
-        
-        .btn-success:hover::before {
-            left: 100%;
-        }
-        
-        .btn-success:active {
-            transform: translateY(0);
-        }
-        
-        /* Mobile Menu Toggle */
+      }
+
+      @media (max-width: 767px) {
         .mobile-menu-toggle {
-            display: none;
-            background: var(--gradient-accent);
-            color: var(--white);
-            border: none;
-            padding: 16px 24px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            width: 100%;
-            text-align: left;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px var(--shadow-light);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
-        
-        .mobile-menu-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px var(--shadow-medium);
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--white);
-            padding: 32px 0;
-            text-align: center;
-            border-top: 1px solid var(--border-light);
-            margin-top: 60px;
-        }
-        
-        footer p {
-            color: var(--text-light);
-            margin: 0;
-            font-weight: 400;
-        }
-        
-        /* Profile Title Enhancement */
-        .profile-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 991px) {
-            .breadcrumb-wrap {
-                margin-bottom: 20px !important;
-            }
-            
-            .dashboard-menu {
-                margin-bottom: 30px;
-            }
-            
-            .card-body {
-                padding: 30px 24px;
-            }
-        }
-        
-        @media (max-width: 767px) {
-            .mobile-menu-toggle {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            
-            .dashboard-menu {
-                display: none;
-                margin-bottom: 20px;
-            }
-            
-            .dashboard-menu.show {
-                display: block;
-                animation: slideDown 0.3s ease;
-            }
-            
-            @keyframes slideDown {
-                from {
-                    opacity: 0;
-                    transform: translateY(-10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            
-            .card-body {
-                padding: 24px 20px;
-            }
-            
-            .user-info-item {
-                padding: 20px;
-                margin-bottom: 16px;
-            }
-            
-            .avatar-wrapper img {
-                width: 100px !important;
-                height: 100px !important;
-            }
-            
-            .btn-success {
-                padding: 10px 20px;
-                font-size: 13px;
-                margin-bottom: 8px;
-                width: 100%;
-            }
-        }
-        
-        /* Additional Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .card {
-            animation: fadeInUp 0.6s ease;
-        }
-        
+
         .dashboard-menu {
-            animation: fadeInUp 0.6s ease 0.2s both;
+          display: none;
+          margin-bottom: 20px;
         }
-        .avatar-wrapper {
-    cursor: pointer;
-}
 
-.avatar-edit-btn {
-    position: absolute;
-    bottom: 20px;
-    right: -4px;
-    width: 36px;
-    height: 36px;
-    background: var(--gradient-accent);
-    color: var(--white);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid var(--white);
-    box-shadow: 0 4px 12px var(--shadow-medium);
-    z-index: 3;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
+        .dashboard-menu.show {
+          display: block;
+          animation: slideDown 0.3s ease;
+        }
 
-.avatar-edit-btn:hover {
-    transform: scale(1.1);
-}
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-.profile-title-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
+        .card-body {
+          padding: 24px 20px;
+        }
 
-.edit-name-btn {
-    background: none;
-    border: none;
-    color: var(--deep-peach);
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 4px 8px;
-    border-radius: 6px;
-}
+        .user-info-item {
+          padding: 20px;
+          margin-bottom: 16px;
+        }
 
-.edit-name-btn:hover {
-    background: var(--gradient-subtle);
-    transform: scale(1.1);
-}
+        .avatar-wrapper img {
+          width: 100px !important;
+          height: 100px !important;
+        }
 
-#nameEditForm {
-    display: none;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-    flex-wrap: wrap;
-}
+        .btn-success {
+          padding: 10px 20px;
+          font-size: 13px;
+          margin-bottom: 8px;
+          width: 100%;
+        }
+      }
 
-#nameEditForm input {
-    max-width: 220px;
-    border-radius: 8px;
-    border: 1px solid var(--border-light);
-    padding: 6px 12px;
-}
+      /* Additional Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-#nameEditForm button {
-    border-radius: 8px;
-    padding: 6px 14px;
-    border: none;
-    font-weight: 600;
-    font-size: 13px;
-}
+      .card {
+        animation: fadeInUp 0.6s ease;
+      }
 
-#nameEditForm .save-btn {
-    background: var(--gradient-accent);
-    color: white;
-}
+      .dashboard-menu {
+        animation: fadeInUp 0.6s ease 0.2s both;
+      }
+      .avatar-wrapper {
+        cursor: pointer;
+      }
 
-#nameEditForm .cancel-btn {
-    background: var(--light-gray);
-    color: var(--text-secondary);
-}
+      .avatar-edit-btn {
+        position: absolute;
+        bottom: 20px;
+        right: -4px;
+        width: 36px;
+        height: 36px;
+        background: var(--gradient-accent);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid var(--white);
+        box-shadow: 0 4px 12px var(--shadow-medium);
+        z-index: 3;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+
+      .avatar-edit-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .profile-title-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .edit-name-btn {
+        background: none;
+        border: none;
+        color: var(--deep-peach);
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+
+      .edit-name-btn:hover {
+        background: var(--gradient-subtle);
+        transform: scale(1.1);
+      }
+
+      #nameEditForm {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      #nameEditForm input {
+        max-width: 220px;
+        border-radius: 8px;
+        border: 1px solid var(--border-light);
+        padding: 6px 12px;
+      }
+
+      #nameEditForm button {
+        border-radius: 8px;
+        padding: 6px 14px;
+        border: none;
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      #nameEditForm .save-btn {
+        background: var(--gradient-accent);
+        color: white;
+      }
+
+      #nameEditForm .cancel-btn {
+        background: var(--light-gray);
+        color: var(--text-secondary);
+      }
     </style>
-</head>
-<body>
-    <%- include("../../views/partials/user/header") %>
-    <%- include("../../views/partials/user/header1") %>
-    
+  </head>
+  <body>
+    <%- include("../../views/partials/user/header") %> <%-
+    include("../../views/partials/user/header1") %>
+
     <main class="main">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="/" rel="nofollow">Home</a>
-                    <span>/</span> Profile <span>/</span> 
-                </div>
-            </div>
+      <div class="page-header breadcrumb-wrap">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="/" rel="nofollow">Home</a>
+            <span>/</span> Profile <span>/</span>
+          </div>
         </div>
-        
-        <section class="pt-5 pb-4">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <!-- Mobile Menu Toggle Button -->
-                        <button class="mobile-menu-toggle" id="toggleMenu">
-                            <span>Menu</span>
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        
-                        <div class="row">
-                            <!-- Sidebar Menu -->
-                            <div class="col-lg-3 col-md-4">
-                                <div class="dashboard-menu" id="sidebarMenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" href="/my-profile">
-                                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/myAddress">
-                                                <i class="fas fa-map-marker-alt"></i> My Address
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/orders">
-                                                <i class="fas fa-shopping-bag"></i> Orders
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/wallet">
-                                                <i class="fas fa-wallet"></i> Wallet 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/referrals">
-                                                <i class="fas fa-user-plus"></i> Referrals
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="/logout">
-                                                <i class="fas fa-sign-out-alt"></i> Logout
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <!-- Content Area -->
-                            <div class="col-lg-9 col-md-8">
-                                <div class="dashboard-content">
-                                    <div class="card card-green">
-                                        <div class="card-header">
-                                            <h5 class="mb-0 text-center">User Profile</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="text-center mb-4">
-                                                <div class="avatar-wrapper" id="avatarWrapper">
-                                                    <img src="<%= user.profileImage || 'uploads/re-image/profile.jpg' %>" alt="Profile Avatar" class="rounded-circle img-thumbnail" id="profileImg">
-                                                    <span class="avatar-edit-btn" id="avatarEditBtn">
-                                                        <i class="fas fa-camera"></i>
-                                                    </span>
-                                                    <input type="file" id="profileImageInput" accept="image/png, image/jpeg, image/jpg, image/webp" hidden>
-                                                </div>
-                                            
-                                                <div class="profile-title-wrap">
-                                                    <h5 class="profile-title" id="profileNameDisplay"><%= user.name %></h5>
-                                                    <button class="edit-name-btn" id="editNameBtn" title="Edit name">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                </div>
-                                            
-                                                <form id="nameEditForm">
-                                                    <input type="text" id="nameInput" value="<%= user.name %>" placeholder="Enter name">
-                                                    <button type="button" class="save-btn" id="saveNameBtn">Save</button>
-                                                    <button type="button" class="cancel-btn" id="cancelNameBtn">Cancel</button>
-                                                    <div id="nameError" class="text-danger small mt-1" style="display:none; width:100%; text-align:center;"></div>
-                                                </form>
-                                            </div>
-                                            
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="user-info-item">
-                                                        <label>Phone Number</label>
-                                                        <p class="mb-0"><%= user.phone %></p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <div class="user-info-item">
-                                                        <label>Email Address</label>
-                                                        <p class="mb-0"><%= user.email %></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="text-center mt-4">
-                                                <a href="/change-email" class="btn btn-success me-2 mb-2">
-                                                    <i class="fas fa-envelope me-2"></i>Change Email
-                                                </a>
-                                                <a href="/change-password" class="btn btn-success mb-2">
-                                                    <i class="fas fa-lock me-2"></i>Change Password
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      </div>
+
+      <section class="pt-5 pb-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <!-- Mobile Menu Toggle Button -->
+              <button class="mobile-menu-toggle" id="toggleMenu">
+                <span>Menu</span>
+                <i class="fas fa-bars"></i>
+              </button>
+
+              <div class="row">
+                <!-- Sidebar Menu -->
+                <div class="col-lg-3 col-md-4">
+                  <div class="dashboard-menu" id="sidebarMenu">
+                    <ul class="nav flex-column">
+                      <li class="nav-item">
+                        <a class="nav-link active" href="/my-profile">
+                          <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/myAddress">
+                          <i class="fas fa-map-marker-alt"></i> My Address
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/orders">
+                          <i class="fas fa-shopping-bag"></i> Orders
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/wallet">
+                          <i class="fas fa-wallet"></i> Wallet
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/referrals">
+                          <i class="fas fa-user-plus"></i> Referrals
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                          <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
+
+                <!-- Content Area -->
+                <div class="col-lg-9 col-md-8">
+                  <div class="dashboard-content">
+                    <div class="card card-green">
+                      <div class="card-header">
+                        <h5 class="mb-0 text-center">User Profile</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="text-center mb-4">
+                          <div class="avatar-wrapper" id="avatarWrapper">
+                            <img
+                              src="<%= user.profileImage || 'uploads/re-image/profile.jpg' %>"
+                              alt="Profile Avatar"
+                              class="rounded-circle img-thumbnail"
+                              id="profileImg"
+                            />
+                            <% if (!isGoogleUser) { %>
+                            <span class="avatar-edit-btn" id="avatarEditBtn">
+                              <i class="fas fa-camera"></i>
+                            </span>
+                            <input
+                              type="file"
+                              id="profileImageInput"
+                              accept="image/png, image/jpeg, image/jpg, image/webp"
+                              hidden
+                            />
+                            <% } %>
+                          </div>
+
+                          <div class="profile-title-wrap">
+                            <h5 class="profile-title" id="profileNameDisplay">
+                              <%= user.name %>
+                            </h5>
+                            <% if (!isGoogleUser) { %>
+                            <button
+                              class="edit-name-btn"
+                              id="editNameBtn"
+                              title="Edit name"
+                            >
+                              <i class="fas fa-pen"></i>
+                            </button>
+                            <% } %>
+                          </div>
+
+                          <form id="nameEditForm">
+                            <input
+                              type="text"
+                              id="nameInput"
+                              value="<%= user.name %>"
+                              placeholder="Enter name"
+                            />
+                            <button
+                              type="button"
+                              class="save-btn"
+                              id="saveNameBtn"
+                            >
+                              Save
+                            </button>
+                            <button
+                              type="button"
+                              class="cancel-btn"
+                              id="cancelNameBtn"
+                            >
+                              Cancel
+                            </button>
+                            <div
+                              id="nameError"
+                              class="text-danger small mt-1"
+                              style="
+                                display: none;
+                                width: 100%;
+                                text-align: center;
+                              "
+                            ></div>
+                          </form>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <div class="user-info-item">
+                              <label>Phone Number</label>
+                              <p class="mb-0"><%= user.phone %></p>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <div class="user-info-item">
+                              <label>Email Address</label>
+                              <p class="mb-0"><%= user.email %></p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                          <% if (!isGoogleUser) { %>
+                          <a
+                            href="/change-email"
+                            class="btn btn-success me-2 mb-2"
+                          >
+                            <i class="fas fa-envelope me-2"></i>Change Email
+                          </a>
+                          <a
+                            href="/change-password"
+                            class="btn btn-success mb-2"
+                          >
+                            <i class="fas fa-lock me-2"></i>Change Password
+                          </a>
+                          <% } else { %>
+                          <p class="text-muted small mb-0">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Email and password are managed by your Google
+                            account.
+                          </p>
+                          <% } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- Footer -->
     <footer>
-        <div class="container">
-            <p>&copy; <%= new Date().getFullYear() %> Your Company. All rights reserved.</p>
-        </div>
+      <div class="container">
+        <p>
+          &copy; <%= new Date().getFullYear() %> Your Company. All rights
+          reserved.
+        </p>
+      </div>
     </footer>
 
     <!-- Bootstrap and jQuery JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Custom JS for mobile menu -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleMenu = document.getElementById('toggleMenu');
-            const sidebarMenu = document.getElementById('sidebarMenu');
-            
-            toggleMenu.addEventListener('click', function() {
-                sidebarMenu.classList.toggle('show');
-            });
-            
-            // Handle window resize - show menu if switching to desktop view
-            window.addEventListener('resize', function() {
-                if (window.innerWidth > 767) {
-                    sidebarMenu.classList.remove('show');
-                }
-            });
-            
-            // Add smooth scrolling and enhanced interactions
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    // Add ripple effect
-                    const ripple = document.createElement('span');
-                    ripple.classList.add('ripple');
-                    this.appendChild(ripple);
-                    
-                    setTimeout(() => {
-                        ripple.remove();
-                    }, 600);
-                });
-            });
+      document.addEventListener("DOMContentLoaded", function () {
+        const toggleMenu = document.getElementById("toggleMenu");
+        const sidebarMenu = document.getElementById("sidebarMenu");
+
+        toggleMenu.addEventListener("click", function () {
+          sidebarMenu.classList.toggle("show");
         });
+
+        // Handle window resize - show menu if switching to desktop view
+        window.addEventListener("resize", function () {
+          if (window.innerWidth > 767) {
+            sidebarMenu.classList.remove("show");
+          }
+        });
+
+        // Add smooth scrolling and enhanced interactions
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.addEventListener("click", function (e) {
+            // Add ripple effect
+            const ripple = document.createElement("span");
+            ripple.classList.add("ripple");
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+              ripple.remove();
+            }, 600);
+          });
+        });
+      });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const editNameBtn = document.getElementById('editNameBtn');
-        const nameEditForm = document.getElementById('nameEditForm');
-        const profileNameDisplay = document.getElementById('profileNameDisplay');
-        const nameInput = document.getElementById('nameInput');
-        const saveNameBtn = document.getElementById('saveNameBtn');
-        const cancelNameBtn = document.getElementById('cancelNameBtn');
-        const nameError = document.getElementById('nameError');
-    
-        editNameBtn.addEventListener('click', () => {
-            profileNameDisplay.parentElement.style.display = 'none';
-            nameEditForm.style.display = 'flex';
-            nameInput.focus();
+      const editNameBtn = document.getElementById("editNameBtn");
+      const nameEditForm = document.getElementById("nameEditForm");
+      const profileNameDisplay = document.getElementById("profileNameDisplay");
+      const nameInput = document.getElementById("nameInput");
+      const saveNameBtn = document.getElementById("saveNameBtn");
+      const cancelNameBtn = document.getElementById("cancelNameBtn");
+      const nameError = document.getElementById("nameError");
+
+      if (editNameBtn) {
+        editNameBtn.addEventListener("click", () => {
+          profileNameDisplay.parentElement.style.display = "none";
+          nameEditForm.style.display = "flex";
+          nameInput.focus();
         });
-    
-        cancelNameBtn.addEventListener('click', () => {
-            nameInput.value = profileNameDisplay.textContent.trim();
-            nameError.style.display = 'none';
-            nameEditForm.style.display = 'none';
-            profileNameDisplay.parentElement.style.display = 'flex';
-        });
-    
-        saveNameBtn.addEventListener('click', () => {
-            const newName = nameInput.value.trim();
-            nameError.style.display = 'none';
-    
-            if (!newName) {
-                nameError.textContent = 'Name cannot be empty';
-                nameError.style.display = 'block';
-                return;
+      }
+
+      editNameBtn.addEventListener("click", () => {
+        profileNameDisplay.parentElement.style.display = "none";
+        nameEditForm.style.display = "flex";
+        nameInput.focus();
+      });
+
+      cancelNameBtn.addEventListener("click", () => {
+        nameInput.value = profileNameDisplay.textContent.trim();
+        nameError.style.display = "none";
+        nameEditForm.style.display = "none";
+        profileNameDisplay.parentElement.style.display = "flex";
+      });
+
+      saveNameBtn.addEventListener("click", () => {
+        const newName = nameInput.value.trim();
+        nameError.style.display = "none";
+
+        if (!newName) {
+          nameError.textContent = "Name cannot be empty";
+          nameError.style.display = "block";
+          return;
+        }
+        if (!/^[A-Za-z ]{3,50}$/.test(newName)) {
+          nameError.textContent = "Name must be 3-50 letters only";
+          nameError.style.display = "block";
+          return;
+        }
+
+        fetch("/updateProfileName", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: newName }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              profileNameDisplay.textContent = newName;
+              nameEditForm.style.display = "none";
+              profileNameDisplay.parentElement.style.display = "flex";
+              Swal.fire({
+                icon: "success",
+                title: "Updated",
+                text: "Name updated successfully",
+                timer: 1500,
+                showConfirmButton: false,
+              });
+            } else {
+              nameError.textContent = data.message || "Failed to update name";
+              nameError.style.display = "block";
             }
-            if (!/^[A-Za-z ]{3,50}$/.test(newName)) {
-                nameError.textContent = 'Name must be 3-50 letters only';
-                nameError.style.display = 'block';
-                return;
+          })
+          .catch(() => {
+            nameError.textContent = "Server error. Please try again.";
+            nameError.style.display = "block";
+          });
+      });
+
+      const avatarEditBtn = document.getElementById("avatarEditBtn");
+      const profileImageInput = document.getElementById("profileImageInput");
+      const profileImg = document.getElementById("profileImg");
+
+      avatarEditBtn.addEventListener("click", () => {
+        profileImageInput.click();
+      });
+
+      profileImageInput.addEventListener("change", () => {
+        const file = profileImageInput.files[0];
+        if (!file) return;
+
+        const allowedTypes = [
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/webp",
+        ];
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid file",
+            text: "Only JPEG, PNG, JPG, WEBP images are allowed",
+          });
+          return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+          Swal.fire({
+            icon: "error",
+            title: "Too large",
+            text: "Image must be under 2MB",
+          });
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("profileImage", file);
+
+        fetch("/updateProfileImage", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              profileImg.src = data.imageUrl + "?t=" + Date.now();
+              Swal.fire({
+                icon: "success",
+                title: "Updated",
+                text: "Profile image updated",
+                timer: 1500,
+                showConfirmButton: false,
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Failed",
+                text: data.message || "Could not update image",
+              });
             }
-    
-            fetch('/updateProfileName', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: newName })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    profileNameDisplay.textContent = newName;
-                    nameEditForm.style.display = 'none';
-                    profileNameDisplay.parentElement.style.display = 'flex';
-                    Swal.fire({ icon: 'success', title: 'Updated', text: 'Name updated successfully', timer: 1500, showConfirmButton: false });
-                } else {
-                    nameError.textContent = data.message || 'Failed to update name';
-                    nameError.style.display = 'block';
-                }
-            })
-            .catch(() => {
-                nameError.textContent = 'Server error. Please try again.';
-                nameError.style.display = 'block';
+          })
+          .catch(() => {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Server error while uploading image",
             });
-        });
-    
-        const avatarEditBtn = document.getElementById('avatarEditBtn');
-        const profileImageInput = document.getElementById('profileImageInput');
-        const profileImg = document.getElementById('profileImg');
-    
-        avatarEditBtn.addEventListener('click', () => {
-            profileImageInput.click();
-        });
-    
-        profileImageInput.addEventListener('change', () => {
-            const file = profileImageInput.files[0];
-            if (!file) return;
-    
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-            if (!allowedTypes.includes(file.type)) {
-                Swal.fire({ icon: 'error', title: 'Invalid file', text: 'Only JPEG, PNG, JPG, WEBP images are allowed' });
-                return;
-            }
-            if (file.size > 2 * 1024 * 1024) {
-                Swal.fire({ icon: 'error', title: 'Too large', text: 'Image must be under 2MB' });
-                return;
-            }
-    
-            const formData = new FormData();
-            formData.append('profileImage', file);
-    
-            fetch('/updateProfileImage', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    profileImg.src = data.imageUrl + '?t=' + Date.now();
-                    Swal.fire({ icon: 'success', title: 'Updated', text: 'Profile image updated', timer: 1500, showConfirmButton: false });
-                } else {
-                    Swal.fire({ icon: 'error', title: 'Failed', text: data.message || 'Could not update image' });
-                }
-            })
-            .catch(() => {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Server error while uploading image' });
-            });
-        });
+          });
+      });
     </script>
-</body>
+  </body>
 </html>

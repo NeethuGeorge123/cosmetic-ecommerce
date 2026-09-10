@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/css/products.css">
     <link rel="stylesheet" href="/css/admin-style.css" />
     <style>
-        /* Main Content Area */
+        
         .admin-main-content {
             flex: 1;
             padding: 20px;
@@ -13,7 +13,7 @@
             margin-left: 0;
         }
         
-        /* Content Header */
+        
         .content-header {
             margin-bottom: 25px;
         }
@@ -26,7 +26,7 @@
             text-align: left;
         }
         
-        /* Enhanced Search Section */
+        
         .search-container {
             width: 100%;
             margin-bottom: 25px;
@@ -65,7 +65,7 @@
             background: #2563eb;
         }
         
-        /* Improved Table Section */
+        
         .table-container {
             width: 100%;
             overflow-x: auto;
@@ -99,7 +99,7 @@
             text-align: center;
         }
         
-        /* Column Width Adjustments */
+        
         .table th:nth-child(1), .table td:nth-child(1) {
             width: 20%;
             text-align: left;
@@ -138,7 +138,7 @@
             width: 10%;
         }
         
-        /* Button Styles */
+        
         .btn {
             padding: 8px 12px;
             border: none;
@@ -159,7 +159,7 @@
             width: 100%;
         }
         
-        /* Info Button (Blue) */
+        
         .btn-info {
             background-color: #316542;
         }
@@ -168,7 +168,7 @@
             background-color: #2563eb;
         }
         
-        /* Success Button (Green) */
+        
         .btn-success {
             background-color: #10b981;
         }
@@ -177,7 +177,7 @@
             background-color: #059669;
         }
         
-        /* Danger Button (Red) */
+        
         .btn-danger {
             background-color: #ef4444;
         }
@@ -186,7 +186,7 @@
             background-color: #dc2626;
         }
         
-        /* Responsive adjustments */
+        
         @media (max-width: 768px) {
             .admin-main-content {
                 padding: 15px;
@@ -228,15 +228,15 @@
     padding: 8px 14px;
     font-size: 14px;
     border-radius: 5px;
-    background-color: #d4edda; /* light green background */
-    color: #155724; /* green text */
+    background-color: #d4edda; 
+    color: #155724; 
     text-decoration: none;
     border: 1px solid #c3e6cb;
     transition: 0.3s ease;
 }
 
 .pagination li a:hover {
-    background-color: #28a745; /* dark green on hover */
+    background-color: #28a745; 
     color: #fff;
     border-color: #28a745;
 }
@@ -251,15 +251,15 @@
 </head>
 
 <div class="dashboard-container">
-    <!-- Sidebar is included from your header partial -->
+   
     
     <main class="admin-main-content">
-        <!-- Header Section -->
+        
         <div class="content-header">
             <h1 class="content-title">Products</h1>
         </div>
         
-        <!-- Enhanced Search Section -->
+       
         <div class="search-container">
             <form action="" method="get" class="search-form">
                 <input type="text" class="search-input" placeholder="Search products or brands..." name="search">
@@ -267,7 +267,7 @@
             </form>
         </div>
         
-        <!-- Improved Table Section -->
+       
         <div class="table-container">
             <table class="table">
                 <thead>
@@ -288,7 +288,7 @@
                     <tr>
                         <td><%=data[i].productName%></td>
                         <td><%=data[i].brand%></td>
-                        <td><%=data[i].category.name%></td>
+                        <td><%= data[i].category ? data[i].category.name : 'Uncategorized' %></td>
                         <td>₹<%=data[i].salePrice%></td>
                         <td>
                             <%if(locals.data[i].productOffer){%>
@@ -296,7 +296,7 @@
                                 <%}else{%>
                                     0%
                                     <%}%>
-                            <!-- ₹<%=data[i].offerPrice || '-'%></td> -->
+                           
                         <td>
                             <%if(locals.data[i].productOffer===0){%>
                             <a href="#" class="btn btn-info" onclick="addOffer('<%=data[i]._id%>')">Add Offer</a>
@@ -322,7 +322,7 @@
             </table>
         </div>
         
-        <!-- Pagination Section -->
+       
         <div class="pagination-container">
             <ul class="pagination">
                 <% if (currentPage> 1) { %>
@@ -344,7 +344,7 @@
 </div>
 
 
-<!-- Add/Update Offer Modal -->
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>

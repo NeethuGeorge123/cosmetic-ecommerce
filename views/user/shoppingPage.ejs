@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEAF - Organic Cosmetics</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,77 +15,45 @@
             --light: #ffffff;
             --accent: #d4e9d2;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #fbfbfb;
         }
-        
+
         .navbar-brand img {
             height: 60px;
             transition: transform 0.3s;
         }
-        
+
         .navbar-brand img:hover {
             transform: scale(1.05);
         }
-        
-        .topbar {
-            background-color: var(--secondary);
-            font-size: 0.9rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        .topbar a {
-            color: var(--dark);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .topbar a:hover {
-            color: var(--primary);
-        }
-        
-        .social-icons a {
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-            margin: 0 3px;
-        }
-        
-        .social-icons a:hover {
-            background-color: var(--primary);
-            color: white !important;
-        }
-        
+
         .search-box {
             border-radius: 30px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        
+
         .search-box input {
             border: none;
             padding: 12px 20px;
         }
-        
+
         .search-box .btn {
             background-color: var(--primary);
             color: white;
             border: none;
             padding: 10px 20px;
         }
-        
+
         .category-nav {
             background-color: var(--light);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-radius: 8px;
         }
-        
+
         .category-heading {
             background-color: var(--primary);
             color: white;
@@ -97,43 +62,43 @@
             padding: 15px 20px;
             font-weight: 600;
         }
-        
+
         .filter-menu .nav-link {
             color: var(--dark);
             padding: 12px 20px;
             border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: all 0.3s;
         }
-        
+
         .filter-menu .nav-link:hover {
             background-color: var(--accent);
             padding-left: 25px;
         }
-        
+
         .filter-menu .dropdown-menu {
             border-radius: 0;
             margin-top: 0;
             border: none;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
+
         .filter-menu .dropdown-item {
             padding: 10px 20px;
             transition: all 0.3s;
         }
-        
+
         .filter-menu .dropdown-item:hover {
             background-color: var(--accent);
             padding-left: 25px;
         }
-        
+
         .top-navbar .nav-link {
             font-weight: 500;
             padding: 15px 20px;
             position: relative;
             transition: all 0.3s;
         }
-        
+
         .top-navbar .nav-link:after {
             content: '';
             position: absolute;
@@ -144,16 +109,16 @@
             background-color: var(--primary);
             transition: width 0.3s;
         }
-        
+
         .top-navbar .nav-link:hover:after {
             width: calc(100% - 40px);
         }
-        
+
         .user-dropdown {
             position: relative;
             cursor: pointer;
         }
-        
+
         .user-dropdown-content {
             display: none;
             position: absolute;
@@ -165,11 +130,11 @@
             border-radius: 8px;
             overflow: hidden;
         }
-        
+
         .user-dropdown:hover .user-dropdown-content {
             display: block;
         }
-        
+
         .user-dropdown-content a {
             display: block;
             padding: 12px 20px;
@@ -178,13 +143,12 @@
             border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: all 0.3s;
         }
-        
+
         .user-dropdown-content a:hover {
             background-color: var(--accent);
             padding-left: 25px;
         }
-        
-        /* Product Card - Fixed Dimensions */
+
         .product-card {
             border-radius: 10px;
             overflow: hidden;
@@ -192,88 +156,88 @@
             transition: all 0.3s;
             margin-bottom: 25px;
             background-color: white;
-            height: 400px; /* Fixed height for all cards */
+            height: 400px;
             display: flex;
             flex-direction: column;
         }
-        
+
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        
+
         .product-img {
             overflow: hidden;
             position: relative;
-            height: 220px; /* Fixed height for image container */
+            height: 220px;
         }
-        
+
         .product-img img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Maintains aspect ratio while covering container */
+            object-fit: cover;
             transition: transform 0.5s;
         }
-        
+
         .product-card:hover .product-img img {
             transform: scale(1.05);
         }
-        
+
         .product-info {
             padding: 20px;
             display: flex;
             flex-direction: column;
-            flex-grow: 1; /* Takes remaining space */
+            flex-grow: 1;
             justify-content: space-between;
         }
-        
+
         .product-content {
             margin-bottom: 15px;
         }
-        
+
         .product-title {
             font-size: 1rem;
             font-weight: 500;
             margin-bottom: 10px;
-            height: 24px; /* Fixed height for title */
+            height: 24px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        
+
         .product-brand {
             font-size: 0.85rem;
             color: #6c757d;
             margin-bottom: 10px;
-            height: 20px; /* Fixed height */
+            height: 20px;
         }
-        
+
         .product-price {
             display: flex;
             align-items: center;
-            height: 28px; /* Fixed height */
+            height: 28px;
         }
-        
+
         .sale-price {
             font-weight: 600;
             color: var(--primary);
             font-size: 1.15rem;
         }
-        
+
         .regular-price {
             margin-left: 10px;
             color: #6c757d;
             text-decoration: line-through;
             font-size: 0.9rem;
         }
-        
+
         .product-actions {
             display: flex;
             justify-content: space-between;
             border-top: 1px solid rgba(0,0,0,0.05);
             padding-top: 15px;
         }
-        
+
         .product-actions a {
             font-size: 0.85rem;
             font-weight: 500;
@@ -283,22 +247,22 @@
             transition: all 0.3s;
             color: var(--dark);
         }
-        
+
         .wishlist-btn:hover {
             background-color: #ffe6e6;
             color: #e05462 !important;
         }
-        
+
         .cart-btn:hover {
             background-color: var(--accent);
             color: var(--primary) !important;
         }
-        
+
         .pagination {
             margin: 40px 0;
             justify-content: center;
         }
-        
+
         .pagination .btn {
             margin: 0 8px;
             padding: 12px 20px;
@@ -308,25 +272,25 @@
             border: none;
             transition: all 0.3s;
         }
-        
+
         .pagination .btn:hover, .pagination .btn.active {
             background-color: #f0f0f0;
             color:#6c757d;
             border-color: var(--primary);
         }
-        
+
         .newsletter {
             background-color: var(--accent);
             border-radius: 10px;
             overflow: hidden;
             padding: 60px 0;
         }
-        
+
         .newsletter-heading {
             position: relative;
             margin-bottom: 30px;
         }
-        
+
         .newsletter-heading:after {
             content: '';
             position: absolute;
@@ -337,18 +301,18 @@
             height: 3px;
             background-color: var(--primary);
         }
-        
+
         .newsletter-input {
             border-radius: 30px;
             overflow: hidden;
             box-shadow: 0 3px 15px rgba(0,0,0,0.05);
         }
-        
+
         .newsletter-input input {
             border: none;
             padding: 15px 25px;
         }
-        
+
         .newsletter-input button {
             background-color: var(--primary);
             color: white;
@@ -357,120 +321,85 @@
             font-weight: 500;
             transition: all 0.3s;
         }
-        
+
         .newsletter-input button:hover {
             background-color: #6a9962;
         }
-        
+
         footer {
             background-color: #343a40;
             color: white;
             padding: 60px 0 30px;
         }
+
+        @media (max-width: 767px) {
+            .search-box {
+                border-radius: 12px;
+            }
+
+            .search-box.input-group {
+                flex-wrap: nowrap;
+            }
+
+            .product-card {
+                height: auto;
+                min-height: 360px;
+            }
+
+            .product-img {
+                height: 180px;
+            }
+
+            .newsletter {
+                padding: 40px 0;
+            }
+
+            .newsletter-input input,
+            .newsletter-input button {
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-img {
+                height: 160px;
+            }
+
+            .product-info {
+                padding: 14px;
+            }
+
+            .pagination .btn {
+                margin: 0 4px;
+                padding: 10px 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Include header partial -->
+
     <%- include("../../views/partials/user/header") %>
+    <%- include("../../views/partials/user/header1") %>
 
-    <!-- Topbar -->
-    <div class="topbar py-2">
-        <div class="container">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center small">
-                        <a href="" class="me-3">FAQs</a>
-                        <span class="text-muted mx-2">|</span>
-                        <a href="" class="me-3">Help</a>
-                        <span class="text-muted mx-2">|</span>
-                        <a href="">Support</a>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="d-flex">
+                    <div class="search-box input-group me-2">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="topSearchInput"
+                            placeholder="Search for organic cosmetics..."
+                            value="<%= filters.search || '' %>">
+                        <button class="btn" type="button" onclick="submitTopSearch()">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </div>
-                </div>
-                <div class="col-md-6 text-end">
-                    <div class="social-icons">
-                        <a href=""><i class="fab fa-facebook-f"></i></a>
-                        <a href=""><i class="fab fa-twitter"></i></a>
-                        <a href=""><i class="fab fa-linkedin-in"></i></a>
-                        <a href=""><i class="fab fa-instagram"></i></a>
-                        <a href=""><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Main Header -->
-    <div class="main-header py-3 bg-white border-bottom">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-2 col-md-3 mb-3 mb-md-0">
-                    <a href="" class="navbar-brand d-flex align-items-center justify-content-center justify-content-md-start">
-                        <img src="/img/logo 2.jpg" alt="Leaf Organics" class="img-fluid">
-                    </a>
-                </div>
-
-
-
-                <!-- search bar -->
-
-
-                <div class="col-lg-7 col-md-6 mb-3 mb-md-0">
-                    <div class="d-flex">
-                        <div class="search-box input-group me-2">
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="topSearchInput"
-                                placeholder="Search for organic cosmetics..."
-                                value="<%= filters.search || '' %>">
-                            <button class="btn" type="button" onclick="submitTopSearch()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                
-                        <% if (filters.search) { %>
-                            <a href="/shopnow" class="btn btn-outline-secondary">Clear</a>
-                        <% } %>
-                    </div>
-                </div>
-                
-                <!-- <div class="col-lg-7 col-md-6 mb-3 mb-md-0">
-                    <form action="/shopnow" method="get" class="d-flex">
-                        <div class="search-box input-group me-2">
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="search"
-                                placeholder="Search for organic cosmetics..."
-                                value="<%= filters.search || '' %>">
-                            <button class="btn" type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    
-                        <% if (filters.search) { %>
-                            <a href="/shopnow" class="btn btn-outline-secondary">Clear</a>
-                        <% } %>
-                    </form>
-                    
-                      
-                      
-                      
-                </div> -->
-
-                
-
-                <div class="col-lg-3 col-md-3 d-flex justify-content-end">
-                    <div class="d-flex align-items-center">
-                        <a href="/wishlist"  class="btn position-relative me-3">
-                            <i class="fas fa-heart fs-5 text-primary"></i>
-                            <span id="wishlist-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
-                        </a>
-                        <a href="/cart" class="btn position-relative">
-                            <i class="fas fa-shopping-cart fs-5 text-primary"></i>
-                            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">0</span>
-                        </a>
-                    </div>
+                    <% if (filters.search) { %>
+                        <a href="/shopnow" class="btn btn-outline-secondary">Clear</a>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -481,17 +410,14 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active"><a href="#">Shop</a></li>
-                    
+                    <li class="breadcrumb-item active" aria-current="page">Shop</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-    <!-- Navigation -->
     <div class="container py-4">
         <div class="row">
-            <!-- Categories Sidebar -->
             <div class="col-lg-3 mb-4 mb-lg-0">
                 <div class="category-nav">
                     <div class="category-heading d-flex justify-content-between align-items-center">
@@ -511,8 +437,6 @@
                                           <%= brand[i].brandName %>
                                         </a>
                                       <% } %>
-                                      
-                                      
                                 </div>
                             </div>
                             <div class="nav-item dropdown">
@@ -521,19 +445,16 @@
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <div class="dropdown-menu w-100">
-                                  <!-- Price Ranges -->
                                   <a href="javascript:void(0)" class="dropdown-item" onclick="updatePriceRange('0', '500')">₹0 - ₹500</a>
                                   <a href="javascript:void(0)" class="dropdown-item" onclick="updatePriceRange('500', '1000')">₹500 - ₹1000</a>
                                   <a href="javascript:void(0)" class="dropdown-item" onclick="updatePriceRange('1000', '1500')">₹1000 - ₹1500</a>
-                              
+
                                   <div class="dropdown-divider"></div>
-                              
-                                  <!-- Sort Order -->
+
                                   <a href="javascript:void(0)" class="dropdown-item" onclick="updateSortOrder('lowToHigh')">Sort: Low to High</a>
                                   <a href="javascript:void(0)" class="dropdown-item" onclick="updateSortOrder('highToLow')">Sort: High to Low</a>
                                 </div>
-                              
-                                <!-- Filter Button -->
+
                                 <form id="filter-form" action="/shopnow" method="get" class="mt-2 px-2">
                                     <input type="hidden" name="search" id="search-input" value="<%= filters.search || '' %>">
                                     <input type="hidden" name="category" id="category-input" value="<%= filters.category || '' %>">
@@ -541,25 +462,20 @@
                                     <input type="hidden" name="gt" id="gt-input" value="<%= filters.gt || '' %>">
                                     <input type="hidden" name="lt" id="lt-input" value="<%= filters.lt || '' %>">
                                     <input type="hidden" name="sort" id="sort-input" value="<%= filters.sort || '' %>">
-                                
+
                                     <button type="submit" class="btn btn-primary w-100 mt-2">
                                         Apply Filters
                                     </button>
                                 </form>
-                                
-                              
+
                                 <a href="/shopnow" class="btn btn-secondary w-100 mt-2">Clear All Filters</a>
                               </div>
-                              
-                           
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Main Content -->
+
             <div class="col-lg-9">
-                <!-- Top Category Navigation -->
                 <nav class="navbar navbar-expand-lg bg-white rounded mb-4 top-navbar">
                     <div class="container-fluid px-0">
                         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -574,14 +490,12 @@
                                       </a>
                                     </li>
                                   <% } %>
-                                  
-                                  
                             </ul>
                             <div class="d-flex">
                                 <%if(!user){%>
                                 <a href="/login" class="nav-link me-3">Login</a>
                                 <a href="/signup" class="nav-link">Register</a>
-                                <%}else{%> 
+                                <%}else{%>
                                 <div class="user-dropdown">
                                     <div class="nav-link d-flex align-items-center">
                                         <i class="fa fa-user-circle me-2"></i>
@@ -598,7 +512,6 @@
                     </div>
                 </nav>
 
-                <!-- Products Section -->
                 <div class="products-section">
                     <div class="section-heading text-center mb-4">
                         <h2 class="fw-bold">Our Products</h2>
@@ -606,16 +519,14 @@
                             <div style="width: 60px; height: 3px; background-color: var(--primary);"></div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <%for(let i=0;i<products.length;i++){%>
                             <% if (products[i].quantity > 0) { %>
                         <div class="col-lg-4 col-md-6">
                             <div class="product-card">
                                 <div class="product-img">
-
-
-                                    <% 
+                                    <%
                                         let image = '';
                                         if (products[i].productImage[0]) {
                                             image = products[i].productImage[0];
@@ -624,18 +535,12 @@
                                         } else if (products[i].productImage[2]) {
                                             image = products[i].productImage[2];
                                         } else {
-                                            image = 'default.jpg'; // Optional: fallback image
+                                            image = 'default.jpg';
                                         }
                                     %>
-
-<a href="/productDetails?id=<%= products[i]._id %>">
-    <img src="/uploads/re-image/<%= image %>" alt="<%= products[i].productName %>">
-</a>
-
-
-
-
-                                   
+                                    <a href="/productDetails?id=<%= products[i]._id %>">
+                                        <img src="/uploads/re-image/<%= image %>" alt="<%= products[i].productName %>">
+                                    </a>
                                 </div>
                                 <div class="product-info">
                                     <div class="product-content">
@@ -649,11 +554,12 @@
                                         </div>
                                     </div>
                                     <div class="product-actions" >
-                                        <button  onclick="addToWishlist('<%=products[i]._id%>')" class="wishlist-btn text-primary" style="border :none;">
-                                            <i class="fa fa-heart text-danger me-1"></i> 
+                                        <% const isWishlisted = wishlistProductIds && wishlistProductIds.includes(products[i]._id.toString()); %>
+                                        <button onclick="addToWishlist('<%=products[i]._id%>', this)" class="wishlist-btn text-primary" style="border:none;">
+                                            <i class="<%= isWishlisted ? 'fa fa-heart text-danger' : 'far fa-heart' %> me-1" style="<%= isWishlisted ? '' : 'color:#495057;' %>"></i>
                                         </button>
-                                        <button  class="cart-btn" onclick="addToCart('<%=products[i]._id%>')"  style="border :none;">
-                                            <i class="fas fa-shopping-cart text-danger me-1"></i> 
+                                        <button class="cart-btn" onclick="addToCart('<%=products[i]._id%>')" style="border:none;">
+                                            <i class="fas fa-shopping-cart text-danger me-1"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -664,47 +570,42 @@
                     </div>
                 </div>
 
-                
-        
-<!-- Pagination -->
-<div class="pagination">
-    <% if (totalPages > 1) { %>
-        <div class="d-flex align-items-center">
+                <div class="pagination">
+                    <% if (totalPages > 1) { %>
+                        <div class="d-flex align-items-center">
 
-            <% if (currentPage > 1) { %>
-                <a class="btn me-2"
-                   href="/shopnow?<%= queryString %>&page=<%= currentPage - 1 %>">
-                    <i class="fa fa-angle-left me-1"></i>
-                </a>
-            <% } else { %>
-                <a class="btn me-2 disabled" href="javascript:void(0)">
-                    <i class="fa fa-angle-left me-1"></i>
-                </a>
-            <% } %>
+                            <% if (currentPage > 1) { %>
+                                <a class="btn me-2"
+                                   href="/shopnow?<%= queryString %>&page=<%= currentPage - 1 %>">
+                                    <i class="fa fa-angle-left me-1"></i>
+                                </a>
+                            <% } else { %>
+                                <a class="btn me-2 disabled" href="javascript:void(0)">
+                                    <i class="fa fa-angle-left me-1"></i>
+                                </a>
+                            <% } %>
 
-            <span class="btn active"><%= currentPage %></span>
+                            <span class="btn active"><%= currentPage %></span>
 
-            <% if (currentPage < totalPages) { %>
-                <a class="btn ms-2"
-                   href="/shopnow?<%= queryString %>&page=<%= currentPage + 1 %>">
-                    <i class="fa fa-angle-right ms-1"></i>
-                </a>
-            <% } else { %>
-                <a class="btn ms-2 disabled" href="javascript:void(0)">
-                    <i class="fa fa-angle-right ms-1"></i>
-                </a>
-            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <a class="btn ms-2"
+                                   href="/shopnow?<%= queryString %>&page=<%= currentPage + 1 %>">
+                                    <i class="fa fa-angle-right ms-1"></i>
+                                </a>
+                            <% } else { %>
+                                <a class="btn ms-2 disabled" href="javascript:void(0)">
+                                    <i class="fa fa-angle-right ms-1"></i>
+                                </a>
+                            <% } %>
 
-        </div>
-    <% } %>
-</div>
-
+                        </div>
+                    <% } %>
+                </div>
 
             </div>
         </div>
     </div>
 
-    <!-- Newsletter Section -->
     <div class="container my-5">
         <div class="newsletter">
             <div class="row justify-content-center">
@@ -722,173 +623,122 @@
         </div>
     </div>
 
-    <!-- Include footer partial -->
     <%- include("../../views/partials/user/footer") %>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</body>
-</html>
 
-<script>
-    // function updateQueryParam(param, value) {
-    //     const url = new URL(window.location.href);
-    //     url.searchParams.set(param, value);
-    //     window.location.href = url.toString();
-    // }
+    <script>
+        function updateQueryParam(param, value) {
+            document.getElementById(param + '-input').value = value;
+            document.getElementById('filter-form').submit();
+        }
 
-    // function updatePriceRange(gt, lt) {
-    //     const url = new URL(window.location.href);
-    //     url.searchParams.set('gt', gt);
-    //     url.searchParams.set('lt', lt);
-    //     url.searchParams.set('page', 1);
-    //     window.location.href = url.toString();
-    // }
+        function updatePriceRange(gt, lt) {
+            document.getElementById('gt-input').value = gt;
+            document.getElementById('lt-input').value = lt;
+            document.getElementById('filter-form').submit();
+        }
 
-    // function updateSortOrder(order) {
-    //     document.getElementById('sort-input').value = order;
-    // }
+        function updateSortOrder(order) {
+            document.getElementById('sort-input').value = order;
+            document.getElementById('filter-form').submit();
+        }
 
-    function updateQueryParam(param, value) {
-  document.getElementById(param + '-input').value = value;
-  document.getElementById('filter-form').submit();
-}
+        function submitTopSearch() {
+            const value = document.getElementById('topSearchInput').value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', value);
+            url.searchParams.set('page', 1);
+            window.location.href = url.toString();
+        }
 
-function updatePriceRange(gt, lt) {
-  document.getElementById('gt-input').value = gt;
-  document.getElementById('lt-input').value = lt;
-  document.getElementById('filter-form').submit();
-}
-
-function updateSortOrder(order) {
-  document.getElementById('sort-input').value = order;
-  document.getElementById('filter-form').submit();
-}
-
-
-function submitTopSearch() {
-    const value = document.getElementById('topSearchInput').value;
-    const url = new URL(window.location.href);
-    url.searchParams.set('search', value);
-    url.searchParams.set('page', 1); // reset to page 1 on new search
-    window.location.href = url.toString();
-}
-
-
-document.getElementById('topSearchInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        submitTopSearch();
-    }
-});
-
-    function updateCartCount() {
-        $.ajax({
-            url: '/cart/count',
-            method: 'GET',
-            success: (response) => {
-                if (response.status) {
-                    $('#cart-count').text(response.count);
-                } else {
-                    $('#cart-count').text('0');
-                }
-            },
-            error: (error) => {
-                $('#cart-count').text('0');
+        document.getElementById('topSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitTopSearch();
             }
         });
-    }
 
-    $(document).ready(function() {
-        updateCartCount();
-    });
-
-    function addToWishlist(productId) {
-        $.ajax({
-            url: '/addToWishlist',
-            method: 'POST',
-            data: { productId: productId },
-            success: (response) => {
-                if (response.status) {
+        function addToWishlist(productId, btnElement) {
+            $.ajax({
+                url: '/addToWishlist',
+                method: 'POST',
+                data: { productId: productId },
+                success: (response) => {
+                    if (response.status) {
+                        Swal.fire({
+                            title: 'Added to Wishlist',
+                            text: 'The product has been added to your wishlist',
+                            icon: 'success',
+                            timer: 2000
+                        });
+                        if (btnElement) {
+                            const icon = btnElement.querySelector('i');
+                            icon.classList.remove('text-secondary');
+                            icon.classList.add('text-danger');
+                        }
+                        if (typeof updateWishlistCount === 'function') {
+                            updateWishlistCount();
+                        }
+                    } else {
+                        Swal.fire({
+                            title: 'Warning',
+                            text: response.message,
+                            icon: 'warning',
+                            timer: 2000
+                        });
+                    }
+                },
+                error: () => {
                     Swal.fire({
-                        title: 'Added to Wishlist',
-                        text: 'The product has been added to your wishlist',
-                        icon: 'success',
-                        timer: 2000
-                    });
-                    updateWishlistCount();
-                } else {
-                    Swal.fire({
-                        title: 'Warning',
-                        text: response.message,
-                        icon: 'warning',
+                        title: 'Error',
+                        text: 'There was an error adding the product to your wishlist',
+                        icon: 'error',
                         timer: 2000
                     });
                 }
-            },
-            error: (error) => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'There was an error adding the product to your wishlist',
-                    icon: 'error',
-                    timer: 2000
-                });
-            }
-        });
-    }
-
-    function addToCart(productId) {
-    $.ajax({
-        url: '/cart',
-        method: 'POST',
-        data: { productId: productId },
-        success: (response) => {
-            console.log('Full response:', response);
-            if (response.status) {
-                Swal.fire({
-                    title: 'Added to Cart',
-                    text: 'The product has been added to your cart',
-                    icon: 'success',
-                    timer: 2000
-                });
-                // Use the count directly from the response instead of making another AJAX call
-                if (response.count !== undefined) {
-                    $('#cart-count').text(response.count);
-                }
-                // DON'T call updateCartCount() here - it makes another AJAX request
-                updateWishlistCount();
-            } else {
-                Swal.fire({
-                    title: 'Already in Cart',
-                    text: response.message,
-                    icon: 'info',
-                    timer: 2000
-                });
-            }
-        },
-        error: (error) => {
-            console.error('addToCart error:', error);
-            Swal.fire({
-                title: 'Error',
-                text: 'There was an error adding the product to your cart',
-                icon: 'error',
-                timer: 2000
             });
         }
-    });
-}
 
-async function updateWishlistCount(){
-      try {
-        const res=await fetch("/wishlist/count")
-        const data=await res.json()
-        document.getElementById("wishlist-badge").innerText=data.count
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
-    updateWishlistCount();
-</script>
+        function addToCart(productId) {
+            $.ajax({
+                url: '/cart',
+                method: 'POST',
+                data: { productId: productId },
+                success: (response) => {
+                    if (response.status) {
+                        Swal.fire({
+                            title: 'Added to Cart',
+                            text: 'The product has been added to your cart',
+                            icon: 'success',
+                            timer: 2000
+                        });
+                        if (response.count !== undefined) {
+                            $('#cart-count').text(response.count);
+                        }
+                        if (typeof updateWishlistCount === 'function') {
+                            updateWishlistCount();
+                        }
+                    } else {
+                        Swal.fire({
+                            title: 'Already in Cart',
+                            text: response.message,
+                            icon: 'info',
+                            timer: 2000
+                        });
+                    }
+                },
+                error: () => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'There was an error adding the product to your cart',
+                        icon: 'error',
+                        timer: 2000
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -11,7 +11,7 @@
     <div class="row justify-content-end mb-2">
       <div class="col-auto d-flex flex-wrap align-items-center gap-2">
         <a href="#" onclick="goToReport()" class="btn btn-success" style="margin-right: 10px;">View Report</a>
-        <!-- <a href="/admin/salesReport" class="btn btn-success" style="margin-right: 10px;">View Report</a> -->
+        
   
         <form method="GET" action="/admin/sales" class="d-flex align-items-center bg-light p-2 rounded shadow-sm flex-wrap gap-2" id="filterForm">
           <label for="range" class="form-label mb-0 me-2 fw-semibold text-primary">
@@ -288,8 +288,7 @@
     }
   }
 
-  // Validate custom date before submitting
-  // Validate custom date before submitting
+  
   document.getElementById('applyBtn').addEventListener('click', function (e) {
     const from = document.getElementById('fromDate').value;
     const to = document.getElementById('toDate').value;
@@ -331,10 +330,10 @@
       });
       return;
     }
-    // valid — form submits normally
+    
   });
 
-  // Trigger UI setup on initial page load
+  
   window.addEventListener('DOMContentLoaded', () => {
     handleRangeChange(true);
   });
@@ -347,14 +346,14 @@
   if (range === 'custom') {
     if (!from || !to) {
       Swal.fire({ icon: "warning", title: "Missing Dates", text: "Please select both From and To dates" });
-      return;   // ← stops here, never navigates
+      return;  
     }
     const toDate = new Date(to);
     const today = new Date();
     today.setHours(23, 59, 59, 999);
     if (toDate > today) {
       Swal.fire({ icon: "error", title: "Invalid Date", text: "End date cannot be greater than today's date" });
-      return;   // ← stops here, never navigates
+      return;  
     }
   }
 
@@ -362,7 +361,7 @@
   if (range === 'custom' && from && to) {
     url += '&from=' + from + '&to=' + to;
   }
-  window.location.href = url;   // ← only reaches here if validation passed
+  window.location.href = url;   
 }
 </script>
 
