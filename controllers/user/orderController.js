@@ -459,7 +459,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
   const userId = req.session.user;
 
   const coupon = await Coupon.findOne({ name: couponCode, isList: true });
-  console.log("COOOOO",coupon)
+  
 
   if (!coupon) {
     return res
@@ -644,7 +644,7 @@ const createOrder = asyncHandler(async (req, res, next) => {
       salePrice: item.productId.salePrice,
     },
     quantity: item.quantity,
-    price: item.productId.salePrice * item.quantity,
+    price: item.productId.salePrice,
   }));
 
   let razorpayOrder = null;

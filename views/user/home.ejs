@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         .header-row {
-            background-color: #FFEBD9; /* Light peach color */
+            background-color: #FFEBD9; 
             box-shadow : 0 2px 4px rgba(0,0,0,0.1);
         }
         
@@ -140,7 +140,7 @@
             background: #f8f9fa;
         }
         
-        /* Mobile responsiveness */
+        
         @media (max-width: 768px) {
             .category-nav {
                 display: none;
@@ -166,7 +166,7 @@
             }
         }
         
-        /* Carousel adjustments */
+        
         .carousel-item {
             height: 400px;
         }
@@ -176,44 +176,44 @@
             height: 100%;
             object-fit: cover;
         }
-    /* CSS for responsive image alignment */
+    
 .product-img {
-    aspect-ratio: 4 / 3; /* Consistent aspect ratio for all images */
+    aspect-ratio: 4 / 3; 
     overflow: hidden;
 }
  
 .product-img img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures images fill the container without distortion */
-    display: block; /* Removes extra space below images */
+    object-fit: cover; 
+    display: block; 
 }
 
-/* Ensure cards are flexible */
+
 .card.product-item {
     display: flex;
     flex-direction: column;
-    height: 100%; /* Makes cards stretch to equal height in a row */
+    height: 100%; 
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
     .product-img {
-        aspect-ratio: 4 / 3; /* Maintain aspect ratio on smaller screens */
+        aspect-ratio: 4 / 3; 
     }
     
     .card-body h6 {
-        font-size: 0.9rem; /* Smaller font for product name */
+        font-size: 0.9rem; 
     }
     
     .card-footer a {
-        font-size: 0.8rem; /* Smaller buttons on mobile */
+        font-size: 0.8rem; 
     }
 }
 
 @media (max-width: 576px) {
     .product-img {
-        aspect-ratio: 1 / 1; /* Square images for very small screens to save space */
+        aspect-ratio: 1 / 1; 
     }
     
     .card-body {
@@ -222,29 +222,29 @@
     }
     
     .card-body h6 {
-        font-size: 0.8rem; /* Even smaller font for mobile */
+        font-size: 0.8rem; 
     }
     
     .card-footer {
-        flex-direction: column; /* Stack buttons vertically on small screens */
+        flex-direction: column; 
         align-items: center;
         gap: 0.5rem;
     }
 }
-/*for brand print bar*/
+
 .vendor-carousel .vendor-item {
-  width: 180px;               /* Set a fixed width */
-  height: 120px;              /* Set a fixed height */
+  width: 180px;               
+  height: 120px;              
   display: flex;
-  align-items: center;        /* Vertically center image */
-  justify-content: center;     /* Horizontally center image */
+  align-items: center;        
+  justify-content: center;     
   margin: auto;
 }
 
 .vendor-carousel .vendor-item img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;        /* Keep image ratio inside box */
+  object-fit: contain;        
 }
 .wishlist-btn, .cart-btn {
     font-size: 0.85rem;
@@ -266,7 +266,7 @@
     background-color: #d4e9d2;
     color: #78a670 !important;
 }
-/* Dropdown styling */
+
 .nav-item .dropdown-menu {
     border-radius: 10px;
     min-width: 160px;
@@ -305,9 +305,9 @@
 <body>
     
     <div class="container-fluid">
-        <!-- Main Header Row -->
+        
         <div class="row header-row align-items-center py-3 px-xl-4">
-            <!-- Logo Section -->
+            
             <div class="col-lg-2 col-md-2 col-4">
                 <div class="logo-section">
                     <a href="/" class="text-decoration-none">
@@ -316,7 +316,7 @@
                 </div>
             </div>
             
-            <!-- Search Section -->
+            
             <div class="col-lg-3 col-md-4 col-8">
                 <div class="search-section">
                     <form action="/shopnow" method="get">
@@ -332,10 +332,10 @@
                 </div>
             </div>
             
-            <!-- Categories/Menu Section -->
+            
             <div class="col-lg-4 d-none d-lg-block">
                 <nav class="category-nav">
-                    <!-- Static categories - replace with dynamic backend data -->
+                    
                     <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
                         <% categories.slice(0, 5).forEach((category, index) => { %>
                             <a href="/category/<%= category.slug || category._id %>" class="category-link <%= index === 0 ? 'active' : '' %>">
@@ -343,7 +343,7 @@
                             </a>
                         <% }) %>
                     <% } else { %>
-                        <!-- Fallback static categories -->
+                        
                         <a href="/shopnow" class="category-link active">Skin</a>
                         <a href="/shopnow" class="category-link">Face</a>
                         <a href="/shopnow" class="category-link">Lips</a>
@@ -353,27 +353,27 @@
                 </nav>
             </div>
             
-            <!-- Cart & User Section -->
+            
             <div class="col-lg-3 col-md-6 col-12 text-right">
                 <div class="cart-section justify-content-end">
-                    <!-- Wishlist Button -->
+                    
                     <a href="/wishlist" class="cart-btn">
                         <i class="fas fa-heart"></i>
                         <span id="wishlist-badge" class="cart-badge">0</span>
                     </a>
                     
-                    <!-- Shopping Cart Button -->
-                    <!-- Shopping Cart Button -->
+                
+                    
 <a href="/cart" class="cart-btn">
     <i class="fas fa-shopping-cart"></i>
     <span id="cart-count" class="cart-badge">0</span>
   </a>
   
                     
-                    <!-- User Dropdown -->
+                    
                     <div class="dropdown user-dropdown d-inline-block ml-2">
                         <% if (typeof user === 'undefined' || !user) { %>
-                            <!-- Guest dropdown -->
+                            
                             <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
                                 <i class="fas fa-user mr-1"></i> Guest
                             </button>
@@ -409,7 +409,7 @@
             </div>
         </div>
         
-        <!-- Mobile Menu (Collapsible) -->
+        
         <div class="collapse" id="mobileMenu">
             <div class="row bg-light p-3">
                 <div class="col-12">
@@ -433,7 +433,7 @@
         </div>
     </div>
     
-    <!-- Banner Carousel -->
+    
     <div class="container-fluid mb-5">
         <div class="row">
             <div class="col-12">
@@ -628,9 +628,9 @@
             </div>
         </div>
     </div>
-    <!-- jQuery -->
+    
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- SweetAlert2 -->
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function addToWishlist(productId) {

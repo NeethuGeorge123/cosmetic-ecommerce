@@ -951,7 +951,7 @@
                                             <!-- Orders List -->
                                             <script>
                                                 const orders = <%- JSON.stringify(orders) %>;
-                                                console.log("Orders:", orders);
+                                                
                                               </script>
                                               
                                              
@@ -1579,7 +1579,7 @@
                     const handleClick = debounce((e) => {
                         e.stopPropagation();
                         const orderId = button.dataset.orderId;
-                        console.log("Cancel orderId:", orderId);
+                        
 
                         if (cancelModalTitle)
                             cancelModalTitle.textContent = "Cancel Order";
@@ -1606,7 +1606,7 @@
                         const handleClick = debounce((e) => {
                             e.stopPropagation();
                             const orderId = button.dataset.orderId;
-                            console.log("Return orderId:", orderId);
+                            
 
                             if (returnModalTitle)
                                 returnModalTitle.textContent = "Return Order";
@@ -1634,7 +1634,7 @@
                             e.stopPropagation();
                             const orderId = button.dataset.orderId;
                             const itemId = button.dataset.itemId;
-                            console.log("Cancel item - OrderId:", orderId, "ItemId:", itemId);
+                            
 
                             if (cancelItemModalTitle)
                                 cancelItemModalTitle.textContent = "Cancel Item";
@@ -1689,7 +1689,7 @@
             if (confirmCancelButton) {
                 confirmCancelButton.addEventListener("click", async function () {
                     const orderId = this.dataset.orderId;
-                    console.log("Cancel request for orderId:", orderId);
+                    
                     if (cancelModalInstance) cancelModalInstance.hide();
 
                     const { value: reason } = await Swal.fire({
@@ -1734,7 +1734,7 @@
                     });
 
                     if (!reason) {
-                        console.log("Cancellation aborted");
+                        
                         return;
                     }
 
@@ -1778,7 +1778,7 @@
                         });
 
                         const data = await response.json();
-                        console.log("Cancel response:", data);
+                        
 
                         if (response.ok && data.success) {
                             await Swal.fire({
@@ -1808,11 +1808,11 @@
                 });
             }
 
-            // Handle "Proceed to Return" button click
+            
             if (confirmReturnButton) {
                 confirmReturnButton.addEventListener("click", async function () {
                     const orderId = this.dataset.orderId;
-                    console.log("Return request for orderId:", orderId);
+                    
                     if (returnModalInstance) returnModalInstance.hide();
 
                     const { value: reason } = await Swal.fire({
@@ -1901,7 +1901,7 @@
                         });
 
                         const data = await response.json();
-                        console.log("Return response:", data);
+                
 
                         if (response.ok && data.success) {
                             await Swal.fire({
@@ -2108,7 +2108,7 @@
                         });
 
                         const data = await response.json();
-                        console.log("Cancel item response:", data);
+                        
 
                         if (response.ok && data.success) {
                             await Swal.fire({
@@ -2159,7 +2159,7 @@
                     const matchesStatus = statusTerm === "" || statusBadge === statusTerm;
 
                     card.style.display = matchesSearch && matchesStatus ? "block" : "none";
-                    console.log(`Card - Product: ${productNames}, Status: ${statusBadge}, Display: ${card.style.display}`);
+                
                 });
             }, 300);
 
@@ -2171,7 +2171,7 @@
                     if (orderSearch) orderSearch.value = "";
                     if (statusFilter) statusFilter.value = "";
                     orderCards.forEach((card) => (card.style.display = "block"));
-                    console.log("Filters cleared");
+                
                 });
             }
 
@@ -2182,7 +2182,7 @@
             if (toggleMenu && sidebarMenu) {
                 toggleMenu.addEventListener("click", () => {
                     sidebarMenu.classList.toggle("show");
-                    console.log("Menu toggled");
+                    
                 });
 
                 window.addEventListener("resize", () => {

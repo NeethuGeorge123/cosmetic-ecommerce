@@ -5,24 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Detail</title>
-    <!-- Bootstrap CSS -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Font Awesome -->
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Google Fonts -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Slick Carousel -->
+    
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
     
-    <!-- jQuery Elevate Zoom -->
+    
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.css"/>
     
     <style>
-    /* General styling */
+  
     body {
       font-family: 'Poppins', sans-serif;
       color: #333;
@@ -33,7 +33,7 @@
       min-height: 80vh;
     }
     
-    /* Breadcrumb styling */
+  
     .breadcrumb-wrap {
       background-color: #f0f2f5;
       padding: 15px 0;
@@ -56,7 +56,7 @@
       color: #6c757d;
     }
     
-    /* Product detail section */
+    
     .product-detail {
       background-color: #fff;
       border-radius: 10px;
@@ -65,7 +65,7 @@
       margin-top: 30px;
     }
     
-    /* Gallery section */
+    
     .detail-gallery {
       position: relative;
       margin-bottom: 30px;
@@ -92,7 +92,7 @@
       cursor: zoom-in;
     }
     
-    /* Thumbnail navigation */
+    
     .slider-nav-thumbnails {
       margin-top: 15px;
     }
@@ -120,7 +120,7 @@
       box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
     
-    /* Product details */
+    
     .title-detail {
       font-size: 28px;
       font-weight: 600;
@@ -146,7 +146,7 @@
       text-decoration: none;
     }
     
-    /* Rating */
+    
     .product-rate-cover {
       display: flex;
       align-items: center;
@@ -174,7 +174,7 @@
       font-size: 14px;
     }
     
-    /* Price section */
+    
     .product-price-cover {
       margin: 20px 0;
       display: flex;
@@ -204,21 +204,21 @@
       margin-left: 15px;
     }
     
-    /* Separator */
+    
     .border-color-1 {
       height: 1px;
       background-color: #eaeaea;
       margin: 25px 0;
     }
     
-    /* Short description */
+    
     .short-desc {
       font-size: 15px;
       line-height: 1.6;
       color: #6c757d;
     }
     
-    /* Product info */
+    
     .product_sort_info {
       padding: 0;
     }
@@ -320,7 +320,7 @@
       transform: translateY(-2px);
     }
     
-    /* Product meta info */
+    
     .product-meta {
       padding: 0;
       margin-top: 30px;
@@ -346,7 +346,7 @@
       font-weight: 500;
     }
     
-    /* Responsive adjustments */
+    
     @media (max-width: 992px) {
       .title-detail {
         font-size: 24px;
@@ -395,7 +395,7 @@
       }
     }
     
-    /* Zoom style adjustments */
+    
     .zoomContainer {
       z-index: 100;
     }
@@ -405,15 +405,15 @@
       background-color: #fff !important;
     }
     
-    /* Loading spinner animation */
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
-    /*css for related products */
+  
 
-    /* Related Products Section */
+  
 .related-products-section {
   background-color: #fff;
   padding: 50px 0;
@@ -618,7 +618,7 @@
                     <% } else { %>
                       <div class="product-detail">
                           <div class="row g-4">
-                                <!-- Product Gallery -->
+                                
                                 <div class="col-lg-6">
                                     <div class="detail-gallery">
                                       <div class="product-image-slider">
@@ -658,7 +658,7 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Product Info -->
+                                
                                 <div class="col-lg-6">
                                     <div class="detail-info">
                                         <h1 class="title-detail"><%=product.productName%></h1>
@@ -704,11 +704,7 @@
                                         <div class="border-color-1"></div>
                                         
                                         <div class="detail-extralink">
-                                            <!-- <div class="detail-qty">
-                                                <a href="#" class="qty-down"><i class="fas fa-minus"></i></a>
-                                                <span class="qty-val" id="quantity">1</span>
-                                                <a href="#" class="qty-up"><i class="fas fa-plus"></i></a>
-                                            </div> -->
+                                            
                                             
                                             <div class="d-flex gap-2">
                                               <button type="button" class="button button-add-to-cart" onclick="addToCart('<%=product._id%>')" <% if (isOutOfStock) { %> disabled style="opacity:0.5; cursor:not-allowed;" <% } %>>
@@ -748,10 +744,10 @@
     </main>
 
 
-    <!-- related product code -->
+    
   </main>
     
-  <!-- Related Products Section -->
+  
   <% if (product) { %>
   <section class="related-products-section">
     <div class="container">
@@ -813,10 +809,10 @@
   </section>
   <% } %>
   
-  <!-- Footer placeholder -->
+  
   <footer class="bg-dark text-white py-4 mt-5">
     
-    <!-- Footer placeholder -->
+    
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
             <div class="row">
@@ -848,23 +844,23 @@
         </div>
     </footer>
 
-    <!-- jQuery -->
+    
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
-    <!-- Bootstrap JS -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Slick Carousel JS -->
+    
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     
-    <!-- Elevate Zoom JS -->
+  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
       $(document).ready(function(){
-          // Initialize product slider
+          
           $('.product-image-slider').slick({
               slidesToShow: 1,
               slidesToScroll: 1,
@@ -881,7 +877,7 @@
               ]
           });
           
-          // Initialize thumbnail navigation
+        
           $('.slider-nav-thumbnails').slick({
               slidesToShow: 4,
               slidesToScroll: 1,
@@ -906,12 +902,12 @@
               ]
           });
           
-          // Initialize Elevate Zoom - FIXED VERSION
-          // NEW CODE - PASTE THIS INSTEAD
+          
+        
           function initZoom() {
     $('.zoomContainer').remove();
     
-    // ✅ Replace ez.destroy() with this
+    
     $('.zoom-img').each(function() {
         $(this).removeData('elevateZoom');
         $(this).off('mouseenter mouseleave mousemove');
@@ -942,12 +938,12 @@
     }
 }
 
-// Initialize zoom after slider is fully loaded
+
 setTimeout(function() {
     initZoom();
 }, 500);
 
-// Reinitialize zoom on window resize (with debouncing)
+
 var resizeTimer;
 $(window).resize(function() {
     clearTimeout(resizeTimer);
@@ -956,24 +952,23 @@ $(window).resize(function() {
     }, 250);
 });
 
-// Reinitialize zoom when slider changes
+
 $('.product-image-slider').on('afterChange', function(event, slick, currentSlide) {
-    console.log('=== Slide Changed ===');
-    console.log('Current slide index:', currentSlide);
+    
+  
     
     setTimeout(function() {
-        // ✅ Remove zoom containers (no destroy needed)
+        
         $('.zoomContainer').remove();
         
-        // ✅ Remove elevateZoom data manually instead of destroy()
+        
         $('.zoom-img').each(function() {
             $(this).removeData('elevateZoom');
             $(this).off('mouseenter mouseleave mousemove');
         });
 
         var $currentImg = $('.product-image-slider .slick-current img.zoom-img');
-        console.log('Found current img elements:', $currentImg.length);
-        console.log('Current img src:', $currentImg.attr('src'));
+        
 
         var currentSrc = $currentImg.attr('src');
         $currentImg.attr('data-zoom-image', currentSrc);
@@ -998,7 +993,7 @@ $('.product-image-slider').on('afterChange', function(event, slick, currentSlide
     }, 200);
 });
           
-          // Quantity buttons
+          
           $('.qty-up').on('click', function(e) {
               e.preventDefault();
               var qtyVal = parseInt($('#quantity').text());

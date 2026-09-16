@@ -38,16 +38,10 @@ const returnItem = asyncHandler(async (req, res) => {
     });
   }
 
-  if (
-    item.product.returnItemStatus &&
-    item.product.returnItemStatus !== "None"
-  ) {
+  if (item.product.returnItemStatus && item.product.returnItemStatus !== "None") {
     return res.status(400).json({
       success: false,
-      message: `Return already ${item.product.returnItemStatus.replace(
-        "_",
-        " "
-      )}`,
+      message: `Return already ${item.product.returnItemStatus.replace( "_"," ")}`,
     });
   }
 

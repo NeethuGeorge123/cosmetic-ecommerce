@@ -231,20 +231,23 @@ const handleReturn = async (req, res) => {
         item.product.returnItemStatus = "returned";
 
         const itemTotal = item.price * item.quantity;
-
+        
         let couponDiscount = 0;
         if (order.discount && order.discount > 0) {
           const orderSubtotal = order.orderedItems.reduce(
             (sum, itm) => sum + itm.price * itm.quantity,
             0
           );
+          
           const discountPercentage = (order.discount / orderSubtotal) * 100;
           couponDiscount = (itemTotal * discountPercentage) / 100;
         }
-
+       
         const itemRefund = Math.round((itemTotal - couponDiscount) * 100) / 100;
+       
         refundAmount += itemRefund;
 
+        
         await Product.findByIdAndUpdate(item.product._id, {
           $inc: { quantity: item.quantity },
         });

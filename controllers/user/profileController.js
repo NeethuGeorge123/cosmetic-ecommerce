@@ -32,7 +32,21 @@ const getForgotPassPage = asyncHandler(async (req, res) => {
 });
 
 const forgotEmailValid = asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email ? req.body.email.trim() : "";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email) {
+    return res.render("user/forgot-password", {
+      message: "Email is required."
+    });
+  }
+
+  if (!emailRegex.test(email)) {
+    return res.render("user/forgot-password", {
+      message: "Please enter a valid email address."
+    });
+  }
+
   const findUser = await User.findOne({ email: email });
 
   if (findUser) {

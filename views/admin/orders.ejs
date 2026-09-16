@@ -1336,63 +1336,7 @@
     }
   }
 
-  async function updateReturnStatus(orderId, productId) {
-    const { value: status } = await Swal.fire({
-      title: "Update Return Status",
-      input: "select",
-      inputOptions: {
-        returning: "returning",
-        returned: "returned",
-      },
-      inputPlaceholder: "Select status",
-      showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value) {
-          return "You need to select a status!";
-        }
-      },
-    });
-
-    if (status) {
-      try {
-        const response = await fetch("/admin//handleReturn/:productId", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            orderId,
-            status,
-            productId,
-            actionType: "update",
-          }),
-        });
-
-        console.log("RESPONCE", response);
-
-        const data = await response.json();
-
-        if (data.success) {
-          await Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Return status updated successfully",
-            timer: 1500,
-          });
-          location.reload();
-        } else {
-          throw new Error(data.message);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        await Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.message || "Failed to update status",
-        });
-      }
-    }
-  }
+ 
 
   function selectItemForAction(orderId, itemId) {
     const approveBtn = document.getElementById(`approveItemBtn_${orderId}`);
@@ -1416,7 +1360,7 @@
       return;
     }
 
-    console.log("Handle item return:", action, orderId, selectedItemId);
+    
   }
 
   function updateItemReturnStatus(orderId) {

@@ -1,7 +1,7 @@
 const User=require("../models/userSignupSchema")
 
 
-//const User = require("../models/userSignupSchema");
+
 
 const userAuth = (req, res, next) => {
     if (!req.session?.user) {
@@ -12,7 +12,7 @@ const userAuth = (req, res, next) => {
     User.findById(req.session.user)
         .then(data => {
             if (data && !data.isBlocked) {
-                console.log("✅ User is valid:", data.email || data._id);
+                
                 return next();
             } else {
                 
@@ -21,13 +21,13 @@ const userAuth = (req, res, next) => {
                        
                         return res.status(500).send("Internal Server Error (session destroy failed)");
                     }
-                    res.clearCookie("user_sid"); // clear cookie
+                    res.clearCookie("user_sid"); 
                     return res.redirect("/login?blocked=true");
                 });
             }
         })
         .catch(error => {
-            console.error("❌ Error in userAuth middleware:", error);
+            
             return res.status(500).send("Internal Server Error (DB lookup failed)");
         });
 };

@@ -355,7 +355,7 @@ function validateAndSubmit() {
 
 function validateForm() {
     let imageDatas = false;
-    console.log("validate form");
+    
     clearErrorMessages();
     const existingImages = document.querySelectorAll("input#imageDatas"); 
 const existingCount = existingImages.length;
@@ -564,7 +564,7 @@ function viewImage(event, index) {
 }
 
 function deleteSingleImage(imageId, productId) {
-    console.log("IMageid:",imageId)
+    
     $.ajax({
         url: "/admin/deleteImage",
         method: "post",

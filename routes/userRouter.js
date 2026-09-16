@@ -17,6 +17,7 @@ router.get("/shopnow", userAuth, userController.shopNow);
 
 router.get("/signup", userController.loadSignup);
 router.post("/signup", userController.signup);
+router.get("/referrals",userAuth,userController.getReferrals)
 
 router.get("/login", userController.loadLogin);
 router.post("/login", userController.userLogin);

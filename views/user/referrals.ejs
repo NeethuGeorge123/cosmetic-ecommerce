@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Referrals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary-peach: #f5e6d3;
+            --secondary-peach: #f0d7c7;
+            --accent-peach: #e8b4a0;
+            --dark-peach: #d4a484;
+            --deep-peach: #c8956d;
+            --gradient-peach: linear-gradient(135deg, #f5e6d3 0%, #f0d7c7 50%, #e8b4a0 100%);
+            --gradient-accent: linear-gradient(135deg, #e8b4a0 0%, #d4a484 50%, #c8956d 100%);
+            --gradient-subtle: linear-gradient(135deg, #faf6f2 0%, #f5e6d3 100%);
+            --text-primary: #3a2f2a;
+            --text-secondary: #6b5b54;
+            --text-light: #9b8b82;
+            --white: #ffffff;
+            --light-gray: #faf6f2;
+            --border-light: #e8ddd4;
+            --shadow-light: rgba(196, 149, 109, 0.08);
+            --shadow-medium: rgba(196, 149, 109, 0.15);
+            --shadow-peach: rgba(232, 180, 160, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+            background: #fafafa;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .breadcrumb-wrap {
+            background: var(--gradient-peach);
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 0 !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breadcrumb-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3));
+            transform: skewX(-15deg);
+        }
+
+        .breadcrumb {
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 500;
+            background: none;
+            padding: 0;
+        }
+
+        .breadcrumb a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--deep-peach);
+        }
+
+        .breadcrumb span {
+            padding: 0 12px;
+            color: var(--text-light);
+        }
+
+        .dashboard-menu {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px var(--shadow-light);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .dashboard-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        .dashboard-menu .nav-link {
+            color: var(--text-primary);
+            padding: 18px 24px;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .dashboard-menu .nav-link:last-child {
+            border-bottom: none;
+        }
+
+        .dashboard-menu .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: var(--gradient-accent);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dashboard-menu .nav-link i {
+            margin-right: 16px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .dashboard-menu .nav-link:hover {
+            background: var(--gradient-subtle);
+            transform: translateX(8px);
+        }
+
+        .dashboard-menu .nav-link:hover::before {
+            width: 4px;
+        }
+
+        .dashboard-menu .nav-link:hover i {
+            color: var(--deep-peach);
+        }
+
+        .dashboard-menu .nav-link.active {
+            background: var(--gradient-peach);
+            font-weight: 600;
+        }
+
+        .dashboard-menu .nav-link.active::before {
+            width: 4px;
+        }
+
+        .dashboard-menu .nav-link.active i {
+            color: var(--deep-peach);
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px var(--shadow-light);
+            margin-bottom: 30px;
+            overflow: hidden;
+            background: var(--white);
+            position: relative;
+        }
+
+        .card-green::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-accent);
+        }
+
+        .card-header {
+            background: var(--gradient-peach);
+            border-bottom: 1px solid var(--border-light);
+            padding: 24px 32px;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .card-body {
+            padding: 40px 32px;
+        }
+
+        .referral-hero {
+            text-align: center;
+            padding: 20px 0 30px;
+        }
+
+        .referral-hero i {
+            font-size: 48px;
+            color: var(--deep-peach);
+            margin-bottom: 16px;
+        }
+
+        .referral-hero h4 {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .referral-hero p {
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .referral-code-box {
+            background: var(--gradient-subtle);
+            border: 2px dashed var(--dark-peach);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .referral-code-box label {
+            display: block;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .referral-code-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .referral-code-text {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+            background: var(--white);
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .copy-btn {
+            background: var(--gradient-accent);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--shadow-peach);
+        }
+
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+
+        .how-it-works {
+            margin-top: 32px;
+        }
+
+        .how-it-works h6 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .step-cards {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .step-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .step-card .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 12px;
+        }
+
+        .step-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .referral-list {
+            margin-top: 32px;
+        }
+
+        .referral-list h6 {
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .referred-user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--light-gray);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .referred-user-item .name {
+            font-weight: 600;
+        }
+
+        .referred-user-item .date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .empty-referrals {
+            text-align: center;
+            padding: 30px 10px;
+            color: var(--text-light);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--gradient-accent);
+            color: var(--white);
+            border: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        footer {
+            background: var(--white);
+            padding: 32px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-light);
+            margin-top: 60px;
+        }
+
+        footer p {
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        @media (max-width: 991px) {
+            .breadcrumb-wrap {
+                margin-bottom: 20px !important;
+            }
+
+            .dashboard-menu {
+                margin-bottom: 30px;
+            }
+
+            .card-body {
+                padding: 30px 24px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .mobile-menu-toggle {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .dashboard-menu {
+                display: none;
+            }
+
+            .dashboard-menu.show {
+                display: block;
+            }
+
+            .card-body {
+                padding: 24px 18px;
+            }
+
+            .referral-code-text {
+                font-size: 22px;
+                padding: 10px 16px;
+                letter-spacing: 2px;
+            }
+
+            .step-cards {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .referral-code-display {
+                flex-direction: column;
+            }
+
+            .copy-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include("../../views/partials/user/header") %>
+    <%- include("../../views/partials/user/header1") %>
+
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/" rel="nofollow">Home</a>
+                    <span>/</span> Profile <span>/</span> Referrals
+                </div>
+            </div>
+        </div>
+
+        <section class="pt-5 pb-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <button class="mobile-menu-toggle" id="toggleMenu">
+                            <span>Menu</span>
+                            <i class="fas fa-bars"></i>
+                        </button>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4">
+                                <div class="dashboard-menu" id="sidebarMenu">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/my-profile">
+                                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/myAddress">
+                                                <i class="fas fa-map-marker-alt"></i> My Address
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/orders">
+                                                <i class="fas fa-shopping-bag"></i> Orders
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/wallet">
+                                                <i class="fas fa-wallet"></i> Wallet
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="/referrals">
+                                                <i class="fas fa-user-plus"></i> Referrals
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/logout">
+                                                <i class="fas fa-sign-out-alt"></i> Logout
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 col-md-8">
+                                <div class="dashboard-content">
+                                    <div class="card card-green">
+                                        <div class="card-header">
+                                            <h5 class="mb-0 text-center">My Referrals</h5>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <div class="referral-hero">
+                                                <i class="fas fa-gift"></i>
+                                                <h4>Invite friends, earn rewards</h4>
+                                                <p>Share your referral code with friends. When they sign up using it, you both get wallet credit.</p>
+                                            </div>
+
+                                            <% if (referralCode) { %>
+                                                <div class="referral-code-box">
+                                                    <label>Your Referral Code</label>
+                                                    <div class="referral-code-display">
+                                                        <span class="referral-code-text" id="referralCodeText"><%= referralCode %></span>
+                                                        <button class="copy-btn" id="copyCodeBtn">
+                                                            <i class="fas fa-copy me-1"></i>Copy Code
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            <% } else { %>
+                                                <div class="empty-referrals">
+                                                    <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
+                                                    <p>Your referral code isn't available right now. Please contact support.</p>
+                                                </div>
+                                            <% } %>
+
+                                            <div class="how-it-works">
+                                                <h6>How it works</h6>
+                                                <div class="step-cards">
+                                                    <div class="step-card">
+                                                        <div class="step-num">1</div>
+                                                        <p>Share your code with a friend</p>
+                                                    </div>
+                                                    <div class="step-card">
+                                                        <div class="step-num">2</div>
+                                                        <p>They sign up using your code</p>
+                                                    </div>
+                                                    <div class="step-card">
+                                                        <div class="step-num">3</div>
+                                                        <p>You both get wallet credit instantly</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="referral-list">
+                                                <h6>People you've referred</h6>
+                                                <% if (redeemedUsers && redeemedUsers.length > 0) { %>
+                                                    <% redeemedUsers.forEach(function(refUser) { %>
+                                                        <div class="referred-user-item">
+                                                            <div>
+                                                                <div class="name"><%= refUser.name %></div>
+                                                                <div class="date"><%= new Date(refUser.createdOn).toDateString() %></div>
+                                                            </div>
+                                                            <span class="badge" style="background: var(--gradient-accent); color: white; padding: 6px 12px; border-radius: 20px;">
+                                                                Joined
+                                                            </span>
+                                                        </div>
+                                                    <% }); %>
+                                                <% } else { %>
+                                                    <div class="empty-referrals">
+                                                        <i class="fas fa-user-friends fa-2x mb-2"></i>
+                                                        <p>You haven't referred anyone yet. Share your code to get started!</p>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <%= new Date().getFullYear() %> Your Company. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleMenu = document.getElementById("toggleMenu");
+            const sidebarMenu = document.getElementById("sidebarMenu");
+
+            if (toggleMenu && sidebarMenu) {
+                toggleMenu.addEventListener("click", function () {
+                    sidebarMenu.classList.toggle("show");
+                });
+
+                window.addEventListener("resize", function () {
+                    if (window.innerWidth > 767) {
+                        sidebarMenu.classList.remove("show");
+                    }
+                });
+            }
+
+            const copyBtn = document.getElementById("copyCodeBtn");
+            const codeText = document.getElementById("referralCodeText");
+
+            if (copyBtn && codeText) {
+                copyBtn.addEventListener("click", function () {
+                    const code = codeText.textContent.trim();
+                    navigator.clipboard.writeText(code).then(() => {
+                        copyBtn.classList.add("copied");
+                        copyBtn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                        setTimeout(() => {
+                            copyBtn.classList.remove("copied");
+                            copyBtn.innerHTML = '<i class="fas fa-copy me-1"></i>Copy Code';
+                        }, 2000);
+                    }).catch(() => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Copy failed",
+                            text: "Please copy the code manually."
+                        });
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

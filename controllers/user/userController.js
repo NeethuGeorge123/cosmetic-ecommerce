@@ -313,69 +313,71 @@ const verifyOtp = asyncHandler(async (req, res) => {
   }
 
   let referral = req.session.userData.referral;
-
   referral = referral.toUpperCase();
-
+  
   let referredUser;
-
+  
   if (referral && referral.trim()) {
-    referredUser = await User.findOne({ referralCode: referral });
-
-    let wallet = await Wallet.findOne({ userId: referredUser._id });
-    if (!wallet) {
-      wallet = new Wallet({
-        userId: referredUser._id,
-        balance: 0,
-        transactions: [],
-      });
-    }
-
-    wallet.balance += 500;
-
-    wallet.transactions.push({
-      amount: 500,
-      type: "credit",
-      description: "Referral Reward",
-    });
-    await wallet.save();
+      referredUser = await User.findOne({ referralCode: referral });
   }
-
+  
   const referralCode = generateReferralCode(user.name);
-
+  
   const saveUserData = new User({
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    password: user.password,
-    referralCode,
-    referredBy: referredUser?.name,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      password: user.password,
+      referralCode,
+      referredBy: referredUser?.name,
   });
-
+  
   await saveUserData.save();
   req.session.user = saveUserData._id;
-  if (referral && referral.trim()) {
-    let wallet = await Wallet.findOne({ userId: saveUserData._id });
-    if (!wallet) {
-      wallet = new Wallet({
-        userId: saveUserData._id,
-        balance: 0,
-        transactions: [],
+  
+  if (referral && referral.trim() && referredUser) {
+      // Credit the referrer's wallet
+      let referrerWallet = await Wallet.findOne({ userId: referredUser._id });
+      if (!referrerWallet) {
+          referrerWallet = new Wallet({
+              userId: referredUser._id,
+              balance: 0,
+              transactions: [],
+          });
+      }
+      referrerWallet.balance += 500;
+      referrerWallet.transactions.push({
+          amount: 500,
+          type: "credit",
+          description: "Referral Reward",
       });
-    }
-    wallet.balance += 200;
-
-    wallet.transactions.push({
-      amount: 200,
-      type: "credit",
-      description: "Refferal Reward",
-    });
-    await wallet.save();
+      await referrerWallet.save();
+  
+      // Record the referral relationship
+      referredUser.redeemedUsers.push(saveUserData._id);
+      await referredUser.save();
+  
+      // Credit the new user's wallet
+      let newUserWallet = await Wallet.findOne({ userId: saveUserData._id });
+      if (!newUserWallet) {
+          newUserWallet = new Wallet({
+              userId: saveUserData._id,
+              balance: 0,
+              transactions: [],
+          });
+      }
+      newUserWallet.balance += 200;
+      newUserWallet.transactions.push({
+          amount: 200,
+          type: "credit",
+          description: "Referral Reward",
+      });
+      await newUserWallet.save();
   }
-
-  req.session.user = saveUserData;
+  
   return res.json({
-    success: true,
-    redirectUrl: "/",
+      success: true,
+      redirectUrl: "/",
   });
 });
 
@@ -419,6 +421,19 @@ const logout = async (req, res) => {
   }
 };
 
+
+const getReferrals = asyncHandler(async (req, res) => {
+  const userId = req.session.user;
+
+  const userData = await User.findById(userId).populate('redeemedUsers', 'name email createdOn');
+
+  res.render("user/referrals", {
+      user: userData,
+      referralCode: userData.referralCode || null,
+      redeemedUsers: userData.redeemedUsers || []
+  });
+});
+
 module.exports = {
   loadHomepage,
   pageNotFound,
@@ -431,4 +446,5 @@ module.exports = {
   resendOtp,
   logout,
   shopNow,
+  getReferrals
 };

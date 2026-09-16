@@ -313,11 +313,11 @@
       form.dataset.valid = "true";
     }
   }
-  console.log("Bforeeee")
+  
 
   function updateInventory(button, productId) {
 
-    console.log("Update button clicked for product ID:", productId);
+    
     const input = button.closest(".quantity-container").querySelector(".quantity-input");
     const value = input.value;
     const currentQuantity = button.closest("tr").querySelector(".current-quantity").textContent;
@@ -330,7 +330,7 @@
       Swal.fire("Info", "Quantity is the same as current stock. No changes made.", "info");
       return;
     }
-console.log("Afterrrr")
+
     $.ajax({
       url: `/admin/inventory?id=${productId}`,
       type: "PATCH",

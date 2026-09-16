@@ -122,21 +122,32 @@ const updateItemReturnStatus = async (req, res) => {
     } else if (status === "returned") {
       item.product.returnItemStatus = "returned";
 
-      const itemTotal = item.price * item.quantity;
+      
+
+      const itemTotal = item.price*item.quantity;
+      
 
       let couponDiscount = 0;
 
       if (order.discount && order.discount > 0) {
         const orderSubtotal = order.orderedItems.reduce((sum, itm) => {
-          return sum + itm.price * itm.quantity;
-        }, 0);
+          return sum + itm.price * itm.quantity; }, 0);
 
+        
         const discountPercentage = (order.discount / orderSubtotal) * 100;
-
-        couponDiscount = (itemTotal * discountPercentage) / 100;
+        if (orderSubtotal > 0) {
+          couponDiscount = (itemTotal / orderSubtotal) * order.discount;
+        }
+        else{
+          couponDiscount = (itemTotal * discountPercentage) / 100;
+        }
+        
+        
       }
 
       refundAmount = Math.round((itemTotal - couponDiscount) * 100) / 100;
+
+      
 
       const user = await User.findById(order.userId);
 
@@ -160,9 +171,7 @@ const updateItemReturnStatus = async (req, res) => {
       wallet.transactions.push({
         amount: refundAmount,
         type: "credit",
-        description: `Refund for returned item - Order #${order.orderId}${
-          couponDiscount > 0 ? " (coupon adjusted)" : ""
-        }`,
+        description: `Refund for returned item - Order #${order.orderId}${couponDiscount > 0 ? " (coupon adjusted)" : ""}`,
         date: new Date(),
         orderId: order._id,
       });
