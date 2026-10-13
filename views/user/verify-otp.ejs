@@ -196,6 +196,47 @@
           event.preventDefault();
           validateOtpForm();
         });
+
+              
+      const otpBoxes = Array.from(document.querySelectorAll(".otp"));
+
+otpBoxes.forEach((box, i) => {
+  
+  box.addEventListener("input", () => {
+    box.value = box.value.replace(/\D/g, "").slice(0, 1);
+    if (box.value && i < otpBoxes.length - 1) {
+      otpBoxes[i + 1].focus();
+    }
+  });
+
+  
+  box.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !box.value && i > 0) {
+      e.preventDefault();
+      otpBoxes[i - 1].value = "";
+      otpBoxes[i - 1].focus();
+    } else if (e.key === "ArrowLeft" && i > 0) {
+      otpBoxes[i - 1].focus();
+    } else if (e.key === "ArrowRight" && i < otpBoxes.length - 1) {
+      otpBoxes[i + 1].focus();
+    }
+  });
+
+  
+  box.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const digits = (e.clipboardData || window.clipboardData)
+      .getData("text")
+      .replace(/\D/g, "")
+      .slice(0, otpBoxes.length);
+    digits.split("").forEach((d, k) => (otpBoxes[k].value = d));
+    otpBoxes[Math.min(digits.length, otpBoxes.length - 1)].focus();
+  });
+
+  box.addEventListener("focus", () => box.select());
+});
+
+otpBoxes[0].focus(); 
     </script>
   </body>
 </html>

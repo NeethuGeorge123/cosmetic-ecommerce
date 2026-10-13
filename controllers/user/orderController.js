@@ -951,8 +951,8 @@ const cancelOrderItem = asyncHandler(async (req, res) => {
     }
     return sum;
   }, 0);
-
-  const itemGross = item.price;
+ 
+  const itemGross = item.price*item.quantity;
   const itemShare = grossOrderTotal > 0 ? itemGross / grossOrderTotal : 0;
   const itemDiscount = +(itemShare * (order.discount || 0)).toFixed(2);
   const itemNetPaid = +(itemGross - itemDiscount).toFixed(2);
@@ -963,10 +963,7 @@ const cancelOrderItem = asyncHandler(async (req, res) => {
 
   order.totalPrice = +(order.totalPrice - itemGross).toFixed(2);
   order.discount = +(order.discount - itemDiscount).toFixed(2);
-  order.finalAmount = Math.max(
-    0,
-    +(order.finalAmount - itemNetPaid).toFixed(2)
-  );
+  order.finalAmount = Math.max( 0,+(order.finalAmount - itemNetPaid).toFixed(2));
 
   const allItemsCancelled = order.orderedItems.every(
     (itm) => itm.cancellationStatus === "cancelled"

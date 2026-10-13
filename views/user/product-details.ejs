@@ -1017,7 +1017,7 @@ $('.product-image-slider').on('afterChange', function(event, slick, currentSlide
         data:{productId:productId},
         success:(response)=>{
             if(response.status){
-              $('#wishlist-count').text(response.count); 
+              updateWishlistCount();
                 Swal.fire({
                     title:'Added to wishlist',
                     text:'The product has been added to your wishlist',
@@ -1060,7 +1060,16 @@ $('.product-image-slider').on('afterChange', function(event, slick, currentSlide
               data:{productId:productId},
               success:(response)=>{
                   if(response.status){
-                      $('#cart-count').text(response.count);
+                    updateCartCount();       
+        updateWishlistCount();   
+
+        
+        const heart = document.querySelector('.action-btn i');
+        if (heart) {
+            heart.classList.remove('fa');
+            heart.classList.add('far');
+            heart.style.color = '';
+        }
                       Swal.fire({
                           title:'Added to cart',
                           text:'The product has been added to your cart',

@@ -11,28 +11,49 @@ const loadLogin = (req, res) => {
   if (req.session.admin) {
     return res.redirect("/admin/dashboard");
   }
-  res.render("admin/admin-login.ejs", { message: null });
+  res.render("admin/admin-login.ejs", { message: null, email: "" });
 };
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const admin = await User.findOne({ email, isAdmin: true });
 
-    if (!admin) {
-      return res.redirect("/admin/login");
+    if (typeof email !== "string" || typeof password !== "string" || !email.trim() || !password) {
+      return res.status(400).render("admin/admin-login.ejs", {
+        message: "Email and password are required",
+        email: "",
+      });
     }
 
-    const passwordMatch = await bcrypt.compare(password, admin.password);
+    const cleanEmail = email.trim().toLowerCase();
+    const admin = await User.findOne({ email: cleanEmail, isAdmin: true });
 
-    if (!passwordMatch) {
-      return res.redirect("/admin/login");
+    const invalid = () =>
+      res.status(401).render("admin/admin-login.ejs", {
+        message: "Invalid email or password",
+        email: cleanEmail,
+      });
+
+    if (!admin) return invalid();
+
+    const passwordMatch = await bcrypt.compare(password, admin.password);
+    if (!passwordMatch) return invalid();
+
+    if (admin.isBlocked) {
+      return res.status(403).render("admin/admin-login.ejs", {
+        message: "This account has been blocked",
+        email: cleanEmail,
+      });
     }
 
     req.session.admin = admin._id;
     return res.redirect("/admin/dashboard");
   } catch (error) {
-    return res.redirect("/pageerror");
+    console.error(error);
+    return res.status(500).render("admin/admin-login.ejs", {
+      message: "Something went wrong. Please try again.",
+      email: "",
+    });
   }
 };
 

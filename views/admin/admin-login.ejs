@@ -68,11 +68,24 @@
       .login-btn:hover {
         background: #0056b3;
       }
+      .error-msg {
+  background: #fdecea;
+  color: #b71c1c;
+  border: 1px solid #f5c2c0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: left;
+}
     </style>
   </head>
   <body>
     <div class="login-container">
       <h2>Admin Login</h2>
+      <% if (message) { %>
+        <div class="error-msg"><%= message %></div>
+      <% } %>
       <form action="/admin/login" method="POST">
         <div class="input-group">
           <label for="email">Email</label>
@@ -81,6 +94,7 @@
             id="email"
             name="email"
             placeholder="Enter your email"
+            value="<%= email %>"
             required
           />
         </div>
