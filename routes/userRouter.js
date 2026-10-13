@@ -31,7 +31,7 @@ router.get("/logout", userController.logout);
 router.get("/forgot-password", profileController.getForgotPassPage);
 router.post("/forgot-email-valid", profileController.forgotEmailValid);
 router.post("/verify-passForgot-otp", profileController.verifyForgotPassOtp);
-router.get("/reset-password", profileController.getResetPassPage);
+ router.get("/reset-password", profileController.getResetPassPage);
 router.post("/resend-forgot-otp", profileController.resendOtp);
 router.post("/reset-password", profileController.postNewPassword);
 router.get("/userProfile", userAuth, profileController.userProfile);
@@ -58,22 +58,26 @@ router.post(
   userAuth,
   profileController.verifyNewEmailOtp
 );
+
 router.get("/change-password", userAuth, profileController.changePassword);
-router.post(
-  "/change-password",
-  userAuth,
-  profileController.changePasswordValid
-);
-router.post(
-  "/verify-changepassword-otp",
-  userAuth,
-  profileController.verifyChangePassOtp
-);
-router.post(
-  "/resend-changepassword-otp",
-  userAuth,
-  profileController.resendChangePassOtp
-);
+router.post("/change-password", userAuth, profileController.postChangePassword);
+
+// router.get("/change-password", userAuth, profileController.changePassword);
+// router.post(
+//   "/change-password",
+//   userAuth,
+//   profileController.changePasswordValid
+// );
+// router.post(
+//   "/verify-changepassword-otp",
+//   userAuth,
+//   profileController.verifyChangePassOtp
+// );
+// router.post(
+//   "/resend-changepassword-otp",
+//   userAuth,
+//   profileController.resendChangePassOtp
+// );
 //address management
 
 router.get("/myAddress", userAuth, profileController.getMyAddress);

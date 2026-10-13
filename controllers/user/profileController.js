@@ -10,6 +10,8 @@ const { format } = require("sharp");
 const asyncHandler = require("../../middlewares/asyncHandler");
 const Messages = require("../../util/messages/profileMessages");
 const { upload } = require("../../helpers/multer");
+//const { validatePassword } = require("../../utils/passwordValidator"); 
+
 
 function generateOtp() {
   const digits = "1234567890";
@@ -276,59 +278,100 @@ const changePassword = asyncHandler(async (req, res) => {
   res.render("user/change-password");
 });
 
-const changePasswordValid = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    const otp = generateOtp();
-    const emailSent = await sendVerificationEmail(email, otp);
-    if (emailSent) {
-      req.session.userOtp = otp;
-      req.session.userData = req.body;
-      req.session.email = email;
-      res.render("user/change-password-otp");
-      console.log("OTP", otp);
-    } else {
-      res.json({
-        success: false,
-        message: "Failed to send OTP.Please try again",
-      });
-    }
-  } else {
-    res.render("user/change-password", {
-      message: "User does not exists",
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+const postChangePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  if ([currentPassword, newPassword, confirmPassword].some(v => typeof v !== "string" || !v)) {
+    return res.status(400).json({ success: false, message: "All fields are required" });
+  }
+
+  const user = await User.findById(req.session.user);
+  if (!user) {
+    return res.status(401).json({ success: false, message: "Please log in again" });
+  }
+
+  if (!(await bcrypt.compare(currentPassword, user.password))) {
+    return res.status(400).json({ success: false, message: "Current password is incorrect" });
+  }
+
+  if (!PASSWORD_REGEX.test(newPassword)) {
+    return res.status(400).json({
+      success: false,
+      message: "Password must be at least 8 characters with one uppercase, one lowercase, one number and one special character (@$!%*?&)",
     });
   }
-});
 
-const verifyChangePassOtp = asyncHandler(async (req, res) => {
-  const enteredOtp = req.body.otp;
-  if (enteredOtp === req.session.userOtp) {
-    res.json({ success: true, redirectUrl: "/reset-password" });
-  } else {
-    res.json({ success: false, message: "OTP Not Matching" });
-  }
-});
-const resendChangePassOtp = asyncHandler(async (req, res) => {
-  if (!req.session.email) {
-    return res.json({ success: false, message: "Session expired" });
-  }
-  const email = req.session.email;
-  const userExists = await User.findOne({ email });
-  if (!userExists) {
-    return res.json({ success: false, message: "User not found" });
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ success: false, message: "Passwords do not match" });
   }
 
-  const newOtp = generateOtp();
-  const emailSent = await sendVerificationEmail(email, newOtp);
-  if (emailSent) {
-    req.session.userOtp = newOtp;
-    console.log("New OTP:", newOtp);
-    res.json({ success: true, message: "OTP resent successfully" });
-  } else {
-    res.json({ success: false, message: "Failed to resent OTP" });
+  if (await bcrypt.compare(newPassword, user.password)) {
+    return res.status(400).json({ success: false, message: "New password must be different from the current one" });
   }
+
+  user.password = await securePassword(newPassword);
+  await user.save();
+
+  return res.json({ success: true, redirect: "/" });
 });
+
+
+// const changePasswordValid = asyncHandler(async (req, res) => {
+//   const { email } = req.body;
+//   const userExists = await User.findOne({ email });
+//   if (userExists) {
+//     const otp = generateOtp();
+//     const emailSent = await sendVerificationEmail(email, otp);
+//     if (emailSent) {
+//       req.session.userOtp = otp;
+//       req.session.userData = req.body;
+//       req.session.email = email;
+//       res.render("user/change-password-otp");
+//       console.log("OTP", otp);
+//     } else {
+//       res.json({
+//         success: false,
+//         message: "Failed to send OTP.Please try again",
+//       });
+//     }
+//   } else {
+//     res.render("user/change-password", {
+//       message: "User does not exists",
+//     });
+//   }
+// });
+
+// const verifyChangePassOtp = asyncHandler(async (req, res) => {
+//   const enteredOtp = req.body.otp;
+//   if (enteredOtp === req.session.userOtp) {
+//     res.json({ success: true, redirectUrl: "/reset-password" });
+//   } else {
+//     res.json({ success: false, message: "OTP Not Matching" });
+//   }
+// });
+// const resendChangePassOtp = asyncHandler(async (req, res) => {
+//   if (!req.session.email) {
+//     return res.json({ success: false, message: "Session expired" });
+//   }
+//   const email = req.session.email;
+//   const userExists = await User.findOne({ email });
+//   if (!userExists) {
+//     return res.json({ success: false, message: "User not found" });
+//   }
+
+//   const newOtp = generateOtp();
+//   const emailSent = await sendVerificationEmail(email, newOtp);
+//   if (emailSent) {
+//     req.session.userOtp = newOtp;
+//     console.log("New OTP:", newOtp);
+//     res.json({ success: true, message: "OTP resent successfully" });
+//   } else {
+//     res.json({ success: false, message: "Failed to resent OTP" });
+//   }
+// });
 
 const getMyAddress = asyncHandler(async (req, res) => {
   const user = req.session.user;
@@ -605,9 +648,10 @@ module.exports = {
   verifyEmailOtp,
   //updateEmail,
   changePassword,
-  changePasswordValid,
-  verifyChangePassOtp,
-  resendChangePassOtp,
+  postChangePassword,
+  //changePasswordValid,
+  //verifyChangePassOtp,
+  //resendChangePassOtp,
   getMyAddress,
   addAddress,
   postAddAddress,
