@@ -690,14 +690,25 @@
                         });
                     }
                 },
-                error: () => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'There was an error adding the product to your wishlist',
-                        icon: 'error',
-                        timer: 2000
-                    });
-                }
+                error: (error) => {
+            if (error.status === 401) {
+                Swal.fire({
+                    title: 'Please login',
+                    text: 'Login to add items to your wishlist',
+                    icon: 'info',
+                    confirmButtonText: 'Go to Login'
+                }).then(() => {
+                    window.location.href = '/login';
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Error',
+                text: 'There was an error adding the product to your wishlist',
+                icon: 'error',
+                timer: 2000
+            });
+        }
             });
         }
 
@@ -729,14 +740,25 @@
                         });
                     }
                 },
-                error: () => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'There was an error adding the product to your cart',
-                        icon: 'error',
-                        timer: 2000
-                    });
-                }
+                error: (error) => {
+            if (error.status === 401) {
+                Swal.fire({
+                    title: 'Please login',
+                    text: 'Login to add items to your cart',
+                    icon: 'info',
+                    confirmButtonText: 'Go to Login'
+                }).then(() => {
+                    window.location.href = '/login';
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Error',
+                text: 'There was an error adding the product to your cart',
+                icon: 'error',
+                timer: 2000
+            });
+        }
             });
         }
     </script>

@@ -13,7 +13,7 @@ const { userAuth } = require("../middlewares/auth");
 
 router.get("/pageNotFound", userController.pageNotFound);
 router.get("/", userController.loadHomepage);
-router.get("/shopnow", userAuth, userController.shopNow);
+router.get("/shopnow",  userController.shopNow);
 
 router.get("/signup", userController.loadSignup);
 router.post("/signup", userController.signup);
@@ -31,7 +31,7 @@ router.get("/logout", userController.logout);
 router.get("/forgot-password", profileController.getForgotPassPage);
 router.post("/forgot-email-valid", profileController.forgotEmailValid);
 router.post("/verify-passForgot-otp", profileController.verifyForgotPassOtp);
-router.get("/reset-password", profileController.getResetPassPage);
+ router.get("/reset-password", profileController.getResetPassPage);
 router.post("/resend-forgot-otp", profileController.resendOtp);
 router.post("/reset-password", profileController.postNewPassword);
 router.get("/userProfile", userAuth, profileController.userProfile);
@@ -58,22 +58,26 @@ router.post(
   userAuth,
   profileController.verifyNewEmailOtp
 );
+
 router.get("/change-password", userAuth, profileController.changePassword);
-router.post(
-  "/change-password",
-  userAuth,
-  profileController.changePasswordValid
-);
-router.post(
-  "/verify-changepassword-otp",
-  userAuth,
-  profileController.verifyChangePassOtp
-);
-router.post(
-  "/resend-changepassword-otp",
-  userAuth,
-  profileController.resendChangePassOtp
-);
+router.post("/change-password", userAuth, profileController.postChangePassword);
+
+// router.get("/change-password", userAuth, profileController.changePassword);
+// router.post(
+//   "/change-password",
+//   userAuth,
+//   profileController.changePasswordValid
+// );
+// router.post(
+//   "/verify-changepassword-otp",
+//   userAuth,
+//   profileController.verifyChangePassOtp
+// );
+// router.post(
+//   "/resend-changepassword-otp",
+//   userAuth,
+//   profileController.resendChangePassOtp
+// );
 //address management
 
 router.get("/myAddress", userAuth, profileController.getMyAddress);
@@ -85,13 +89,13 @@ router.post("/editAddress", userAuth, profileController.postEditAddress);
 router.get("/deleteAddress", userAuth, profileController.deleteAddress);
 //product management
 
-router.get("/productDetails", userAuth, productController.productDetails);
+router.get("/productDetails", productController.productDetails);
 
 //Cart
 
 router.post("/cart", userAuth, cartController.addToCart);
 router.get("/cart", userAuth, cartController.getCart);
-router.get("/cart/count", userAuth, cartController.getCartCount);
+router.get("/cart/count",  cartController.getCartCount);
 router.put("/cart", userAuth, cartController.updateCartQuantity);
 router.delete("/cart", userAuth, cartController.deleteFromCart);
 

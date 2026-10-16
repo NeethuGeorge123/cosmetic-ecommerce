@@ -6,7 +6,8 @@ const Wishlist = require("../../models/wishlistSchema");
 
 const productDetails = asyncHandler(async (req, res) => {
   const userId = req.session.user;
-  const userData = await User.findById(userId);
+  //const userData = await User.findById(userId);
+  const userData = userId ? await User.findById(userId) : null;
   const productId = req.query.id;
 
   const product = await Product.findById(productId).populate("category");
