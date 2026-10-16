@@ -292,7 +292,7 @@ const validateCheckout = asyncHandler(async (req, res) => {
 const getCartCount = asyncHandler(async (req, res) => {
   const userId = req.session.user;
   if (!userId) {
-    return res.status(200).json({ status: false, count: 0 });
+    return res.status(200).json({ status: true, count: 0 });
   }
 
   const cart = await Cart.findOne({ userId });

@@ -11,6 +11,8 @@ const sendVerificationEmail = require("../../util/sendVerificationEmail");
 const Product = require("../../models/productSchema");
 const asyncHandler = require("../../middlewares/asyncHandler");
 const Wishlist = require("../../models/wishlistSchema");
+const { validatePassword } = require("../../util/passwordValidator");
+
 
 const pageNotFound = asyncHandler(async (req, res) => {
   res.render("user/page-404");
@@ -60,8 +62,8 @@ const loadHomepage = asyncHandler(async (req, res) => {
 
 const shopNow = asyncHandler(async (req, res) => {
   const userId = req.session.user;
-  const user = await User.findById(userId);
-
+  //const user = await User.findById(userId);
+  const user = userId ? await User.findById(userId) : null;
   let wishlistProductIds = [];
   if (userId) {
     const wishlistDoc = await Wishlist.findOne({ userId });
@@ -162,58 +164,110 @@ function generateOtp() {
 const signup = asyncHandler(async (req, res, next) => {
   const { name, email, password, cpassword, phone, referral } = req.body;
 
-  const existEmail = await User.findOne({ email });
+  // ---------- BACKEND VALIDATION ----------
 
-  if (existEmail) {
+  // 1. Every field must be a string (blocks NoSQL injection like {"$ne": null})
+  for (const [key, value] of Object.entries({ name, email, phone, password, cpassword })) {
+    if (typeof value !== "string") {
+      return res.status(400).json({
+        success: false,
+        field: key === "cpassword" ? "confirm-password" : key,
+        message: "Invalid input",
+      });
+    }
+  }
+  if (referral !== undefined && typeof referral !== "string") {
+    return res.status(400).json({ success: false, field: "referral", message: "Invalid referral code" });
+  }
+
+  // 2. Clean the values
+  const cleanName = name.trim();
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanPhone = phone.trim();
+  const cleanReferral = referral ? referral.trim() : "";
+
+  // 3. Format checks
+  if (!/^[A-Za-z\s]{2,50}$/.test(cleanName)) {
     return res.status(400).json({
-      success: false,
-      field: "email",
-      message: "User with this email already exists",
+      success: false, field: "name",
+      message: "Name must be 2-50 letters and spaces only",
     });
+  }
+
+  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(cleanEmail)) {
+    return res.status(400).json({
+      success: false, field: "email",
+      message: "Enter a valid email address",
+    });
+  }
+
+  if (!/^[0-9]{10}$/.test(cleanPhone)) {
+    return res.status(400).json({
+      success: false, field: "phone",
+      message: "Phone number must be exactly 10 digits",
+    });
+  }
+
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    return res.status(400).json({ success: false, field: "password", message: passwordError });
   }
 
   if (password !== cpassword) {
     return res.status(400).json({
-      success: false,
-      field: "confirm-password",
+      success: false, field: "confirm-password",
       message: "Passwords do not match",
     });
   }
-  if (referral && referral.trim()) {
-    const referralCode = referral.toUpperCase();
-    const referredUser = await User.findOne({ referralCode: referralCode });
+
+  // ---------- DATABASE CHECKS ----------
+
+  const existEmail = await User.findOne({ email: cleanEmail });
+  if (existEmail) {
+    return res.status(400).json({
+      success: false, field: "email",
+      message: "User with this email already exists",
+    });
+  }
+
+  // Delete this block if phone is not unique in your project
+  
+
+  if (cleanReferral) {
+    const referredUser = await User.findOne({ referralCode: cleanReferral.toUpperCase() });
     if (!referredUser) {
       return res.status(400).json({
-        success: false,
-        field: "referral",
+        success: false, field: "referral",
         message: "Not a valid referral code",
       });
     }
   }
 
+  // ---------- OTP + SESSION ----------
+
   const otp = generateOtp();
-  const emailSent = await sendVerificationEmail(email, otp);
-  console.log("OTP", otp);
+  const emailSent = await sendVerificationEmail(cleanEmail, otp);
+  console.log("OTP", otp); // remove before production
 
   if (!emailSent) {
-    return res.status(500).json({ error: "Error sending OTP" });
+    return res.status(500).json({
+      success: false, field: "email",
+      message: "Error sending OTP",
+    });
   }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   req.session.userOtp = otp;
   req.session.otpCreatedAt = Date.now();
   req.session.userData = {
-    name,
-    phone,
-    email,
+    name: cleanName,
+    phone: cleanPhone,
+    email: cleanEmail,
     password: hashedPassword,
-    referral,
+    referral: cleanReferral,
   };
 
-
-  console.log("OTP Sent", otp);
   return res.json({ success: true, redirect: "/verify-otp" });
 });
 

@@ -351,13 +351,13 @@
         }
 
         const fieldMap = {
-          email: { input: email, error: emailError },
-          "confirm-password": {
-            input: confirmPassword,
-            error: confirmPasswordError,
-          },
-          referral: { input: referral, error: referralError },
-        };
+  name: { input: fullName, error: fullNameError },
+  email: { input: email, error: emailError },
+  phone: { input: phone, error: phoneError },
+  password: { input: password, error: passwordError },
+  "confirm-password": { input: confirmPassword, error: confirmPasswordError },
+  referral: { input: referral, error: referralError },
+};
 
         fullName.addEventListener("input", function () {
           if (

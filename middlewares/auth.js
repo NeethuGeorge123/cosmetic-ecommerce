@@ -5,8 +5,18 @@ const User=require("../models/userSignupSchema")
 
 const userAuth = (req, res, next) => {
     if (!req.session?.user) {
-        
+        const isAjax =
+      req.xhr ||
+      req.method !== "GET" ||
+      req.headers.accept?.includes("application/json");
+
+    if (isAjax) {
+      return res
+        .status(401)
+        .json({ status: false, message: "Please login first" });
+    } 
         return res.redirect("/login");
+    
     }
 
     User.findById(req.session.user)

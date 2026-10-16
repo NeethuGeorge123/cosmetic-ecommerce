@@ -13,7 +13,7 @@ const { userAuth } = require("../middlewares/auth");
 
 router.get("/pageNotFound", userController.pageNotFound);
 router.get("/", userController.loadHomepage);
-router.get("/shopnow", userAuth, userController.shopNow);
+router.get("/shopnow",  userController.shopNow);
 
 router.get("/signup", userController.loadSignup);
 router.post("/signup", userController.signup);
@@ -89,13 +89,13 @@ router.post("/editAddress", userAuth, profileController.postEditAddress);
 router.get("/deleteAddress", userAuth, profileController.deleteAddress);
 //product management
 
-router.get("/productDetails", userAuth, productController.productDetails);
+router.get("/productDetails", productController.productDetails);
 
 //Cart
 
 router.post("/cart", userAuth, cartController.addToCart);
 router.get("/cart", userAuth, cartController.getCart);
-router.get("/cart/count", userAuth, cartController.getCartCount);
+router.get("/cart/count",  cartController.getCartCount);
 router.put("/cart", userAuth, cartController.updateCartQuantity);
 router.delete("/cart", userAuth, cartController.deleteFromCart);
 
