@@ -687,7 +687,7 @@ const loadSalesReport = async (req, res, next) => {
     const orders = await Order.aggregate([
       {
         $match: {
-          status: { $in: [/^delivered$/i, /^processing$/i, /^shipped$/i] }, //i changed
+          status: { $in: [/^delivered$/i, /^processing$/i, /^shipped$/i] }, 
           createdOn: { $gte: startDate, $lte: endDate },
         },
       },

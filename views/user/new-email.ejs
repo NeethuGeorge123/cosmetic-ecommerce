@@ -44,6 +44,29 @@
     color: #b8b8b8;
     cursor: not-allowed;
   }
+  .btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4e9d2;
+  color: #2f4f4f;
+  border: 2px solid #d4e9d2;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color .2s, border-color .2s;
+}
+.btn-cancel:hover {
+  background: #bfdcbc;
+  border-color: #bfdcbc;
+  color: #2f4f4f;
+}
+.btn-cancel:focus-visible {
+  outline: 3px solid rgba(47, 79, 79, .35);
+  outline-offset: 2px;
+}
 </style>
 
 <section
@@ -107,22 +130,18 @@
               "
             ></div>
           </div>
-          <div class="mb-4" style="width: 100%">
-            <button
-              type="button"
-              id="sendOtpBtn"
-              class="btn w-100"
-              style="
-                background-color: #ffdab9;
-                color: #000;
-                padding: 12px;
-                font-size: 1rem;
-                border-radius: 6px;
-                width: 100%;
-              "
-            >
-              Send OTP
-            </button>
+          <div class="mb-4" style="width: 50%">
+            <div class="d-flex gap-2">
+              <a href="/my-profile" class="btn btn-cancel w-50">Cancel</a>
+              <button
+                type="button"
+                id="sendOtpBtn"
+                class="btn w-50"
+                style="background-color: #ffdab9; color: #000; padding: 12px; font-size: 1rem; border-radius: 6px;"
+              >
+                Send OTP
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -338,7 +357,14 @@
         otpError.textContent = "Server error while resending OTP";
       });
   });
-
+  document.getElementById("backBtn").addEventListener("click", () => {
+  clearInterval(countdownInterval);
+  otpInput.value = "";
+  otpError.textContent = "";
+  otpStep.style.display = "none";
+  emailStep.style.display = "block";
+  emailInput.focus();
+});
   otpInput.addEventListener("input", function () {
     this.value = this.value.replace(/[^0-9]/g, "");
   });

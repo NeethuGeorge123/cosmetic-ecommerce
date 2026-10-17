@@ -56,9 +56,9 @@ const forgotEmailValid = asyncHandler(async (req, res) => {
     const emailSent = await sendVerificationEmail(email, otp);
     if (emailSent) {
       req.session.userOtp = otp;
-      req.session.otpCreatedAt = Date.now();   // server-side expiry
+      req.session.otpCreatedAt = Date.now();   
       req.session.email = email;
-      delete req.session.resetVerified;        // start a clean flow
+      delete req.session.resetVerified;        
       res.render("user/forgotPass-otp");
       console.log("OTP:", otp);
     } else {
@@ -74,14 +74,7 @@ const forgotEmailValid = asyncHandler(async (req, res) => {
   }
 });
 
-// const verifyForgotPassOtp = asyncHandler(async (req, res) => {
-//   const enteredOtp = req.body.otp;
-//   if (enteredOtp === req.session.userOtp) {
-//     res.json({ success: true, redirectUrl: "/reset-password" });
-//   } else {
-//     res.json({ success: false, message: Messages.OTP_FAILED });
-//   }
-// });
+
 const verifyForgotPassOtp = asyncHandler(async (req, res) => {
   const enteredOtp = req.body.otp;
 
@@ -89,7 +82,7 @@ const verifyForgotPassOtp = asyncHandler(async (req, res) => {
     return res.json({ success: false, message: "Session expired. Please start again." });
   }
 
-  // server-side expiry (your timer shows 60 seconds)
+  
   if (!req.session.otpCreatedAt || Date.now() - req.session.otpCreatedAt > 60 * 1000) {
     return res.json({ success: false, message: "OTP expired. Please resend OTP." });
   }
@@ -98,19 +91,16 @@ const verifyForgotPassOtp = asyncHandler(async (req, res) => {
     return res.json({ success: false, message: Messages.OTP_FAILED });
   }
 
-  // OTP is correct: mark this session as verified
+  
   req.session.resetVerified = {
     email: req.session.email,
-    expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes to set the new password
+    expiresAt: Date.now() + 10 * 60 * 1000, 
   };
-  delete req.session.userOtp;        // OTP can't be used again
+  delete req.session.userOtp;        
   delete req.session.otpCreatedAt;
 
   return res.json({ success: true, redirectUrl: "/reset-password" });
 });
-// const getResetPassPage = asyncHandler(async (req, res) => {
-//   res.render("user/reset-password");
-// });
 
 const getResetPassPage = asyncHandler(async (req, res) => {
   const verified = req.session.resetVerified;
@@ -153,7 +143,7 @@ const postNewPassword = asyncHandler(async (req, res) => {
   const { newPass1, newPass2 } = req.body;
   const verified = req.session.resetVerified;
 
-  // blocks the request if the OTP step was skipped or has expired
+  
   if (!verified || verified.expiresAt < Date.now()) {
     return res.redirect("/forgot-password");
   }
@@ -173,11 +163,11 @@ const postNewPassword = asyncHandler(async (req, res) => {
 
   const passwordHash = await securePassword(newPass1);
   await User.updateOne(
-    { email: verified.email },            // email from the verified session only
+    { email: verified.email },            
     { $set: { password: passwordHash } }
   );
 
-  delete req.session.resetVerified;       // one-time use
+  delete req.session.resetVerified;       
   delete req.session.email;
 
   res.redirect("/login");
@@ -595,13 +585,13 @@ const updateProfileName = asyncHandler(async (req, res) => {
 
     const currentUser = await User.findById(userId);
     if (currentUser.googleId) {
-      // ADD THIS
+      
       return res
         .status(403)
         .json({
           success: false,
           message: "Google account details cannot be edited here",
-        }); // ADD THIS
+        }); 
     }
 
     const name = req.body.name ? req.body.name.trim() : "";
@@ -654,13 +644,13 @@ const updateProfileImage = [
 
       const currentUser = await User.findById(userId);
       if (currentUser.googleId) {
-        // ADD THIS
+        
         return res
           .status(403)
           .json({
             success: false,
             message: "Google account details cannot be edited here",
-          }); // ADD THIS
+          }); 
       }
 
       if (!req.file) {

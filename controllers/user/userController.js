@@ -164,9 +164,9 @@ function generateOtp() {
 const signup = asyncHandler(async (req, res, next) => {
   const { name, email, password, cpassword, phone, referral } = req.body;
 
-  // ---------- BACKEND VALIDATION ----------
+  
 
-  // 1. Every field must be a string (blocks NoSQL injection like {"$ne": null})
+  
   for (const [key, value] of Object.entries({ name, email, phone, password, cpassword })) {
     if (typeof value !== "string") {
       return res.status(400).json({
@@ -180,13 +180,13 @@ const signup = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ success: false, field: "referral", message: "Invalid referral code" });
   }
 
-  // 2. Clean the values
+  
   const cleanName = name.trim();
   const cleanEmail = email.trim().toLowerCase();
   const cleanPhone = phone.trim();
   const cleanReferral = referral ? referral.trim() : "";
 
-  // 3. Format checks
+  
   if (!/^[A-Za-z\s]{2,50}$/.test(cleanName)) {
     return res.status(400).json({
       success: false, field: "name",
@@ -220,7 +220,7 @@ const signup = asyncHandler(async (req, res, next) => {
     });
   }
 
-  // ---------- DATABASE CHECKS ----------
+
 
   const existEmail = await User.findOne({ email: cleanEmail });
   if (existEmail) {
@@ -230,7 +230,7 @@ const signup = asyncHandler(async (req, res, next) => {
     });
   }
 
-  // Delete this block if phone is not unique in your project
+
   
 
   if (cleanReferral) {
@@ -243,11 +243,11 @@ const signup = asyncHandler(async (req, res, next) => {
     }
   }
 
-  // ---------- OTP + SESSION ----------
+  
 
   const otp = generateOtp();
   const emailSent = await sendVerificationEmail(cleanEmail, otp);
-  console.log("OTP", otp); // remove before production
+  console.log("OTP", otp); 
 
   if (!emailSent) {
     return res.status(500).json({
@@ -293,13 +293,33 @@ const loadLogin = asyncHandler(async (req, res) => {
   return res.render("user/login.ejs", { message, email: "" });
 });
 
+
 const userLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const findUser = await User.findOne({ isAdmin: 0, email: email });
+  if (!email || !email.trim()) {
+    return res.render("user/login", {
+      message: "Email is required",
+      email,
+    });
+  }
+
+  if (!password || !password.trim()) {
+    return res.render("user/login", {
+      message: "Password is required",
+      email,
+    });
+  }
+
+  const findUser = await User.findOne({
+    isAdmin: 0,
+    email: email.trim(),
+  });
+
   if (!findUser) {
     return res.render("user/login", { message: "User not found", email });
   }
+
   if (findUser.isBlocked) {
     return res.render("user/login", {
       message: "User id blocked by admin",
@@ -310,12 +330,16 @@ const userLogin = asyncHandler(async (req, res) => {
   const passwordMatch = await bcrypt.compare(password, findUser.password);
 
   if (!passwordMatch) {
-    return res.render("user/login", { message: "Incorrect password", email });
+    return res.render("user/login", {
+      message: "Incorrect password",
+      email,
+    });
   }
 
   req.session.user = findUser._id;
   res.redirect("/");
 });
+
 
 const securePassword = asyncHandler(async (password) => {
   const passwordHash = await bcrypt.hash(password, 10);
@@ -390,7 +414,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
   req.session.user = saveUserData._id;
   
   if (referral && referral.trim() && referredUser) {
-      // Credit the referrer's wallet
+      
       let referrerWallet = await Wallet.findOne({ userId: referredUser._id });
       if (!referrerWallet) {
           referrerWallet = new Wallet({
@@ -407,11 +431,11 @@ const verifyOtp = asyncHandler(async (req, res) => {
       });
       await referrerWallet.save();
   
-      // Record the referral relationship
+    
       referredUser.redeemedUsers.push(saveUserData._id);
       await referredUser.save();
   
-      // Credit the new user's wallet
+    
       let newUserWallet = await Wallet.findOne({ userId: saveUserData._id });
       if (!newUserWallet) {
           newUserWallet = new Wallet({
